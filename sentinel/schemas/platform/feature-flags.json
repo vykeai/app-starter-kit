@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "feature-flags",
+  "version": "1.0.0",
+  "description": "Feature flags for app-starter-kit. All flags default OFF. Enable per milestone.",
+  "flags": {
+    "SOCIAL": {
+      "defaultValue": false,
+      "description": "Social features (follows, feed, sharing)"
+    },
+    "NOTIFICATIONS": {
+      "defaultValue": false,
+      "description": "Push notifications"
+    },
+    "ANALYTICS": {
+      "defaultValue": false,
+      "description": "Analytics and usage tracking"
+    },
+    "PREMIUM": {
+      "defaultValue": false,
+      "description": "Premium/paid features gate"
+    }
+  }
+}

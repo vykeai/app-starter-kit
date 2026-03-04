@@ -1,0 +1,4 @@
+PRODUCT_BUNDLE_IDENTIFIER = com.starter.app.staging
+BUNDLE_DISPLAY_NAME = StarterApp (Staging)
+API_BASE_URL = https://api-staging.yourapp.com/api/v1
+ENVIRONMENT = staging

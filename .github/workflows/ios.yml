@@ -1,0 +1,50 @@
+# iOS CI — XcodeGen + build + test
+#
+# MANUAL TRIGGER ONLY. To activate on push/PR, see docs/setup/GITHUB_ACTIONS.md.
+#
+on:
+  workflow_dispatch:
+
+name: ios
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-xcode-${{ hashFiles('ios/project.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-xcode-
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Build (Dev Debug)
+        working-directory: ios
+        run: |
+          xcodebuild \
+            -scheme StarterApp-Dev \
+            -destination "generic/platform=iOS Simulator" \
+            -sdk iphonesimulator \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcpretty || cat /tmp/xcodebuild.log
+
+      - name: Test
+        working-directory: ios
+        run: |
+          xcodebuild \
+            -scheme StarterApp-Dev \
+            -destination "platform=iOS Simulator,name=iPhone 15" \
+            -sdk iphonesimulator \
+            CODE_SIGNING_ALLOWED=NO \
+            test | xcpretty

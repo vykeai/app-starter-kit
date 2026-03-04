@@ -1,0 +1,4 @@
+PRODUCT_BUNDLE_IDENTIFIER = com.starter.app
+BUNDLE_DISPLAY_NAME = StarterApp
+API_BASE_URL = https://api.yourapp.com/api/v1
+ENVIRONMENT = production

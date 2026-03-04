@@ -1,0 +1,66 @@
+name: StarterApp
+options:
+  bundleIdPrefix: com.starter.app
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "15"
+configs:
+  Dev-Debug: debug
+  Dev-Release: release
+  Staging-Debug: debug
+  Staging-Release: release
+  Release-Debug: debug
+  Release-Release: release
+targets:
+  StarterApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: StarterApp
+    configFiles:
+      Dev-Debug: Configs/Dev.xcconfig
+      Dev-Release: Configs/Dev.xcconfig
+      Staging-Debug: Configs/Staging.xcconfig
+      Staging-Release: Configs/Staging.xcconfig
+      Release-Debug: Configs/Release.xcconfig
+      Release-Release: Configs/Release.xcconfig
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+        PRODUCT_NAME: StarterApp
+        INFOPLIST_FILE: StarterApp/App/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+    dependencies: []
+  StarterAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: StarterAppTests
+    dependencies:
+      - target: StarterApp
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+schemes:
+  StarterApp-Dev:
+    build:
+      targets:
+        StarterApp: all
+    run:
+      config: Dev-Debug
+    test:
+      config: Dev-Debug
+      targets:
+        - StarterAppTests
+  StarterApp-Staging:
+    build:
+      targets:
+        StarterApp: all
+    run:
+      config: Staging-Debug
+  StarterApp-Release:
+    build:
+      targets:
+        StarterApp: all
+    run:
+      config: Release-Release
