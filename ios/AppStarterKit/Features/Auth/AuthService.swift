@@ -35,4 +35,16 @@ struct AuthService {
             body: MagicLinkVerifyBody(email: email, code: code)
         )
     }
+
+    func authenticateWithSocial(credential: SocialAuthCredential) async throws -> AuthResponse {
+        struct SocialAuthRequest: Encodable {
+            let provider: String
+            let idToken: String
+        }
+        return try await APIClient.shared.request(
+            "auth/social",
+            method: "POST",
+            body: SocialAuthRequest(provider: credential.provider.rawValue, idToken: credential.idToken)
+        )
+    }
 }

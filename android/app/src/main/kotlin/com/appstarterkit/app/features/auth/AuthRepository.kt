@@ -8,6 +8,7 @@ interface AuthRepository {
     suspend fun verifyMagicLink(email: String, code: String): Result<AuthResponse>
     /** Invalidates the server session and clears all locally stored tokens. */
     suspend fun logout()
+    suspend fun authenticateWithSocial(provider: String, idToken: String): Result<Unit>
 }
 
 class AuthRepositoryImpl @Inject constructor(
@@ -30,5 +31,11 @@ class AuthRepositoryImpl @Inject constructor(
         // Ignore any errors — the local state is always cleared regardless.
         runCatching { apiService.deleteSession() }
         securePreferences.clearAll()
+    }
+
+    override suspend fun authenticateWithSocial(provider: String, idToken: String): Result<Unit> = runCatching {
+        val response = apiService.authenticateWithSocial(SocialAuthRequest(provider, idToken))
+        securePreferences.saveAccessToken(response.accessToken)
+        securePreferences.saveRefreshToken(response.refreshToken)
     }
 }

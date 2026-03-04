@@ -17,6 +17,7 @@ import { AuthService } from './auth.service';
 import { RequestMagicLinkDto } from './dtos/request-magic-link.dto';
 import { VerifyMagicLinkDto } from './dtos/verify-magic-link.dto';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
+import { SocialAuthDto } from './dtos/social-auth.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 
@@ -70,5 +71,13 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async logoutAll(@CurrentUser() user: { userId: string }): Promise<void> {
     await this.authService.logout(user.userId);
+  }
+
+  @Post('social')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Authenticate with Apple or Google identity token' })
+  @ApiResponse({ status: 200, description: 'Authentication successful' })
+  async socialAuth(@Body() dto: SocialAuthDto) {
+    return this.authService.authenticateWithSocial(dto);
   }
 }

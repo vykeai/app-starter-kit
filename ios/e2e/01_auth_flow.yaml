@@ -1,0 +1,37 @@
+# AppStarterKit — Auth flow E2E test
+# Tests: launch → welcome screen → email entry → OTP code screen → back navigation
+#
+# Prerequisites:
+#   - Backend running locally (cd backend && npm run start:dev)
+#   - Debug build installed on Simulator or device
+#   - clearState: true ensures the app starts in a logged-out state
+#
+# OTP note: In development mode the 8-digit code is printed to the server console:
+#   [AuthService] OTP for test@example.com: 12345678
+# Copy the code into the inputText step below for a manual end-to-end run.
+
+appId: com.appstarterkit.app
+
+---
+- launchApp:
+    clearState: true
+
+# Welcome screen
+- assertVisible: "AppStarterKit"
+- assertVisible: "Sign In"
+- tapOn: "Sign In"
+
+# Email input screen
+- assertVisible: "Enter your email"
+- tapOn:
+    id: "emailTextField"
+- inputText: "test@example.com"
+- tapOn: "Continue"
+
+# OTP code entry screen (server sends code to email / logs to dev console)
+- assertVisible: "Check your email"
+- assertVisible: "test@example.com"
+
+# Test back navigation returns to email screen
+- tapOn: "Back"
+- assertVisible: "Enter your email"

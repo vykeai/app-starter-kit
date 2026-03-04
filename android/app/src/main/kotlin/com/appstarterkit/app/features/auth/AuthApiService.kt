@@ -8,6 +8,7 @@ data class RequestMagicLinkBody(val email: String)
 data class VerifyMagicLinkBody(val email: String, val code: String)
 data class AuthResponse(val accessToken: String, val refreshToken: String)
 data class MessageResponse(val message: String)
+data class SocialAuthRequest(val provider: String, val idToken: String)
 
 interface AuthApiService {
     @POST("auth/magic-link/request")
@@ -19,4 +20,7 @@ interface AuthApiService {
     /** Fire-and-forget session termination. Server invalidates the refresh token. */
     @DELETE("auth/session")
     suspend fun deleteSession(): MessageResponse
+
+    @POST("auth/social")
+    suspend fun authenticateWithSocial(@Body body: SocialAuthRequest): AuthResponse
 }

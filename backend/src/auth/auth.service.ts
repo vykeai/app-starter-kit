@@ -1,9 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import * as crypto from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
+import { SocialAuthDto } from './dtos/social-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -109,5 +110,36 @@ export class AuthService {
 
   async logout(userId: string): Promise<void> {
     await this.prisma.refreshToken.deleteMany({ where: { userId } });
+  }
+
+  async authenticateWithSocial(dto: SocialAuthDto) {
+    // Verify identity token with provider
+    let email: string;
+    let providerUserId: string;
+    let displayName: string | undefined;
+
+    if (dto.provider === 'apple') {
+      // TODO: Verify Apple identity token
+      // npm install apple-signin-auth
+      // const appleUser = await appleSignin.verifyIdToken(dto.idToken, { audience: 'com.appstarterkit.app' });
+      // email = appleUser.email; providerUserId = appleUser.sub;
+      throw new BadRequestException('Apple Sign-In not yet configured. See auth.service.ts TODO.');
+    } else {
+      // TODO: Verify Google identity token
+      // npm install google-auth-library
+      // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+      // const ticket = await client.verifyIdToken({ idToken: dto.idToken, audience: process.env.GOOGLE_CLIENT_ID });
+      // const payload = ticket.getPayload();
+      // email = payload.email; providerUserId = payload.sub; displayName = payload.name;
+      throw new BadRequestException('Google Sign-In not yet configured. See auth.service.ts TODO.');
+    }
+
+    // Upsert user (would be used once TODOs are resolved)
+    // const user = await this.prisma.user.upsert({
+    //   where: { email },
+    //   create: { email, displayName },
+    //   update: {},
+    // });
+    // return this.generateTokens(user);
   }
 }

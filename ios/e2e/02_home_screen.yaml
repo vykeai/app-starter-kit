@@ -1,0 +1,23 @@
+# AppStarterKit — Home screen test
+#
+# Prerequisites:
+#   - User is already logged in (run 01_auth_flow.yaml to completion first, or
+#     launch without clearState so the stored tokens are reused).
+#   - clearState is intentionally omitted here so the session persists.
+
+appId: com.appstarterkit.app
+
+---
+- launchApp
+
+# If already logged in, should land on home
+- assertVisible: "Home"
+
+# Test logout flow — open profile, confirm the sign-out option appears, then cancel
+- tapOn:
+    id: "profileButton"
+- assertVisible: "Sign out"
+- tapOn: "Cancel"
+
+# Confirm still on home after cancelling
+- assertVisible: "Home"

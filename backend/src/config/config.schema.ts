@@ -18,4 +18,6 @@ export const configSchema = Joi.object({
   APP_VERSION_IOS_MINIMUM: Joi.string().default('1.0.0'),
   APP_VERSION_ANDROID_CURRENT: Joi.string().default('1.0.0'),
   APP_VERSION_ANDROID_MINIMUM: Joi.string().default('1.0.0'),
+  GOOGLE_CLIENT_ID: Joi.string().optional(),
+  APPLE_BUNDLE_ID: Joi.string().optional(),
 });

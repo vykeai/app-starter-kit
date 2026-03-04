@@ -18,5 +18,10 @@ struct AuthFlowView: View {
             }
         }
         .background(AppTokens.Color.background.ignoresSafeArea())
+        .onChange(of: viewModel.authSucceeded) { _, succeeded in
+            if succeeded {
+                appState.isAuthenticated = true
+            }
+        }
     }
 }

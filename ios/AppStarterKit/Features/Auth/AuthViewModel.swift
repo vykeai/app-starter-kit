@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 enum AuthStep {
     case welcome
@@ -13,6 +14,10 @@ class AuthViewModel {
     var codeInput: String = ""
     var isLoading: Bool = false
     var errorMessage: String? = nil
+
+    /// Set to `true` after a successful social sign-in so that `AuthFlowView` can
+    /// transition the app to the authenticated state (mirrors the `verifyCode` return value pattern).
+    var authSucceeded: Bool = false
 
     private let authService = AuthService()
 
@@ -80,5 +85,42 @@ class AuthViewModel {
             isLoading = false
             return false
         }
+    }
+
+    // MARK: - Social sign-in
+
+    func signInWithApple() async {
+        isLoading = true
+        errorMessage = nil
+        do {
+            let credential = try await AppleSignInHelper.shared.signIn()
+            let response = try await authService.authenticateWithSocial(credential: credential)
+            KeychainHelper.shared.saveAccessToken(response.accessToken)
+            KeychainHelper.shared.saveRefreshToken(response.refreshToken)
+            authSucceeded = true
+        } catch let error as SocialAuthError where error == .cancelled {
+            // Silently ignore — user tapped cancel in the system sheet.
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        isLoading = false
+    }
+
+    func signInWithGoogle(presenting viewController: UIViewController?) async {
+        guard let vc = viewController else { return }
+        isLoading = true
+        errorMessage = nil
+        do {
+            let credential = try await GoogleSignInHelper.shared.signIn(presenting: vc)
+            let response = try await authService.authenticateWithSocial(credential: credential)
+            KeychainHelper.shared.saveAccessToken(response.accessToken)
+            KeychainHelper.shared.saveRefreshToken(response.refreshToken)
+            authSucceeded = true
+        } catch let error as SocialAuthError where error == .cancelled {
+            // Silently ignore — user tapped cancel.
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        isLoading = false
     }
 }

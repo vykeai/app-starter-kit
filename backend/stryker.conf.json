@@ -1,0 +1,25 @@
+{
+  "$schema": "https://stryker-mutator.io/schemas/stryker-config-schema.json",
+  "testRunner": "jest",
+  "jest": {
+    "configFile": "jest.config.js"
+  },
+  "mutate": [
+    "src/auth/auth.service.ts",
+    "src/user/user.service.ts",
+    "src/common/**/*.ts",
+    "!src/**/*.spec.ts",
+    "!src/**/*.module.ts",
+    "!src/**/*.dto.ts"
+  ],
+  "reporters": ["html", "clear-text", "progress"],
+  "htmlReporter": {
+    "fileName": "reports/mutation/html/index.html"
+  },
+  "timeoutMS": 10000,
+  "thresholds": {
+    "high": 80,
+    "low": 60,
+    "break": 50
+  }
+}

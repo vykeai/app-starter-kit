@@ -1,0 +1,13 @@
+{
+  "name": "appstarterkit-load-tests",
+  "private": true,
+  "scripts": {
+    "smoke": "k6 run smoke.js",
+    "load": "k6 run load.js",
+    "stress": "k6 run stress.js",
+    "smoke:staging": "BASE_URL=https://api-staging.yourapp.com k6 run smoke.js"
+  },
+  "devDependencies": {
+    "@types/k6": "^0.54.0"
+  }
+}
