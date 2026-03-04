@@ -37,7 +37,6 @@ android/app/release/
 !android/gradle/wrapper/gradle-wrapper.jar
 
 # iOS
-ios/StarterApp.xcodeproj/
 ios/DerivedData/
 ios/Pods/
 ios/*.xcarchive
