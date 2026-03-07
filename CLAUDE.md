@@ -215,3 +215,127 @@ cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
 | `android/app/src/main/kotlin/.../nfr/` | Force update, offline banner, review prompt |
 | `sentinel/schemas/design/tokens.json` | Design token source of truth |
 | `docs/setup/GITHUB_ACTIONS.md` | CI setup guide |
+
+---
+
+## Simulator / Emulator Management (simemu)
+
+**simemu is the ONLY permitted way to interact with iOS simulators and Android emulators.**
+`simemu` is installed at `~/dev/simemu`. A global hook blocks all direct `xcrun simctl`, `adb`, `emulator`, and `avdmanager` calls.
+
+This is a template project — simulators are acquired per-use by the operator, not pre-assigned. Before doing any simulator work, ask which slug to use or check `simemu status`.
+
+```bash
+# Check what's available and reserved
+simemu list ios
+simemu list android
+simemu status
+
+# ── Headless by default ────────────────────────────────────────────────────
+# Android boots without a window. iOS window stays behind other apps.
+# Add --window to boot/acquire only when you need to watch directly.
+# PROVE DELIVERABLES WITH SCREENSHOTS — never verbal claims:
+#   simemu screenshot <slug> -o /tmp/<platform>_<feature>.png
+#   (read the file to verify visually before committing)
+# ───────────────────────────────────────────────────────────────────────────
+
+# Use whatever slug the operator has assigned
+simemu install <slug> path/to/App.app           # iOS (.app or .ipa)
+simemu install <slug> path/to/app.apk           # Android
+simemu launch <slug> com.example.app
+simemu terminate <slug> com.example.app
+simemu clear-data <slug> com.example.app        # Android: reset app data
+simemu screenshot <slug> -o /tmp/screen.png --max-size 1000
+# Maestro (navigation only — always use simemu screenshot to capture)
+simemu animations <ios-slug> off               # disable before Maestro for stability
+simemu animations <android-slug> off
+simemu maestro <ios-slug>     /tmp/flow.yaml   # maestro --device <udid> test /tmp/flow.yaml
+simemu maestro <android-slug> /tmp/flow.yaml   # maestro --device <serial> test /tmp/flow.yaml
+simemu animations <ios-slug> on                # restore when done
+simemu status-bar <slug> --time "9:41" --battery 100 --wifi 3
+simemu status-bar <slug> --clear
+simemu tap <slug> 195 400
+simemu swipe <slug> 195 700 195 200             # swipe up
+simemu long-press <slug> 195 400
+simemu rotate <slug> landscape
+simemu rotate <slug> portrait
+simemu appearance <slug> dark
+simemu appearance <slug> light
+simemu key <slug> home
+simemu key <ios-slug> paste                         # paste clipboard into focused field (Cmd+V)
+simemu reboot <slug>
+simemu focus <ios-slug>                             # bring iOS Simulator window to front
+simemu biometrics <slug> match
+simemu privacy <slug> grant com.example.app camera
+simemu location <slug> 37.7749 -122.4194
+simemu network <android-slug> airplane              # airplane | all | wifi | data | none (Android)
+simemu battery <android-slug> --level 85            # fake battery % for screenshots (Android)
+simemu battery <android-slug> --reset               # restore real battery
+simemu input <ios-slug> "hello world"               # sets iOS clipboard — then: key paste to type
+simemu input <android-slug> "hello world"           # types directly into focused field
+simemu add-media <ios-slug> photo.jpg               # add photo/video to iOS Photos library
+simemu add-media <android-slug> photo.jpg           # add photo/video to Android Gallery
+simemu log <slug>
+simemu env <slug>
+```
+
+If no slug is assigned yet, you may acquire one from the free pool for your work:
+
+```bash
+simemu list ios
+simemu list android
+
+# Acquire with descriptive slug: manifest-{purpose}  (or your project name)
+simemu acquire ios starter-ios --device "Soba iPhone16 6.1in iOS18" --wait 120
+simemu acquire android starter-android --device "Biscuit MedPhone 6.3in API35" --wait 120
+
+# Always release when done
+simemu release starter-ios
+simemu release starter-android
+```
+
+**Rules — no exceptions:**
+- **NEVER** call `xcrun simctl` or `adb` directly — the hook will block it
+- If nothing is free and `--wait` times out, tell the user
+
+---
+
+## Screen Catalog — setup guide
+
+When building a real app from this template, configure the screen catalog in `sentinel.yaml`. The catalog generates platform-specific screenshots in light/dark mode (plus iOS 26 glossy variants) for every screen. Luke reviews all screens from `catalog/index.html` before approving UI work.
+
+Update the `catalog:` section in `sentinel.yaml` with your project's slugs and bundle IDs:
+```yaml
+catalog:
+  output: catalog/
+  resize: 1000
+  ios18:
+    slug: {your-app}-ios          # matches simemu acquire slug
+    app_id: {your.bundle.id}
+  ios26:
+    slug: {your-app}-ios26
+    app_id: {your.bundle.id}
+    glossy: true
+  android:
+    slug: {your-app}-android      # matches simemu acquire slug
+    app_id: {your.android.package}
+  screens:
+    - slug: welcome
+      flow: flows/welcome.yaml
+    - slug: sign-in
+      flow: flows/sign-in.yaml
+    - slug: home
+      flow: flows/home.yaml
+```
+
+Commands:
+```bash
+sentinel catalog:capture       # capture all screens
+sentinel catalog:validate      # verify all shots exist
+sentinel catalog:index         # regenerate catalog/index.html
+```
+
+Rules:
+1. Every screen added to the app must have an entry in `sentinel.yaml → screens`
+2. `sentinel catalog:validate` must pass before marking any screen task done
+3. Luke reviews completed screens from `catalog/index.html`

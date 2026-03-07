@@ -29,3 +29,18 @@ platforms:
       flags:     ./android/app/src/main/kotlin/com/appstarterkit/app/core/FeatureFlags.kt
       models:    ./android/app/src/main/kotlin/com/appstarterkit/app/core/models/Models.kt
       endpoints: ./android/app/src/main/kotlin/com/appstarterkit/app/core/network/APIClient.kt
+
+catalog:
+  output: catalog/
+  resize: 1000
+  ios18:
+    slug: starter-ios           # update to match your simemu slug when using this template
+    app_id: starter.app.dev     # update to match your bundle ID
+  ios26:
+    slug: starter-ios26
+    app_id: starter.app.dev
+    glossy: true
+  android:
+    slug: starter-android
+    app_id: com.appstarterkit.app  # update to match your Android package
+  screens: []  # add screens as you build them — slug + flow path required
