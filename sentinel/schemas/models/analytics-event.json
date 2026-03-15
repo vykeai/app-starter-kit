@@ -1,0 +1,12 @@
+{
+  "$sentinel": "1.0",
+  "type": "model",
+  "id": "analytics-event",
+  "name": "AnalyticsEvent",
+  "platforms": ["ios", "android", "api", "web"],
+  "fields": [
+    { "name": "name", "type": "String", "optional": false },
+    { "name": "category", "type": "String", "optional": true },
+    { "name": "properties", "type": "Map<String,String>", "optional": true }
+  ]
+}

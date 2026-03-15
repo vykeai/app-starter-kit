@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileView: View {
     @Environment(AppState.self) var appState
     @Environment(ToastManager.self) var toastManager
+    private let userService = UserService()
     @State private var displayName: String = ""
     @State private var isEditing = false
     @State private var showDeleteAccountAlert = false
@@ -101,10 +102,15 @@ struct ProfileView: View {
 
     private func saveName() async {
         isSaving = true
-        // TODO: PATCH /user/me with { displayName }
-        // On success: update appState.currentUser?.displayName
-        toastManager.show("Name updated", style: .success)
-        isEditing = false
-        isSaving = false
+        defer { isSaving = false }
+
+        do {
+            let profile = try await userService.updateMe(displayName: displayName)
+            appState.currentUser = AppUser(profile: profile)
+            toastManager.show("Name updated", style: .success)
+            isEditing = false
+        } catch {
+            toastManager.show(error.localizedDescription, style: .error)
+        }
     }
 }

@@ -9,6 +9,9 @@ import { HealthModule } from './health/health.module';
 import { AppVersionModule } from './app-version/app-version.module';
 import { NotificationModule } from './notification/notification.module';
 import { AdminModule } from './admin/admin.module';
+import { MediaModule } from './media/media.module';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { BillingModule } from './billing/billing.module';
 import { CorrelationIdMiddleware } from './common/middleware/correlation-id.middleware';
 import { configSchema } from './config/config.schema';
 
@@ -23,6 +26,9 @@ import { configSchema } from './config/config.schema';
     AppVersionModule,
     NotificationModule,
     AdminModule,
+    MediaModule,
+    AnalyticsModule,
+    BillingModule,
   ],
   providers: [
     {

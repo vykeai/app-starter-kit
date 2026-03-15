@@ -24,5 +24,21 @@ Current boundaries:
   - Sentinel schemas
   - route contracts
   - fixture and screenshot proof expectations
+- `user-core`
+  - current-user profile fetch/update
+  - lightweight preference summary
+  - app-shell user projection
+- `media-core`
+  - upload preparation/finalization
+  - media asset metadata
+  - list/delete operations
+- `billing-core`
+  - entitlement state
+  - native purchase verification contract
+  - feature-gating inputs
+- `analytics-core`
+  - event ingest contract
+  - event naming conventions
+  - starter summary shape
 
 These are internal boundaries first, not published packages yet.

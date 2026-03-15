@@ -1,0 +1,13 @@
+{
+  "$sentinel": "1.0",
+  "type": "model",
+  "id": "entitlement-state",
+  "name": "EntitlementState",
+  "platforms": ["ios", "android", "api", "web"],
+  "fields": [
+    { "name": "tier", "type": "String", "optional": false },
+    { "name": "source", "type": "String", "optional": false },
+    { "name": "features", "type": "String[]", "optional": false },
+    { "name": "renewsAt", "type": "Date", "optional": true }
+  ]
+}

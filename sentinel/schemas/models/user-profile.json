@@ -1,0 +1,13 @@
+{
+  "$sentinel": "1.0",
+  "type": "model",
+  "id": "user-profile",
+  "name": "UserProfile",
+  "platforms": ["ios", "android", "api", "web"],
+  "fields": [
+    { "name": "id", "type": "String", "optional": false },
+    { "name": "email", "type": "String", "optional": false },
+    { "name": "displayName", "type": "String", "optional": true },
+    { "name": "preferences", "type": "NotificationPreferences", "optional": true }
+  ]
+}

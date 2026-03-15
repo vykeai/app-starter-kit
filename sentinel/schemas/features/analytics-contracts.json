@@ -1,0 +1,14 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "analytics-contracts",
+  "name": "Analytics Contracts",
+  "canonicalDoc": "docs/EXTRACTION_DETAILED_AUDIT.md",
+  "platforms": ["ios", "android", "api", "web"],
+  "capabilities": [
+    "event_ingest",
+    "event_naming",
+    "authenticated_event_tracking",
+    "lightweight_summary"
+  ]
+}

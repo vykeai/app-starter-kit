@@ -13,6 +13,7 @@ struct AuthFlowView: View {
                 EmailInputView(viewModel: viewModel)
             case .enterCode(let email):
                 CodeEntryView(viewModel: viewModel, email: email) {
+                    appState.currentUser = viewModel.authenticatedUser
                     appState.isAuthenticated = true
                 }
             }
@@ -20,6 +21,7 @@ struct AuthFlowView: View {
         .background(AppTokens.Color.background.ignoresSafeArea())
         .onChange(of: viewModel.authSucceeded) { _, succeeded in
             if succeeded {
+                appState.currentUser = viewModel.authenticatedUser
                 appState.isAuthenticated = true
             }
         }
@@ -39,6 +41,7 @@ struct AuthFlowView: View {
         appState.pendingAuthLink = nil
         let success = await viewModel.consumePendingAuth(pendingAuthLink)
         if success {
+            appState.currentUser = viewModel.authenticatedUser
             appState.isAuthenticated = true
         }
     }

@@ -11,6 +11,17 @@ Onlystack is a monorepo containing the starter app plus shared reusable layers.
 - **Admin Web** — Next.js, server-ready admin shell
 - **Product Web** — Next.js, authenticated app shell
 
+Reusable internal library seams:
+
+- `auth-core`
+- `network-core`
+- `notifications-core`
+- `user-core`
+- `media-core`
+- `billing-core`
+- `analytics-core`
+- `contracts`
+
 There is no shared code layer. Each platform independently reimplements business logic. Sentinel schemas are the machine-readable source of truth that enforces consistency across platforms without sharing runtime code.
 
 ```
@@ -35,6 +46,9 @@ onlystack/
 │   ├── src/
 │   │   ├── auth/             # Magic link: request + verify + refresh + logout
 │   │   ├── user/             # GET /user/me, PATCH /user/me
+│   │   ├── media/            # Upload prepare/complete, list, delete
+│   │   ├── analytics/        # Event ingest + starter summaries
+│   │   ├── billing/          # Entitlements + native purchase verification
 │   │   ├── health/           # GET /health
 │   │   ├── app-version/      # GET /app/version-check (force update)
 │   │   └── prisma/           # Global PrismaService
@@ -48,14 +62,14 @@ onlystack/
 │       ├── Features/Auth/    # WelcomeView, EmailInputView, CodeEntryView
 │       ├── Features/Home/    # HomeView placeholder
 │       ├── DesignSystem/     # AppTokens.swift (generated), components
-│       └── Core/             # APIClient, NetworkMonitor, KeychainHelper, NFRs
+│       └── Core/             # APIClient, NetworkMonitor, KeychainHelper, NFRs, User, Media, Billing, Analytics
 ├── apps/starter-android/
 │   └── app/src/main/kotlin/com/onlystack/starterapp/
 │       ├── app/              # Application (Hilt), MainActivity
 │       ├── features/auth/    # AuthNavHost, AuthViewModel, screens
 │       ├── features/home/    # HomeScreen placeholder
 │       ├── design/           # AppTokens.kt (generated), components
-│       ├── core/             # ApiClient, NetworkMonitor, SecurePreferences, DI
+│       ├── core/             # ApiClient, NetworkMonitor, SecurePreferences, DI, User, Media, Billing, Analytics
 │       └── nfr/              # ForceUpdateViewModel, ReviewManager
 ├── apps/starter-web-public/  # Astro public marketing surface
 ├── apps/starter-web-admin/   # Next.js admin shell

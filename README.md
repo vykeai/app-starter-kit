@@ -15,6 +15,10 @@ Shared library boundaries in this monorepo:
 - `network-core`
 - `notifications-core`
 - `contracts`
+- `user-core`
+- `media-core`
+- `billing-core`
+- `analytics-core`
 
 Runnable starter surfaces in this monorepo:
 - `starter-api`

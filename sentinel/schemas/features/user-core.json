@@ -1,0 +1,14 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "user-core",
+  "name": "User Core",
+  "canonicalDoc": "docs/EXTRACTION_DETAILED_AUDIT.md",
+  "platforms": ["ios", "android", "api", "web"],
+  "capabilities": [
+    "profile_fetch",
+    "profile_update",
+    "preferences_summary",
+    "session_profile_projection"
+  ]
+}

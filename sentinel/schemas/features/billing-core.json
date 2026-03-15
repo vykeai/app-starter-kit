@@ -1,0 +1,14 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "billing-core",
+  "name": "Billing Core",
+  "canonicalDoc": "docs/EXTRACTION_DETAILED_AUDIT.md",
+  "platforms": ["ios", "android", "api", "web"],
+  "capabilities": [
+    "entitlement_fetch",
+    "native_purchase_verification",
+    "feature_gate_input",
+    "store_platform_awareness"
+  ]
+}
