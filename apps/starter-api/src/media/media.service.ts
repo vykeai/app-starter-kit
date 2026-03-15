@@ -29,22 +29,20 @@ export class MediaService {
 
   prepareUpload(userId: string, dto: PrepareUploadDto) {
     const assetId = `asset_${randomUUID()}`;
-    const storageKey = `${userId}/${dto.kind}/${assetId}/${dto.fileName ?? 'upload.bin'}`;
-    const bucketBaseUrl = this.config.get<string>(
-      'MEDIA_PUBLIC_BASE_URL',
-      'https://media.onlystack.dev',
-    );
+    const storageKey = this.buildStorageKey(userId, dto.kind, assetId, dto.fileName);
+    const uploadUrl = this.buildUploadUrl(storageKey);
+    const publicUrl =
+      (dto.visibility ?? 'private') === 'public'
+        ? this.buildPublicUrl(storageKey)
+        : null;
 
     const record: MediaAssetRecord = {
       id: assetId,
       ownerId: userId,
       kind: dto.kind,
       storageKey,
-      uploadUrl: `${bucketBaseUrl}/upload/${encodeURIComponent(storageKey)}`,
-      publicUrl:
-        (dto.visibility ?? 'private') === 'public'
-          ? `${bucketBaseUrl}/${encodeURIComponent(storageKey)}`
-          : null,
+      uploadUrl,
+      publicUrl,
       mimeType: dto.mimeType,
       fileName: dto.fileName ?? null,
       sizeBytes: dto.sizeBytes ?? null,
@@ -62,6 +60,7 @@ export class MediaService {
       storageKey: record.storageKey,
       uploadUrl: record.uploadUrl,
       publicUrl: record.publicUrl,
+      uploadMethod: 'PUT',
       headers: {
         'Content-Type': record.mimeType,
       },
@@ -114,5 +113,48 @@ export class MediaService {
       visibility: record.visibility,
       createdAt: record.createdAt,
     };
+  }
+
+  private buildStorageKey(
+    userId: string,
+    kind: string,
+    assetId: string,
+    fileName?: string,
+  ) {
+    const safeFileName = (fileName ?? 'upload.bin')
+      .replace(/[^a-zA-Z0-9._-]/g, '-')
+      .replace(/-+/g, '-');
+
+    return `${userId}/${kind}/${assetId}/${safeFileName}`;
+  }
+
+  private buildUploadUrl(storageKey: string) {
+    const bucketName = this.config.get<string>('R2_BUCKET_NAME');
+    const accountId = this.config.get<string>('R2_ACCOUNT_ID');
+
+    if (bucketName && accountId) {
+      return `https://${accountId}.r2.cloudflarestorage.com/${bucketName}/${encodeURIComponent(storageKey)}`;
+    }
+
+    const fallbackBaseUrl = this.config.get<string>(
+      'R2_PUBLIC_BASE_URL',
+      'https://media.onlystack.dev',
+    );
+    return `${fallbackBaseUrl.replace(/\/$/, '')}/upload/${encodeURIComponent(storageKey)}`;
+  }
+
+  private buildPublicUrl(storageKey: string) {
+    const publicBaseUrl = this.config.get<string>('R2_PUBLIC_BASE_URL');
+    if (publicBaseUrl) {
+      return `${publicBaseUrl.replace(/\/$/, '')}/${encodeURIComponent(storageKey)}`;
+    }
+
+    const accountId = this.config.get<string>('R2_ACCOUNT_ID');
+    const bucketName = this.config.get<string>('R2_BUCKET_NAME');
+    if (accountId && bucketName) {
+      return `https://pub-${accountId}.r2.dev/${encodeURIComponent(storageKey)}`;
+    }
+
+    return `https://media.onlystack.dev/${encodeURIComponent(storageKey)}`;
   }
 }
