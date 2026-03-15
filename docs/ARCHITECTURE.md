@@ -2,7 +2,7 @@
 
 ## Overview
 
-app-starter-kit is a monorepo containing three production-ready layers:
+Onlystack is a monorepo containing the starter app plus shared reusable layers.
 
 - **iOS** — SwiftUI + `@Observable` MVVM, Keychain storage, iOS 17+
 - **Android** — Jetpack Compose + ViewModel + StateFlow, Hilt DI, API 26+

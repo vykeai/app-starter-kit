@@ -1,8 +1,8 @@
-# app-starter-kit — Development Rules
+# Onlystack — Development Rules
 
 > Production-ready mobile app starter: NestJS + iOS (SwiftUI) + Android (Compose).
 > Magic link auth, design tokens, force update, offline-first.
-> Built as a template — rename `AppStarterKit` / `starter.app` to your app when using.
+> Monorepo for the starter app plus shared libs. `AppStarterKit` remains the current runnable reference app.
 
 ---
 

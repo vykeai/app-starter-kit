@@ -1,6 +1,6 @@
 # Starter Auth System
 
-Canonical auth standard for products built from `app-starter-kit`.
+Canonical auth standard for products built from `Onlystack`.
 
 This document merges the strongest parts of:
 - `univiirse` frontend auth orchestration and screenshot-backed proof

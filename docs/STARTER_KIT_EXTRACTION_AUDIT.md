@@ -6,7 +6,7 @@ Cross-repo pass over:
 - `sitches`
 - `fitkind`
 
-Goal: identify systems that appear repeatedly enough to belong in `app-starter-kit`.
+Goal: identify systems that appear repeatedly enough to belong in `Onlystack`.
 
 ## Should Be In Starter Kit
 

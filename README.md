@@ -1,16 +1,27 @@
-# app-starter-kit
+# Onlystack
 
-Production-ready mobile app starter: **NestJS API + iOS (SwiftUI) + Android (Compose)**.
+Onlystack is the monorepo for the default product stack: runnable starter apps,
+shared reusable libraries, and the doctrine that ties them together.
 
-Magic link auth, social sign-in, design tokens, offline indicator, force update, review prompt, subscriptions, admin panel, Terraform infra — all wired up and ready to rename.
+The current executable reference is still the mobile starter app:
+**NestJS API + iOS (SwiftUI) + Android (Compose)**.
 
-This repo is also the proving ground for the shared starter libraries:
+Magic link auth, social sign-in, design tokens, offline indicator, force update,
+review prompt, subscriptions, admin panel, Terraform infra — all wired up and
+ready to reuse.
+
+Shared library boundaries in this monorepo:
 - `auth-core`
 - `network-core`
 - `notifications-core`
 - `contracts`
 
 The starter app remains the runnable reference consumer for those libraries.
+
+Stack doctrine lives in:
+- [STACK.md](/Users/ted/dev/app-starter-kit/docs/STACK.md)
+- [CONVENTIONS.md](/Users/ted/dev/app-starter-kit/docs/CONVENTIONS.md)
+- [HOSTING.md](/Users/ted/dev/app-starter-kit/docs/HOSTING.md)
 
 ---
 

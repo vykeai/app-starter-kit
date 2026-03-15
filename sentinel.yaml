@@ -1,5 +1,5 @@
 sentinel: "1.0"
-project: starter-app
+project: onlystack
 
 # Sentinel is the source of truth for cross-platform consistency.
 # Install the Sentinel CLI: npm install (links sentinel from your local checkout).

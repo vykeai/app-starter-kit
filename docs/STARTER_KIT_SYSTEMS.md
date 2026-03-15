@@ -1,7 +1,7 @@
 # Starter-Kit Systems
 
 This document records the reusable cross-cutting systems that should live in
-`app-starter-kit`, the source repos they were extracted from, and the contract
+`Onlystack`, the source repos they were extracted from, and the contract
 they should preserve.
 
 The goal is not identical UI across products. The goal is one reusable runtime
@@ -349,7 +349,7 @@ Starter contract:
 
 ## Decision
 
-These systems should become part of `app-starter-kit` by default. Product repos
+These systems should become part of `Onlystack` by default. Product repos
 should customize presentation and domain rules, but should stop rebuilding the
 underlying runtime shape from scratch.
 
