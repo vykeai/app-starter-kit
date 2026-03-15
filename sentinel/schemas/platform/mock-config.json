@@ -3,7 +3,7 @@
   "type": "mock-config",
   "id": "mock-config",
   "fixtures": [
-    { "platform": "ios",     "path": "ios/StarterAppTests/Fixtures" },
-    { "platform": "android", "path": "android/app/src/test/resources/fixtures" }
+    { "platform": "ios",     "path": "apps/starter-ios/StarterAppTests/Fixtures" },
+    { "platform": "android", "path": "apps/starter-android/app/src/test/resources/fixtures" }
   ]
 }

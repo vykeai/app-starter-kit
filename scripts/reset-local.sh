@@ -32,8 +32,8 @@ echo -e "      ${GREEN}✓ postgres ready${NC}"
 
 echo ""
 echo "[3/3] Rebuilding schema and seed data..."
-(cd backend && npx prisma migrate dev --name init 2>/dev/null || npx prisma migrate deploy)
-(cd backend && npm run db:seed 2>/dev/null || true)
+(cd apps/starter-api && npx prisma migrate dev --name init 2>/dev/null || npx prisma migrate deploy)
+(cd apps/starter-api && npm run db:seed 2>/dev/null || true)
 echo -e "      ${GREEN}✓ done${NC}"
 
 echo ""

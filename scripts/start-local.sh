@@ -29,10 +29,10 @@ if ! docker info &>/dev/null; then
   exit 1
 fi
 
-if [[ ! -f "backend/.env" ]]; then
-  echo -e "${YELLOW}⚠ backend/.env not found — copying from .env.example${NC}"
-  cp .env.example backend/.env
-  echo "  Edit backend/.env and set JWT_SECRET before proceeding."
+if [[ ! -f "apps/starter-api/.env" ]]; then
+  echo -e "${YELLOW}⚠ apps/starter-api/.env not found — copying from apps/starter-api/.env.example${NC}"
+  cp apps/starter-api/.env.example apps/starter-api/.env
+  echo "  Edit apps/starter-api/.env and set JWT_SECRET before proceeding."
   echo "  Generate one with: openssl rand -base64 48"
 fi
 
@@ -60,21 +60,21 @@ echo -e "      ${GREEN}✓ redis ready${NC}"
 
 echo ""
 echo "[2/4] Installing backend dependencies..."
-(cd backend && npm install --silent)
+(cd apps/starter-api && npm install --silent)
 echo -e "      ${GREEN}✓ done${NC}"
 
 # ── Step 4: Run Prisma migrations ──────────────────────────────────────────
 
 echo ""
 echo "[3/4] Running database migrations..."
-(cd backend && npx prisma migrate dev --name init 2>/dev/null || npx prisma migrate deploy)
+(cd apps/starter-api && npx prisma migrate dev --name init 2>/dev/null || npx prisma migrate deploy)
 echo -e "      ${GREEN}✓ migrations applied${NC}"
 
 # ── Step 5: Seed database ──────────────────────────────────────────────────
 
 echo ""
 echo "[4/4] Seeding database..."
-(cd backend && npm run db:seed 2>/dev/null || echo "      (no seed script yet — skipping)")
+(cd apps/starter-api && npm run db:seed 2>/dev/null || echo "      (no seed script yet — skipping)")
 echo -e "      ${GREEN}✓ done${NC}"
 
 # ── Done ───────────────────────────────────────────────────────────────────
@@ -82,11 +82,11 @@ echo -e "      ${GREEN}✓ done${NC}"
 echo ""
 echo -e "${GREEN}Local stack is ready!${NC}"
 echo ""
-echo "  Backend:      cd backend && npm run start:dev"
+echo "  Backend:      cd apps/starter-api && npm run start:dev"
 echo "                → http://localhost:3000"
 echo "  API docs:     http://localhost:3000/api/docs"
 echo "  Health check: http://localhost:3000/health"
 echo ""
-echo "  Postgres:     postgresql://postgres:postgres@localhost:5432/appstarterkit_dev"
+echo "  Postgres:     postgresql://postgres:postgres@localhost:5432/starterapp_dev"
 echo "  Redis:        redis://localhost:6379"
 echo ""

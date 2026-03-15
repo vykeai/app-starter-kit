@@ -7,8 +7,11 @@
     "schema:generate": "npx sentinel schema:generate",
     "sentinel:all": "npx sentinel all",
     "validate:fixtures": "node scripts/validate-fixtures.js",
-    "test:backend": "cd backend && npm test",
-    "test:e2e": "cd backend && npm run test:e2e"
+    "build:backend": "cd apps/starter-api && npm run build",
+    "build:ios": "cd apps/starter-ios && xcodebuild -project StarterApp.xcodeproj -scheme 'StarterApp-Dev' -destination 'generic/platform=iOS Simulator' build",
+    "build:android": "cd apps/starter-android && ./gradlew :app:compileMockDebugKotlin",
+    "test:backend": "cd apps/starter-api && npm test",
+    "test:e2e": "cd apps/starter-api && npm run test:e2e"
   },
   "devDependencies": {
     "sentinel": "file:../sentinel"

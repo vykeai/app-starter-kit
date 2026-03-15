@@ -106,7 +106,7 @@ In the Railway dashboard, add these services to your project:
 - Redis — click "Add Plugin" → Redis
 
 **Application services:**
-- API (NestJS) — connect your GitHub repo, set root directory to `backend/`
+- API (NestJS) — connect your GitHub repo, set root directory to `apps/starter-api/`
 - Meilisearch — use Docker image `getmeili/meilisearch:v1.5`
 - PostHog — use Docker image `posthog/posthog:latest` (or share one instance across projects)
 

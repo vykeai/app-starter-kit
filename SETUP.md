@@ -37,18 +37,18 @@ bash scripts/rename.sh "MyApp" "com.mycompany.myapp"
 
 The rename script performs a full find-and-replace of `StarterApp` and the bundle ID across all source files, renames iOS directories, moves the Android package tree, and regenerates the Xcode project. It prompts for confirmation before making changes.
 
-After renaming, update brand colours in `ios/MyApp/DesignSystem/Tokens/AppTokens.swift` and `android/app/src/main/kotlin/.../design/tokens/AppTokens.kt`.
+After renaming, update brand colours in `apps/starter-ios/MyApp/DesignSystem/Tokens/AppTokens.swift` and `apps/starter-android/app/src/main/kotlin/.../design/tokens/AppTokens.kt`.
 
 ---
 
 ## Section 2: Backend setup
 
 ```bash
-cp .env.example backend/.env
-# Edit backend/.env — set DATABASE_URL and JWT_SECRET at minimum
+cp .env.example apps/starter-api/.env
+# Edit apps/starter-api/.env — set DATABASE_URL and JWT_SECRET at minimum
 ```
 
-The minimum required values in `backend/.env`:
+The minimum required values in `apps/starter-api/.env`:
 
 ```
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/app_dev
@@ -59,7 +59,7 @@ REDIS_URL=redis://localhost:6379
 Then start the services and run migrations:
 
 ```bash
-cd backend && npm install
+cd apps/starter-api && npm install
 docker-compose up -d          # starts postgres:15 + redis:7
 npx prisma migrate dev --name init
 npm run start:dev
@@ -79,7 +79,7 @@ Swagger UI is available at `http://localhost:3000/api/docs`.
 ## Section 3: iOS setup
 
 ```bash
-cd ios && xcodegen generate
+cd apps/starter-ios && xcodegen generate
 open StarterApp.xcodeproj
 ```
 
@@ -97,7 +97,7 @@ The Dev scheme points to `http://localhost:3000/api/v1` by default.
 ## Section 4: Android setup
 
 1. Open **Android Studio**
-2. Choose **Open** and select the `android/` folder
+2. Choose **Open** and select the `apps/starter-android/` folder
 3. Wait for the Gradle sync to complete (this may take a few minutes on first run)
 4. In the **Build Variants** panel (View → Tool Windows → Build Variants), select **devDebug**
 5. Select an emulator (or connected device) and press the Run button
@@ -107,7 +107,7 @@ The `devDebug` variant points to `http://10.0.2.2:3000/api/v1` (the emulator's a
 Alternatively, build from the command line:
 
 ```bash
-cd android
+cd apps/starter-android
 ./gradlew assembleDevDebug
 ```
 
@@ -133,7 +133,7 @@ iOS tests (run in Xcode):
 Android tests:
 
 ```bash
-cd android
+cd apps/starter-android
 ./gradlew testDevDebugUnitTest
 ```
 
@@ -162,7 +162,7 @@ docker-compose ps   # both postgres and redis should be "running"
 lsof -ti:3000 | xargs kill -9
 ```
 
-Or change the backend port by setting `PORT=3001` in `backend/.env` and updating the API_BASE_URL in `ios/Configs/Dev.xcconfig`.
+Or change the backend port by setting `PORT=3001` in `apps/starter-api/.env` and updating the API_BASE_URL in `apps/starter-ios/Configs/Dev.xcconfig`.
 
 ### Xcode code signing error
 

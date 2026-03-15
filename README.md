@@ -61,7 +61,7 @@ The script replaces all occurrences of `StarterApp`, `com.onlystack.starterapp`,
 ### 3. Backend
 
 ```bash
-cd backend
+cd apps/starter-api
 cp .env.example .env    # fill in JWT_SECRET, SMTP settings, etc.
 npm install
 npm run start:dev       # http://localhost:3000/api/v1
@@ -71,7 +71,7 @@ npm run start:dev       # http://localhost:3000/api/v1
 ### 4. iOS
 
 ```bash
-cd ios
+cd apps/starter-ios
 brew install xcodegen   # if not installed
 xcodegen generate
 open StarterApp.xcodeproj
@@ -81,7 +81,7 @@ open StarterApp.xcodeproj
 ### 5. Android
 
 ```bash
-cd android
+cd apps/starter-android
 ./gradlew assembleDevDebug
 # Or open in Android Studio, select dev flavour
 ```
@@ -90,7 +90,7 @@ cd android
 
 ```bash
 # Android fixture-backed runtime mode
-cd android
+cd apps/starter-android
 ./gradlew assembleMockDebug
 
 # iOS fixture-backed runtime mode
@@ -155,7 +155,7 @@ Auth standard docs:
 
 ### CRUD Resource Template
 
-`backend/src/_templates/resource/` — copy-paste scaffold for any new domain:
+`apps/starter-api/src/_templates/resource/` — copy-paste scaffold for any new domain:
 
 ```
 resource/
@@ -175,7 +175,7 @@ resource/
 | Tool | Location | Purpose |
 |------|----------|---------|
 | Docker Compose | `docker-compose.yml` | Local postgres 16 + redis 7 |
-| Dockerfile | `backend/Dockerfile` | Multi-stage, non-root, health check |
+| Dockerfile | `apps/starter-api/Dockerfile` | Multi-stage, non-root, health check |
 | Terraform | `infra/terraform/` | GCP Cloud Run + Cloud SQL + Redis + Secret Manager |
 | Deploy workflow | `.github/workflows/deploy.yml` | Manual Cloud Run deploy (staging / production) |
 
@@ -194,14 +194,14 @@ infra/terraform/
 
 | Layer | Tool | Location |
 |-------|------|----------|
-| Backend unit | Jest | `backend/src/**/*.spec.ts` |
-| Backend E2E | Supertest | `backend/test/` |
-| iOS unit | XCTest | `ios/StarterAppTests/` |
-| iOS E2E | Maestro | `ios/e2e/` |
-| Android unit | JUnit 5 + MockK | `android/app/src/test/` |
-| Android E2E | Detox | `android/e2e/` |
+| Backend unit | Jest | `apps/starter-api/src/**/*.spec.ts` |
+| Backend E2E | Supertest | `apps/starter-api/test/` |
+| iOS unit | XCTest | `apps/starter-ios/StarterAppTests/` |
+| iOS E2E | Maestro | `apps/starter-ios/e2e/` |
+| Android unit | JUnit 5 + MockK | `apps/starter-android/app/src/test/` |
+| Android E2E | Detox | `apps/starter-android/e2e/` |
 | Load tests | k6 | `load-tests/` |
-| Mutation tests | Stryker | `backend/stryker.conf.json` |
+| Mutation tests | Stryker | `apps/starter-api/stryker.conf.json` |
 
 **k6 load test profiles:**
 - `npm run smoke` — 1 VU, 30s (sanity check)
@@ -219,7 +219,7 @@ infra/terraform/
 - GitHub Actions deploy (manual `workflow_dispatch`, staging + production)
 - Dependabot (npm, Swift packages, Gradle, GitHub Actions — weekly)
 - Pre-commit hook: runs `npx sentinel schema:validate` before every commit
-- Postman collection with token-saving test scripts (`backend/postman/`)
+- Postman collection with token-saving test scripts (`apps/starter-api/postman/`)
 - Stryker mutation testing config (targeting auth + common)
 
 ---
@@ -233,7 +233,7 @@ infra/terraform/
 | Staging | StarterApp-Staging | staging | `https://api-staging.yourapp.com/api/v1` |
 | Production | StarterApp-Release | prod | `https://api.yourapp.com/api/v1` |
 
-Update URLs in `ios/Configs/*.xcconfig` and `android/app/build.gradle.kts`.
+Update URLs in `apps/starter-ios/Configs/*.xcconfig` and `apps/starter-android/app/build.gradle.kts`.
 
 ## Auth Environment Modes
 
@@ -311,7 +311,7 @@ Rules:
 
 ```
 onlystack/
-├── backend/
+├── apps/starter-api/
 │   ├── src/
 │   │   ├── auth/             # Magic link auth + social auth + JWT
 │   │   ├── user/             # User profile
@@ -327,7 +327,7 @@ onlystack/
 │   ├── postman/              # Postman collection + environment
 │   ├── Dockerfile
 │   └── stryker.conf.json
-├── ios/
+├── apps/starter-ios/
 │   ├── project.yml
 │   ├── Configs/              # xcconfig per env
 │   ├── fastlane/
@@ -340,7 +340,7 @@ onlystack/
 │       │   └── More/         # ProfileView, PaywallView
 │       ├── DesignSystem/     # Tokens + Components
 │       └── Core/             # APIClient, Network, Keychain, Biometric, Subscription
-├── android/
+├── apps/starter-android/
 │   ├── app/src/main/kotlin/com/onlystack/starterapp/
 │   │   ├── app/              # Application + MainActivity
 │   │   ├── features/auth/    # Auth flow
@@ -368,10 +368,10 @@ onlystack/
 
 1. **Run** `./scripts/rename.sh "YourApp" "com.yourcompany.yourapp"`
 2. **Colours**: update `AppTokens.Color.primary` (iOS) and `AppColors.Primary` (Android)
-3. **API URLs**: update `ios/Configs/*.xcconfig` and `android/app/build.gradle.kts`
+3. **API URLs**: update `apps/starter-ios/Configs/*.xcconfig` and `apps/starter-android/app/build.gradle.kts`
 4. **App Store / Play Store IDs**: search `YOUR_APP_ID` in `HardUpdateView.swift` / `ForceUpdateComponents.kt`
-5. **Email**: implement `backend/src/email/email.processor.ts` with your SMTP provider
-6. **Social auth**: follow TODO comments in `AppleSignInHelper.swift`, `GoogleSignInHelper.swift`, `GoogleSignInHelper.kt`, and `backend/src/auth/auth.service.ts`
+5. **Email**: implement `apps/starter-api/src/email/email.processor.ts` with your SMTP provider
+6. **Social auth**: follow TODO comments in `AppleSignInHelper.swift`, `GoogleSignInHelper.swift`, `GoogleSignInHelper.kt`, and `apps/starter-api/src/auth/auth.service.ts`
 7. **Subscriptions**: follow TODO comments in `SubscriptionManager.swift` / `SubscriptionManager.kt` for RevenueCat SDK
 8. **Firebase**: add `google-services.json` (Android) / `GoogleService-Info.plist` (iOS) and uncomment Crashlytics dependencies
 9. **Terraform**: fill in `infra/terraform/variables.tf` and `envs/staging.tfvars` with your GCP project

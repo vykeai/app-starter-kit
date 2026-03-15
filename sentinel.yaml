@@ -11,24 +11,24 @@ project: onlystack
 
 platforms:
   ios:
-    path: ./ios
+    path: ./apps/starter-ios
     language: swift
     output:
-      tokens:    ./ios/StarterApp/DesignSystem/Tokens/AppTokens.swift
-      strings:   ./ios/StarterApp/Resources/Strings.swift
-      flags:     ./ios/StarterApp/Core/FeatureFlags.swift
-      models:    ./ios/StarterApp/Core/Models/Models.swift
-      endpoints: ./ios/StarterApp/Core/Network/APIClientProtocol.swift
+      tokens:    ./apps/starter-ios/StarterApp/DesignSystem/Tokens/AppTokens.swift
+      strings:   ./apps/starter-ios/StarterApp/Resources/Strings.swift
+      flags:     ./apps/starter-ios/StarterApp/Core/FeatureFlags.swift
+      models:    ./apps/starter-ios/StarterApp/Core/Models/Models.swift
+      endpoints: ./apps/starter-ios/StarterApp/Core/Network/APIClientProtocol.swift
 
   android:
-    path: ./android
+    path: ./apps/starter-android
     language: kotlin
     output:
-      tokens:    ./android/app/src/main/kotlin/com/onlystack/starterapp/design/tokens/AppTokens.kt
-      strings:   ./android/app/src/main/res/values/strings-generated.xml
-      flags:     ./android/app/src/main/kotlin/com/onlystack/starterapp/core/FeatureFlags.kt
-      models:    ./android/app/src/main/kotlin/com/onlystack/starterapp/core/models/Models.kt
-      endpoints: ./android/app/src/main/kotlin/com/onlystack/starterapp/core/network/APIClient.kt
+      tokens:    ./apps/starter-android/app/src/main/kotlin/com/onlystack/starterapp/design/tokens/AppTokens.kt
+      strings:   ./apps/starter-android/app/src/main/res/values/strings-generated.xml
+      flags:     ./apps/starter-android/app/src/main/kotlin/com/onlystack/starterapp/core/FeatureFlags.kt
+      models:    ./apps/starter-android/app/src/main/kotlin/com/onlystack/starterapp/core/models/Models.kt
+      endpoints: ./apps/starter-android/app/src/main/kotlin/com/onlystack/starterapp/core/network/APIClient.kt
 
 catalog:
   output: catalog/
@@ -64,7 +64,7 @@ quality:
   commit-format: "^(feat|fix|chore|docs|refactor|test):"
   require-pushed: true
   include:
-    - "backend/src/**/*.{ts,tsx}"
+    - "apps/starter-api/src/**/*.{ts,tsx}"
   exclude:
     - "node_modules/**"
     - "dist/**"

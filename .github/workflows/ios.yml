@@ -18,7 +18,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/Library/Developer/Xcode/DerivedData
-          key: ${{ runner.os }}-xcode-${{ hashFiles('ios/project.yml') }}
+          key: ${{ runner.os }}-xcode-${{ hashFiles('apps/starter-ios/project.yml') }}
           restore-keys: |
             ${{ runner.os }}-xcode-
 
@@ -26,11 +26,11 @@ jobs:
         run: brew install xcodegen
 
       - name: Generate Xcode project
-        working-directory: ios
+        working-directory: apps/starter-ios
         run: xcodegen generate
 
       - name: Build (Dev Debug)
-        working-directory: ios
+        working-directory: apps/starter-ios
         run: |
           xcodebuild \
             -scheme StarterApp-Dev \
@@ -40,7 +40,7 @@ jobs:
             build | xcpretty || cat /tmp/xcodebuild.log
 
       - name: Test
-        working-directory: ios
+        working-directory: apps/starter-ios
         run: |
           xcodebuild \
             -scheme StarterApp-Dev \

@@ -12,10 +12,10 @@ There is no shared code layer. Each platform independently reimplements business
 
 ```
 sentinel/schemas/
-  ├── design/tokens.json          →  ios/.../DesignSystem/Tokens/AppTokens.swift  (generated)
-  │                               →  android/.../design/tokens/AppTokens.kt        (generated)
-  ├── platform/feature-flags.json →  ios/.../Core/FeatureFlags.swift               (generated)
-  │                               →  android/.../core/FeatureFlags.kt              (generated)
+  ├── design/tokens.json          →  apps/starter-ios/.../DesignSystem/Tokens/AppTokens.swift  (generated)
+  │                               →  apps/starter-android/.../design/tokens/AppTokens.kt        (generated)
+  ├── platform/feature-flags.json →  apps/starter-ios/.../Core/FeatureFlags.swift               (generated)
+  │                               →  apps/starter-android/.../core/FeatureFlags.kt              (generated)
   ├── platform/navigation.json    →  (validated — not generated)
   └── features/*.json             →  (validated — informs implementation)
 ```
@@ -28,7 +28,7 @@ Generated files must never be hand-edited. Edit the schema and run `npx sentinel
 
 ```
 onlystack/
-├── backend/                  # NestJS API
+├── apps/starter-api/                  # NestJS API
 │   ├── src/
 │   │   ├── auth/             # Magic link: request + verify + refresh + logout
 │   │   ├── user/             # GET /user/me, PATCH /user/me
@@ -37,7 +37,7 @@ onlystack/
 │   │   └── prisma/           # Global PrismaService
 │   ├── prisma/schema.prisma  # User, MagicLink, RefreshToken, UserPreferences, AppVersion
 │   └── docker-compose.yml    # postgres:15 + redis:7
-├── ios/
+├── apps/starter-ios/
 │   ├── project.yml           # XcodeGen — 3 schemes: Dev, Staging, Release
 │   ├── Configs/              # xcconfig per scheme (API_BASE_URL, ENVIRONMENT)
 │   └── StarterApp/
@@ -46,7 +46,7 @@ onlystack/
 │       ├── Features/Home/    # HomeView placeholder
 │       ├── DesignSystem/     # AppTokens.swift (generated), components
 │       └── Core/             # APIClient, NetworkMonitor, KeychainHelper, NFRs
-├── android/
+├── apps/starter-android/
 │   └── app/src/main/kotlin/com/onlystack/starterapp/
 │       ├── app/              # Application (Hilt), MainActivity
 │       ├── features/auth/    # AuthNavHost, AuthViewModel, screens
@@ -176,14 +176,14 @@ Never hand-edit generated files:
 
 | Generated file | Source schema |
 |---------------|---------------|
-| `ios/.../DesignSystem/Tokens/AppTokens.swift` | `sentinel/schemas/design/tokens.json` |
-| `ios/.../Core/FeatureFlags.swift` | `sentinel/schemas/platform/feature-flags.json` |
-| `ios/.../Core/Models/Models.swift` | `sentinel/schemas/models/*.json` |
-| `ios/.../Core/Network/APIClientProtocol.swift` | `sentinel/schemas/features/*.json` |
-| `android/.../design/tokens/AppTokens.kt` | `sentinel/schemas/design/tokens.json` |
-| `android/.../core/FeatureFlags.kt` | `sentinel/schemas/platform/feature-flags.json` |
-| `android/.../core/models/Models.kt` | `sentinel/schemas/models/*.json` |
-| `android/.../core/network/APIClient.kt` | `sentinel/schemas/features/*.json` |
+| `apps/starter-ios/.../DesignSystem/Tokens/AppTokens.swift` | `sentinel/schemas/design/tokens.json` |
+| `apps/starter-ios/.../Core/FeatureFlags.swift` | `sentinel/schemas/platform/feature-flags.json` |
+| `apps/starter-ios/.../Core/Models/Models.swift` | `sentinel/schemas/models/*.json` |
+| `apps/starter-ios/.../Core/Network/APIClientProtocol.swift` | `sentinel/schemas/features/*.json` |
+| `apps/starter-android/.../design/tokens/AppTokens.kt` | `sentinel/schemas/design/tokens.json` |
+| `apps/starter-android/.../core/FeatureFlags.kt` | `sentinel/schemas/platform/feature-flags.json` |
+| `apps/starter-android/.../core/models/Models.kt` | `sentinel/schemas/models/*.json` |
+| `apps/starter-android/.../core/network/APIClient.kt` | `sentinel/schemas/features/*.json` |
 
 Validate schemas before every commit:
 
@@ -216,8 +216,8 @@ Three environments exist on every platform:
 | Staging | StarterApp-Staging | stagingDebug | `https://api-staging.yourapp.com/api/v1` |
 | Production | StarterApp-Release | prodRelease | `https://api.yourapp.com/api/v1` |
 
-iOS API URLs are set in `ios/Configs/Dev.xcconfig`, `Staging.xcconfig`, `Release.xcconfig`.
-Android API URLs are set via `buildConfigField` in `android/app/build.gradle.kts`.
+iOS API URLs are set in `apps/starter-ios/Configs/Dev.xcconfig`, `Staging.xcconfig`, `Release.xcconfig`.
+Android API URLs are set via `buildConfigField` in `apps/starter-android/app/build.gradle.kts`.
 
 ---
 

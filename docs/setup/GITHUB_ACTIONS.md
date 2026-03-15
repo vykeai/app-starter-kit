@@ -87,7 +87,7 @@ None for simulator builds. For TestFlight distribution add:
 - uses: actions/cache@v4
   with:
     path: ~/Library/Developer/Xcode/DerivedData
-    key: ${{ runner.os }}-xcode-${{ hashFiles('ios/project.yml') }}
+    key: ${{ runner.os }}-xcode-${{ hashFiles('apps/starter-ios/project.yml') }}
 ```
 
 ---
@@ -117,7 +117,7 @@ None for debug builds. For Play Store distribution add:
     path: |
       ~/.gradle/caches
       ~/.gradle/wrapper
-    key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle.kts', 'android/gradle/libs.versions.toml') }}
+    key: ${{ runner.os }}-gradle-${{ hashFiles('apps/starter-android/**/*.gradle.kts', 'apps/starter-android/gradle/libs.versions.toml') }}
 ```
 
 ---

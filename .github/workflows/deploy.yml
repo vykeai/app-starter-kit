@@ -29,21 +29,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
-          cache-dependency-path: backend/pnpm-lock.yaml
+          cache: 'npm'
+          cache-dependency-path: apps/starter-api/package-lock.json
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
       - name: Deploy to Railway
-        working-directory: backend
+        working-directory: apps/starter-api
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
@@ -52,7 +48,7 @@ jobs:
 
       - name: Run migrations
         if: ${{ github.event.inputs.run_migrations == 'true' }}
-        working-directory: backend
+        working-directory: apps/starter-api
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |

@@ -2,8 +2,8 @@
 
 Source of truth currently lives in:
 
-- iOS: `ios/StarterApp/Core/Network/`
-- Android: `android/app/src/main/kotlin/com/onlystack/starterapp/core/network/`
+- iOS: `apps/starter-ios/StarterApp/Core/Network/`
+- Android: `apps/starter-android/app/src/main/kotlin/com/onlystack/starterapp/core/network/`
 
 Responsibilities:
 

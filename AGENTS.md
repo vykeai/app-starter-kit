@@ -34,7 +34,7 @@ Do not keep proof or review screenshots in `/tmp`.
 
 ```
 onlystack/
-├── backend/                  # NestJS API
+├── apps/starter-api/                  # NestJS API
 │   ├── src/
 │   │   ├── auth/             # Magic link: request + verify + refresh + logout
 │   │   ├── user/             # GET /user/me, PATCH /user/me
@@ -43,7 +43,7 @@ onlystack/
 │   │   └── prisma/           # Global PrismaService
 │   ├── prisma/schema.prisma  # User, MagicLink, RefreshToken, UserPreferences, AppVersion
 │   └── docker-compose.yml    # postgres:15 + redis:7
-├── ios/
+├── apps/starter-ios/
 │   ├── project.yml           # XcodeGen — 3 schemes: Dev, Staging, Release
 │   ├── Configs/              # xcconfig per scheme (API_BASE_URL, ENVIRONMENT)
 │   └── StarterApp/
@@ -52,7 +52,7 @@ onlystack/
 │       ├── Features/Home/    # HomeView placeholder
 │       ├── DesignSystem/     # AppTokens.swift, AppButton, AppCard, AppTextField, etc.
 │       └── Core/             # APIClient, NetworkMonitor, KeychainHelper, NFRs
-├── android/
+├── apps/starter-android/
 │   └── app/src/main/kotlin/com/onlystack/starterapp/
 │       ├── app/              # StarterApp (Hilt), MainActivity
 │       ├── features/auth/    # AuthNavHost, AuthViewModel, screens (Welcome → Email → Code)
@@ -71,9 +71,9 @@ onlystack/
 
 | Platform | Directory | In code |
 |----------|-----------|---------|
-| Backend API | `backend/` | API |
-| iOS | `ios/` | iOS |
-| Android | `android/` | Android |
+| Backend API | `apps/starter-api/` | API |
+| iOS | `apps/starter-ios/` | iOS |
+| Android | `apps/starter-android/` | Android |
 
 ---
 
@@ -244,19 +244,19 @@ cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
 
 | File | Purpose |
 |------|---------|
-| `backend/prisma/schema.prisma` | DB schema — User, MagicLink, RefreshToken, UserPreferences, AppVersion |
-| `backend/src/auth/auth.service.ts` | Magic link logic |
-| `backend/.env.example` | All required environment variables |
-| `ios/project.yml` | XcodeGen project definition |
-| `ios/Configs/*.xcconfig` | Per-environment config (API URL, bundle ID) |
-| `ios/StarterApp/Core/NFR/` | Force update, offline banner, review prompt |
-| `android/gradle/libs.versions.toml` | All Android dependency versions |
-| `android/app/build.gradle.kts` | Flavour definitions |
-| `android/app/src/main/kotlin/.../nfr/` | Force update, offline banner, review prompt |
+| `apps/starter-api/prisma/schema.prisma` | DB schema — User, MagicLink, RefreshToken, UserPreferences, AppVersion |
+| `apps/starter-api/src/auth/auth.service.ts` | Magic link logic |
+| `apps/starter-api/.env.example` | All required environment variables |
+| `apps/starter-ios/project.yml` | XcodeGen project definition |
+| `apps/starter-ios/Configs/*.xcconfig` | Per-environment config (API URL, bundle ID) |
+| `apps/starter-ios/StarterApp/Core/NFR/` | Force update, offline banner, review prompt |
+| `apps/starter-android/gradle/libs.versions.toml` | All Android dependency versions |
+| `apps/starter-android/app/build.gradle.kts` | Flavour definitions |
+| `apps/starter-android/app/src/main/kotlin/.../nfr/` | Force update, offline banner, review prompt |
 | `sentinel/schemas/design/tokens.json` | Design token source of truth |
 | `docs/setup/GITHUB_ACTIONS.md` | CI setup guide |
-| `ios/StarterApp/Core/Sync/` | Sync engine protocols, engine, queue, metrics |
-| `android/app/src/main/kotlin/.../core/sync/` | Sync engine, worker, DI module |
+| `apps/starter-ios/StarterApp/Core/Sync/` | Sync engine protocols, engine, queue, metrics |
+| `apps/starter-android/app/src/main/kotlin/.../core/sync/` | Sync engine, worker, DI module |
 | `docs/sync/SYNC_CONTRACT.md` | HTTP push/pull API contract |
 
 ---

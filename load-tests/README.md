@@ -15,7 +15,7 @@ brew install k6
 All tests default to `http://localhost:3000`. Start the backend before running:
 
 ```bash
-cd backend && npm run start:dev
+cd apps/starter-api && npm run start:dev
 ```
 
 ### Smoke test — 1 VU, 30 seconds

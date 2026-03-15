@@ -1,4 +1,4 @@
-# StarterApp — Local development stack
+# Onlystack / StarterApp — Local development stack
 # Usage: docker-compose up -d
 # Stop:  docker-compose down
 # Reset: docker-compose down -v  (deletes all data)
@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: appstarterkit_dev
+      POSTGRES_DB: starterapp_dev
     ports:
       - "5432:5432"
     volumes:

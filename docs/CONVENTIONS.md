@@ -10,13 +10,13 @@ Shared conventions across all TheOnlyStack projects. Consistency here means Clau
 
 | Platform | Root dir | Language |
 |----------|----------|---------|
-| iOS/iPadOS | `apple/` | Swift |
-| Android | `google/` | Kotlin |
-| Backend API | `backend/` | TypeScript |
-| Web Admin | `web-admin/` | TypeScript |
-| Web Public | `web-public/` | TypeScript |
+| Starter iOS app | `apps/starter-ios/` | Swift |
+| Starter Android app | `apps/starter-android/` | Kotlin |
+| Starter API | `apps/starter-api/` | TypeScript |
+| Shared libraries | `libs/` | Mixed |
+| Docs and contracts | `docs/`, `sentinel/` | Mixed |
 
-Never use `ios/`, `android/`, `server/`, `api/`, or `website/` as directory names.
+Prefer `apps/<product-surface>` and `libs/<shared-surface>` at repo root. Avoid ad hoc roots like `server/`, `api/`, or `website/`.
 
 ### Code
 
@@ -75,7 +75,7 @@ Never commit: `.env` files, secrets, `node_modules`, `*.xcuserstate`, `*.pbxuser
 ### Module Structure
 
 ```
-backend/src/<domain>/
+apps/starter-api/src/<domain>/
 ├── <domain>.module.ts
 ├── <domain>.service.ts
 ├── <domain>.controller.ts
@@ -187,8 +187,8 @@ Everything else is a bug. Fix immediately.
 - Every `*.service.ts` has a `*.service.spec.ts`
 - Unit tests mock Prisma — no real DB in unit tests
 - E2E tests use real test PostgreSQL (`docker-compose` in CI)
-- Run unit tests: `cd backend && pnpm test --config jest.config.js`
-- Run E2E: `cd backend && pnpm test:e2e`
+- Run unit tests: `cd apps/starter-api && pnpm test --config jest.config.js`
+- Run E2E: `cd apps/starter-api && pnpm test:e2e`
 
 ### iOS
 

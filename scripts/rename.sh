@@ -148,9 +148,9 @@ replace_in_files "$OLD_SWAGGER_TITLE" "$NEW_PASCAL API"
 echo "[2/5] Renaming iOS directories..."
 
 ios_dirs=(
-  "ios/${OLD_NAME}Tests:ios/${NEW_PASCAL}Tests"
-  "ios/${OLD_NAME}UITests:ios/${NEW_PASCAL}UITests"
-  "ios/${OLD_NAME}:ios/${NEW_PASCAL}"
+  "apps/starter-ios/${OLD_NAME}Tests:apps/starter-ios/${NEW_PASCAL}Tests"
+  "apps/starter-ios/${OLD_NAME}UITests:apps/starter-ios/${NEW_PASCAL}UITests"
+  "apps/starter-ios/${OLD_NAME}:apps/starter-ios/${NEW_PASCAL}"
 )
 
 for entry in "${ios_dirs[@]}"; do
@@ -163,9 +163,9 @@ for entry in "${ios_dirs[@]}"; do
 done
 
 # Rename xcodeproj directory
-if [[ -d "ios/${OLD_NAME}.xcodeproj" && "${OLD_NAME}" != "${NEW_PASCAL}" ]]; then
-  mv "ios/${OLD_NAME}.xcodeproj" "ios/${NEW_PASCAL}.xcodeproj"
-  echo "  ios/${OLD_NAME}.xcodeproj → ios/${NEW_PASCAL}.xcodeproj"
+if [[ -d "apps/starter-ios/${OLD_NAME}.xcodeproj" && "${OLD_NAME}" != "${NEW_PASCAL}" ]]; then
+  mv "apps/starter-ios/${OLD_NAME}.xcodeproj" "apps/starter-ios/${NEW_PASCAL}.xcodeproj"
+  echo "  apps/starter-ios/${OLD_NAME}.xcodeproj → apps/starter-ios/${NEW_PASCAL}.xcodeproj"
 fi
 
 # Update project.yml name field (was already content-replaced above, but double-check)
@@ -176,9 +176,9 @@ fi
 echo "[3/5] Moving Android package directories..."
 
 android_src_roots=(
-  "android/app/src/main/kotlin"
-  "android/app/src/test/java"
-  "android/app/src/androidTest/java"
+  "apps/starter-android/app/src/main/kotlin"
+  "apps/starter-android/app/src/test/java"
+  "apps/starter-android/app/src/androidTest/java"
 )
 
 for src_root in "${android_src_roots[@]}"; do
@@ -197,18 +197,18 @@ done
 echo "[4/5] Regenerating iOS xcodeproj..."
 
 if command -v xcodegen &>/dev/null; then
-  (cd ios && xcodegen generate --quiet)
+  (cd apps/starter-ios && xcodegen generate --quiet)
   echo "  xcodeproj regenerated"
 else
   echo "  xcodegen not found — install with: brew install xcodegen"
-  echo "  Then run: cd ios && xcodegen generate"
+  echo "  Then run: cd apps/starter-ios && xcodegen generate"
 fi
 
 # ── Step 5: Clean up any stale Gradle caches ─────────────────────────────────
 
 echo "[5/5] Cleaning Android build cache..."
-if [[ -f "android/gradlew" ]]; then
-  (cd android && ./gradlew clean --quiet 2>/dev/null || true)
+if [[ -f "apps/starter-android/gradlew" ]]; then
+  (cd apps/starter-android && ./gradlew clean --quiet 2>/dev/null || true)
   echo "  Gradle clean done"
 fi
 
@@ -218,11 +218,11 @@ echo ""
 echo "Rename complete."
 echo ""
 echo "Next steps:"
-echo "  1. Open ios/${NEW_PASCAL}.xcodeproj in Xcode — verify targets build"
+echo "  1. Open apps/starter-ios/${NEW_PASCAL}.xcodeproj in Xcode — verify targets build"
 echo "  2. Update AppTokens.swift / AppTokens.kt with your brand colours"
 echo "  3. Replace YOUR_APP_ID in HardUpdateView.swift / ForceUpdateComponents.kt"
 echo "     with your real App Store / Play Store IDs"
-echo "  4. Implement email sending in backend/src/email/email.processor.ts"
-echo "  5. Update API URLs in ios/Configs/*.xcconfig and android/app/build.gradle.kts"
+echo "  4. Implement email sending in apps/starter-api/src/email/email.processor.ts"
+echo "  5. Update API URLs in apps/starter-ios/Configs/*.xcconfig and apps/starter-android/app/build.gradle.kts"
 echo "  6. git add -A && git commit -m 'chore: rename StarterApp → ${NEW_PASCAL}'"
 echo ""

@@ -8,7 +8,7 @@ Add these in your Railway project dashboard:
 
 | Service | Type | Notes |
 |---------|------|-------|
-| **api** | GitHub repo deploy | Root dir: `backend/` |
+| **api** | GitHub repo deploy | Root dir: `apps/starter-api/` |
 | **PostgreSQL** | Plugin | Auto-wires `DATABASE_URL` |
 | **Redis** | Plugin | Auto-wires `REDIS_URL` |
 | **Meilisearch** | Docker image | `getmeili/meilisearch:v1.5` |

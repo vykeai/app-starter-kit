@@ -2,9 +2,9 @@
 
 Source of truth currently lives in:
 
-- backend: `backend/src/auth/`
-- iOS: `ios/StarterApp/Features/Auth/`
-- Android: `android/app/src/main/kotlin/com/onlystack/starterapp/features/auth/`
+- backend: `apps/starter-api/src/auth/`
+- iOS: `apps/starter-ios/StarterApp/Features/Auth/`
+- Android: `apps/starter-android/app/src/main/kotlin/com/onlystack/starterapp/features/auth/`
 
 Responsibilities:
 

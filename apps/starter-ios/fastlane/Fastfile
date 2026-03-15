@@ -1,0 +1,139 @@
+# Fastfile — StarterApp iOS
+#
+# Prerequisites before any lane will work:
+#   1. Install dependencies:       cd apps/starter-ios && bundle install
+#   2. Fill in Appfile TODOs:      apple_id, team_id, app_identifier
+#   3. Fill in Matchfile TODOs:    git_url for your private certs repo
+#   4. (beta/release only) Create the app in App Store Connect first.
+#
+# Run a lane:  cd apps/starter-ios && bundle exec fastlane <lane>
+
+default_platform :ios
+
+platform :ios do
+
+  # ---------------------------------------------------------------------------
+  # test — Run the unit + UI test suite locally or in CI.
+  #
+  # Requirements:
+  #   • Xcode with the StarterApp-Dev scheme configured (done via xcodegen).
+  #   • A booted simulator, or let run_tests pick one automatically.
+  # ---------------------------------------------------------------------------
+  lane :test do
+    run_tests(
+      scheme:        "StarterApp-Dev",
+      device:        "iPhone 15 Pro",
+      clean:         true,
+      code_coverage: true,
+      output_directory: "fastlane/test_output"
+    )
+  end
+
+  # ---------------------------------------------------------------------------
+  # sync_certs — Download/create development + App Store certificates and
+  # provisioning profiles via Match (cert + profile management).
+  #
+  # Requirements:
+  #   • Matchfile git_url points to an initialised private repo.
+  #   • You have been granted access to the certs repo.
+  # ---------------------------------------------------------------------------
+  lane :sync_certs do
+    # Sync development certs (used for running on physical devices).
+    match(type: "development", readonly: is_ci)
+
+    # Sync App Store distribution certs (used for TestFlight + App Store uploads).
+    match(type: "appstore", readonly: is_ci)
+  end
+
+  # ---------------------------------------------------------------------------
+  # beta — Build and upload to TestFlight.
+  #
+  # Requirements:
+  #   • Matchfile and Appfile TODOs must be filled in.
+  #   • The app must exist in App Store Connect.
+  #   • CI environment variable MATCH_PASSWORD (or local prompt) for decryption.
+  # ---------------------------------------------------------------------------
+  lane :beta do
+    # Ensure we're starting clean.
+    ensure_git_status_clean
+
+    # Bump the build number using the current CI build number, or increment it
+    # locally if not running in CI.
+    increment_build_number(
+      build_number: ENV["BUILD_NUMBER"] || latest_testflight_build_number + 1,
+      xcodeproj:    "StarterApp.xcodeproj"
+    )
+
+    # Fetch App Store signing identity.
+    # TODO: Add `git_basic_authorization` env var if your certs repo is private.
+    match(type: "appstore", readonly: is_ci)
+
+    # Build for distribution.
+    build_app(
+      scheme:               "StarterApp-Release",
+      configuration:        "Release-Release",
+      export_method:        "app-store",
+      include_bitcode:      false,
+      output_directory:     "fastlane/builds",
+      output_name:          "StarterApp.ipa"
+    )
+
+    # Upload to TestFlight (no immediate external release).
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+
+    # Commit the bumped build number so the repo stays in sync.
+    commit_version_bump(
+      message:    "chore: bump build number for TestFlight [skip ci]",
+      xcodeproj:  "StarterApp.xcodeproj"
+    )
+  end
+
+  # ---------------------------------------------------------------------------
+  # release — Build and submit to the App Store for review.
+  #
+  # Requirements:
+  #   • All beta requirements, plus:
+  #   • App Store metadata (screenshots, description) already uploaded, OR
+  #     set `skip_metadata: true` / `skip_screenshots: true` as needed.
+  # ---------------------------------------------------------------------------
+  lane :release do
+    # Ensure we're starting clean.
+    ensure_git_status_clean
+
+    # Bump the build number.
+    increment_build_number(
+      build_number: ENV["BUILD_NUMBER"] || latest_testflight_build_number + 1,
+      xcodeproj:    "StarterApp.xcodeproj"
+    )
+
+    # Fetch App Store signing identity.
+    match(type: "appstore", readonly: is_ci)
+
+    # Build for distribution.
+    build_app(
+      scheme:               "StarterApp-Release",
+      configuration:        "Release-Release",
+      export_method:        "app-store",
+      include_bitcode:      false,
+      output_directory:     "fastlane/builds",
+      output_name:          "StarterApp.ipa"
+    )
+
+    # Upload to App Store and submit for review.
+    # TODO: Populate deliver metadata in fastlane/metadata/ before first release.
+    upload_to_app_store(
+      force:              true,   # Skip HTML verification prompt
+      submit_for_review:  true,
+      automatic_release:  false   # Set to true to auto-release after approval
+    )
+
+    # Commit the bumped build number.
+    commit_version_bump(
+      message:    "chore: bump build number for App Store release [skip ci]",
+      xcodeproj:  "StarterApp.xcodeproj"
+    )
+  end
+
+end

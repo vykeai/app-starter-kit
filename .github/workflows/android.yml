@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: android
+        working-directory: apps/starter-android
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle.kts', 'android/gradle/libs.versions.toml') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('apps/starter-android/**/*.gradle.kts', 'apps/starter-android/gradle/libs.versions.toml') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
