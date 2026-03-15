@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		081436CC4F1841112ECF4C5D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4F316D8F1EE68C3981FCC6 /* NotificationService.swift */; };
 		094B0D08B3D3703277B23B0E /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C70ECD48796FCCA875BF21 /* NetworkMonitor.swift */; };
 		0B76DFB6A5F8660136073552 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B1591E7B72A16BB3035D0C0 /* LoadingView.swift */; };
 		0BCE804D51D67B59C136B67D /* CodeEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D0310EA4E24746FE14A012 /* CodeEntryView.swift */; };
 		0D66F07A56F69BF7C5E4FEB9 /* SocialAuthModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB580297F109F044C83E3E6 /* SocialAuthModels.swift */; };
 		0F2D7A03D2A1FE252E685A1C /* AppleSignInHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B1D7822425F83C1E51113B /* AppleSignInHelper.swift */; };
+		11665959B9288B48495AD7A4 /* NotificationPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3930736DF5D12B0FE7A4595B /* NotificationPreferences.swift */; };
 		198C6D71008A996849F67676 /* ConflictResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDB0F8916DF6A6FC96F037F /* ConflictResolver.swift */; };
 		214AB7F7C3243EFE6A227557 /* SignInWithAppleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B922150F7D78FD91FDE8BB8 /* SignInWithAppleButton.swift */; };
 		2613239F9DCE964CED3FF499 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BDFA704F671213FA685766 /* AppUser.swift */; };
@@ -39,6 +41,7 @@
 		87A9A1D13B33A77CA8007AB7 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE0FA988CFD7DC08A4BD2F2 /* ProfileView.swift */; };
 		8A0C041487A7D8DF82F9907A /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2ED6A10CE98E5B4F6925D /* APIClient.swift */; };
 		8AE4C06434D04BCA31173FD0 /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBB71CDA3692A603F78BB23 /* ReviewManager.swift */; };
+		8E76ECC625FE3A7097A11943 /* PushRegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB84572875B1D96456080450 /* PushRegistrationManager.swift */; };
 		8F1078EAA673062FF4D75292 /* SyncableRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E380CEBBBE3405FA17170A5F /* SyncableRecord.swift */; };
 		A128E5F7D314A13ED18DD3B1 /* BiometricHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8374DC7878F224B21434A478 /* BiometricHelper.swift */; };
 		A799AB583C820980BE2EA31F /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FC847413EB72C1906C74B2 /* KeychainHelper.swift */; };
@@ -98,6 +101,7 @@
 		2FC57598AEA8E4729C963565 /* SyncModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncModels.swift; sourceTree = "<group>"; };
 		2FE8EA7D6739EF6F343D7F7B /* AuthServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthServiceTests.swift; sourceTree = "<group>"; };
 		36BDFA704F671213FA685766 /* AppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = "<group>"; };
+		3930736DF5D12B0FE7A4595B /* NotificationPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferences.swift; sourceTree = "<group>"; };
 		44AAC60C56E77F607A9879D5 /* auth-request.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "auth-request.json"; sourceTree = "<group>"; };
 		45069CFF144450C2D80AFA52 /* AppStarterKit.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AppStarterKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4751C167A9F6D1E2E0EA03A9 /* BiometricHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricHelperTests.swift; sourceTree = "<group>"; };
@@ -116,6 +120,7 @@
 		8374DC7878F224B21434A478 /* BiometricHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricHelper.swift; sourceTree = "<group>"; };
 		881D54DECD3BC5A105A100A1 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		8AD3A45044706C75BDC585C4 /* SignInWithGoogleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithGoogleButton.swift; sourceTree = "<group>"; };
+		8D4F316D8F1EE68C3981FCC6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		96F133F7486662351442F5B7 /* SyncState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncState.swift; sourceTree = "<group>"; };
 		9B1591E7B72A16BB3035D0C0 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		9CA85E493D92CD481565427E /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -130,6 +135,7 @@
 		B926B70FC158BDEABF4CF24B /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		C71D0653549D9CE2164AAD99 /* HapticsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsHelper.swift; sourceTree = "<group>"; };
 		C95CB044C3D75B324F9CF3BA /* StarterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarterApp.swift; sourceTree = "<group>"; };
+		CB84572875B1D96456080450 /* PushRegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushRegistrationManager.swift; sourceTree = "<group>"; };
 		D44C16C0129EA3F4B1A7CF1D /* AppTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTokens.swift; sourceTree = "<group>"; };
 		D92B4A2F88E896A9C4E46F75 /* AppStarterKitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AppStarterKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA5FA9EE8B6C4CDA52F01D78 /* SoftUpdateBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftUpdateBanner.swift; sourceTree = "<group>"; };
@@ -182,6 +188,7 @@
 				443C056E6E8925BB50736256 /* Models */,
 				8835DE994137620A52850FD8 /* Network */,
 				3BB0AF6BEFAF16DAA5CB1D35 /* NFR */,
+				937BD6DC0C2CAF278E47E579 /* Notifications */,
 				A85361048712E8A3304A8A97 /* Subscription */,
 				6B22C1EF8DA9D6DB77D5C467 /* Sync */,
 				C004B4C22F03AF995BD10D2F /* Utilities */,
@@ -331,6 +338,16 @@
 				56C70ECD48796FCCA875BF21 /* NetworkMonitor.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		937BD6DC0C2CAF278E47E579 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				3930736DF5D12B0FE7A4595B /* NotificationPreferences.swift */,
+				8D4F316D8F1EE68C3981FCC6 /* NotificationService.swift */,
+				CB84572875B1D96456080450 /* PushRegistrationManager.swift */,
+			);
+			path = Notifications;
 			sourceTree = "<group>";
 		};
 		93E2246C58EA9AF101BC6971 /* Auth */ = {
@@ -563,9 +580,12 @@
 				0B76DFB6A5F8660136073552 /* LoadingView.swift in Sources */,
 				6F388C9DDF9C10C44473297B /* MainTabView.swift in Sources */,
 				094B0D08B3D3703277B23B0E /* NetworkMonitor.swift in Sources */,
+				11665959B9288B48495AD7A4 /* NotificationPreferences.swift in Sources */,
+				081436CC4F1841112ECF4C5D /* NotificationService.swift in Sources */,
 				BA27F4B76E8BF9BC87442076 /* OfflineBanner.swift in Sources */,
 				DF5C4E681CE04DBB367E9FF3 /* PaywallView.swift in Sources */,
 				87A9A1D13B33A77CA8007AB7 /* ProfileView.swift in Sources */,
+				8E76ECC625FE3A7097A11943 /* PushRegistrationManager.swift in Sources */,
 				8AE4C06434D04BCA31173FD0 /* ReviewManager.swift in Sources */,
 				F6ADAB31B2C2F166DE02B5EA /* RootView.swift in Sources */,
 				5B23792D87DCF29356B106F4 /* ShimmerView.swift in Sources */,

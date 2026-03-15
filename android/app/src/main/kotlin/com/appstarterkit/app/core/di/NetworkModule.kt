@@ -1,6 +1,7 @@
 package com.appstarterkit.app.core.di
 
 import com.appstarterkit.app.core.network.ApiClient
+import com.appstarterkit.app.core.notifications.NotificationApiService
 import com.appstarterkit.app.features.auth.AuthApiService
 import com.appstarterkit.app.features.auth.AuthRepository
 import com.appstarterkit.app.features.auth.AuthRepositoryImpl
@@ -23,6 +24,11 @@ abstract class NetworkModule {
         @Provides
         @Singleton
         fun provideAuthApiService(apiClient: ApiClient): AuthApiService =
+            apiClient.create()
+
+        @Provides
+        @Singleton
+        fun provideNotificationApiService(apiClient: ApiClient): NotificationApiService =
             apiClient.create()
     }
 }
