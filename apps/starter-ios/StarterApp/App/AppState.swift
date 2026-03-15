@@ -175,6 +175,61 @@ class AppState {
                   "renewsAt": "2026-04-14T12:00:00Z"
                 }
                 """.data(using: .utf8) ?? Data()
+            case ("POST", let route) where route.hasSuffix("/media/uploads/prepare"):
+                statusCode = 201
+                body = """
+                {
+                  "assetId": "asset_fixture_avatar",
+                  "storageKey": "fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "uploadUrl": "https://example.r2.cloudflarestorage.com/onlystack-media-dev/fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "publicUrl": "https://media.onlystack.dev/fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "uploadMethod": "PUT",
+                  "headers": {
+                    "Content-Type": "image/webp"
+                  },
+                  "expiresInSeconds": 900
+                }
+                """.data(using: .utf8) ?? Data()
+            case ("POST", let route) where route.hasSuffix("/media/uploads/complete"):
+                statusCode = 201
+                body = """
+                {
+                  "id": "asset_fixture_avatar",
+                  "ownerId": "fixture-user",
+                  "kind": "avatar",
+                  "status": "ready",
+                  "storageKey": "fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "publicUrl": "https://media.onlystack.dev/fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "mimeType": "image/webp",
+                  "fileName": "profile-photo.webp",
+                  "sizeBytes": 262144,
+                  "width": 1024,
+                  "height": 1024,
+                  "visibility": "public",
+                  "createdAt": "2026-03-15T00:00:00.000Z"
+                }
+                """.data(using: .utf8) ?? Data()
+            case ("GET", let route) where route.hasSuffix("/media/assets"):
+                statusCode = 200
+                body = """
+                [
+                  {
+                    "id": "asset_fixture_avatar",
+                    "ownerId": "fixture-user",
+                    "kind": "avatar",
+                    "status": "ready",
+                    "storageKey": "fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                    "publicUrl": "https://media.onlystack.dev/fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                    "mimeType": "image/webp",
+                    "fileName": "profile-photo.webp",
+                    "sizeBytes": 262144,
+                    "width": 1024,
+                    "height": 1024,
+                    "visibility": "public",
+                    "createdAt": "2026-03-15T00:00:00.000Z"
+                  }
+                ]
+                """.data(using: .utf8) ?? Data()
             case ("GET", let route) where route.hasSuffix("/health"):
                 statusCode = 200
                 body = #"{"status":"ok","timestamp":"2026-03-15T00:00:00.000Z"}"#.data(using: .utf8) ?? Data()

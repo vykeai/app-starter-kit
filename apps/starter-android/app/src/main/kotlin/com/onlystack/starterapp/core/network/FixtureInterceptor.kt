@@ -135,6 +135,61 @@ class FixtureInterceptor @Inject constructor() : Interceptor {
                 }
                 """.trimIndent()
             }
+            method == "POST" && path.endsWith("/media/uploads/prepare") -> {
+                201 to """
+                {
+                  "assetId": "asset_fixture_avatar",
+                  "storageKey": "fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "uploadUrl": "https://example.r2.cloudflarestorage.com/onlystack-media-dev/fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "publicUrl": "https://media.onlystack.dev/fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "uploadMethod": "PUT",
+                  "headers": {
+                    "Content-Type": "image/webp"
+                  },
+                  "expiresInSeconds": 900
+                }
+                """.trimIndent()
+            }
+            method == "POST" && path.endsWith("/media/uploads/complete") -> {
+                201 to """
+                {
+                  "id": "asset_fixture_avatar",
+                  "ownerId": "fixture-user",
+                  "kind": "avatar",
+                  "status": "ready",
+                  "storageKey": "fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "publicUrl": "https://media.onlystack.dev/fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                  "mimeType": "image/webp",
+                  "fileName": "profile-photo.webp",
+                  "sizeBytes": 262144,
+                  "width": 1024,
+                  "height": 1024,
+                  "visibility": "public",
+                  "createdAt": "2026-03-15T00:00:00.000Z"
+                }
+                """.trimIndent()
+            }
+            method == "GET" && path.endsWith("/media/assets") -> {
+                200 to """
+                [
+                  {
+                    "id": "asset_fixture_avatar",
+                    "ownerId": "fixture-user",
+                    "kind": "avatar",
+                    "status": "ready",
+                    "storageKey": "fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                    "publicUrl": "https://media.onlystack.dev/fixture-user/avatar/asset_fixture_avatar/profile-photo.webp",
+                    "mimeType": "image/webp",
+                    "fileName": "profile-photo.webp",
+                    "sizeBytes": 262144,
+                    "width": 1024,
+                    "height": 1024,
+                    "visibility": "public",
+                    "createdAt": "2026-03-15T00:00:00.000Z"
+                  }
+                ]
+                """.trimIndent()
+            }
             method == "GET" && path.endsWith("/health") -> {
                 200 to """{"status":"ok","timestamp":"2026-03-15T00:00:00.000Z"}"""
             }

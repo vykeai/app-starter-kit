@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -218,6 +219,35 @@ fun ProfileScreen(
                             style = MaterialTheme.typography.bodySmall,
                             color = AppColors.TextSecondary,
                         )
+                    }
+                }
+            }
+
+            item {
+                Card {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text("Media", style = MaterialTheme.typography.titleMedium)
+                        Button(
+                            onClick = viewModel::simulateAvatarUpload,
+                            enabled = !uiState.isUploadingMedia,
+                        ) {
+                            Text(if (uiState.isUploadingMedia) "Uploading avatar…" else "Simulate avatar upload")
+                        }
+                        uiState.mediaAssets.forEach { asset ->
+                            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                Text(asset.fileName ?: asset.kind)
+                                Text(
+                                    asset.publicUrl ?: asset.storageKey,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = AppColors.TextSecondary,
+                                )
+                            }
+                        }
                     }
                 }
             }

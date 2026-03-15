@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.onlystack.starterapp.core.billing.BillingRepository
 import com.onlystack.starterapp.core.billing.EntitlementState
+import com.onlystack.starterapp.core.media.MediaAsset
+import com.onlystack.starterapp.core.media.MediaRepository
 import com.onlystack.starterapp.core.notifications.NotificationPreferences
 import com.onlystack.starterapp.core.notifications.NotificationRepository
 import com.onlystack.starterapp.core.user.UserProfile
@@ -20,8 +22,10 @@ data class ProfileUiState(
     val user: UserProfile? = null,
     val notifications: NotificationPreferences? = null,
     val entitlement: EntitlementState? = null,
+    val mediaAssets: List<MediaAsset> = emptyList(),
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
+    val isUploadingMedia: Boolean = false,
     val errorMessage: String? = null,
 )
 
@@ -30,6 +34,7 @@ class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val notificationRepository: NotificationRepository,
     private val billingRepository: BillingRepository,
+    private val mediaRepository: MediaRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
@@ -46,12 +51,14 @@ class ProfileViewModel @Inject constructor(
             val userResult = userRepository.fetchMe()
             val notificationsResult = notificationRepository.fetchPreferences()
             val entitlementResult = billingRepository.fetchEntitlements()
+            val mediaResult = mediaRepository.listAssets()
 
             _uiState.update {
                 it.copy(
                     user = userResult.getOrNull() ?: it.user,
                     notifications = notificationsResult.getOrNull() ?: it.notifications,
                     entitlement = entitlementResult.getOrNull() ?: it.entitlement,
+                    mediaAssets = mediaResult.getOrNull() ?: it.mediaAssets,
                     isLoading = false,
                     errorMessage = userResult.exceptionOrNull()?.message
                         ?: notificationsResult.exceptionOrNull()?.message
@@ -80,6 +87,35 @@ class ProfileViewModel @Inject constructor(
 
     fun setEmailEnabled(enabled: Boolean) {
         updateNotifications(emailEnabled = enabled)
+    }
+
+    fun simulateAvatarUpload() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isUploadingMedia = true, errorMessage = null) }
+
+            mediaRepository.prepareUpload(
+                kind = "avatar",
+                mimeType = "image/webp",
+                fileName = "profile-photo.webp",
+                sizeBytes = 262_144,
+                visibility = "public",
+            ).onSuccess { preparation ->
+                mediaRepository.completeUpload(
+                    assetId = preparation.assetId,
+                    width = 1024,
+                    height = 1024,
+                )
+                val mediaResult = mediaRepository.listAssets()
+                _uiState.update {
+                    it.copy(
+                        mediaAssets = mediaResult.getOrDefault(it.mediaAssets),
+                        isUploadingMedia = false,
+                    )
+                }
+            }.onFailure { error ->
+                _uiState.update { it.copy(isUploadingMedia = false, errorMessage = error.message) }
+            }
+        }
     }
 
     private fun updateNotifications(

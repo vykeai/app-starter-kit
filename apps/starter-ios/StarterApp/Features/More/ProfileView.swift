@@ -6,13 +6,16 @@ struct ProfileView: View {
     private let userService = UserService()
     private let notificationService = NotificationService()
     private let billingService = BillingService()
+    private let mediaService = MediaService()
     @State private var displayName: String = ""
     @State private var isEditing = false
     @State private var showDeleteAccountAlert = false
     @State private var isSaving = false
     @State private var notificationPreferences: NotificationPreferences?
     @State private var entitlement: EntitlementState?
+    @State private var mediaAssets: [MediaAsset] = []
     @State private var isLoadingSettings = false
+    @State private var isUploadingMedia = false
 
     var body: some View {
         NavigationStack {
@@ -101,6 +104,26 @@ struct ProfileView: View {
                     }
                 }
 
+                Section("Media") {
+                    Button(isUploadingMedia ? "Uploading avatar…" : "Simulate avatar upload") {
+                        Task { await simulateAvatarUpload() }
+                    }
+                    .disabled(isUploadingMedia)
+
+                    if mediaAssets.isEmpty, isLoadingSettings {
+                        ProgressView()
+                    } else {
+                        ForEach(mediaAssets, id: \.id) { asset in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(asset.fileName ?? asset.kind)
+                                Text(asset.publicUrl ?? asset.storageKey)
+                                    .font(.footnote)
+                                    .foregroundStyle(AppTokens.Color.textSecondary)
+                            }
+                        }
+                    }
+                }
+
                 // Account section
                 Section("Account") {
                     Button("Sign out") {
@@ -177,10 +200,12 @@ struct ProfileView: View {
 
         async let notificationTask = notificationService.fetchPreferences()
         async let billingTask = billingService.fetchEntitlements()
+        async let mediaTask = mediaService.listAssets()
 
         do {
             notificationPreferences = try await notificationTask
             entitlement = try await billingTask
+            mediaAssets = try await mediaTask
         } catch {
             toastManager.show(error.localizedDescription, style: .error)
         }
@@ -196,6 +221,32 @@ struct ProfileView: View {
                 emailEnabled: emailEnabled
             )
             toastManager.show("Preferences updated", style: .success)
+        } catch {
+            toastManager.show(error.localizedDescription, style: .error)
+        }
+    }
+
+    private func simulateAvatarUpload() async {
+        guard !isUploadingMedia else { return }
+        isUploadingMedia = true
+        defer { isUploadingMedia = false }
+
+        do {
+            let preparation = try await mediaService.prepareUpload(
+                kind: "avatar",
+                mimeType: "image/webp",
+                fileName: "profile-photo.webp",
+                sizeBytes: 262_144,
+                visibility: "public"
+            )
+
+            _ = try await mediaService.completeUpload(
+                assetId: preparation.assetId,
+                width: 1024,
+                height: 1024
+            )
+            mediaAssets = try await mediaService.listAssets()
+            toastManager.show("Media asset synced", style: .success)
         } catch {
             toastManager.show(error.localizedDescription, style: .error)
         }
