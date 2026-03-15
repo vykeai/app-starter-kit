@@ -14,7 +14,7 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
-backend/.env
+apps/starter-api/.env
 
 # OS
 .DS_Store
@@ -28,21 +28,21 @@ Thumbs.db
 xcuserdata/
 
 # Android
-android/.gradle/
-android/local.properties
-android/app/release/
+apps/starter-android/.gradle/
+apps/starter-android/local.properties
+apps/starter-android/app/release/
 *.apk
 *.aab
 *.keystore
-!android/gradle/wrapper/gradle-wrapper.jar
+!apps/starter-android/gradle/wrapper/gradle-wrapper.jar
 
 # iOS
-ios/DerivedData/
-ios/Pods/
-ios/*.xcarchive
+apps/starter-ios/DerivedData/
+apps/starter-ios/Pods/
+apps/starter-ios/*.xcarchive
 
 # Prisma
-backend/prisma/migrations/
+apps/starter-api/prisma/migrations/
 
 # Logs
 *.log
