@@ -32,6 +32,7 @@ struct CodeEntryView: View {
                         isFocused: focusedIndex == index,
                         onChanged: { handleInput(at: index, value: $0) }
                     )
+                    .accessibilityIdentifier("codeDigitField_\(index)")
                     .focused($focusedIndex, equals: index)
                 }
             }

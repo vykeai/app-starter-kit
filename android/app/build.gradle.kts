@@ -26,7 +26,17 @@ android {
             versionNameSuffix = "-dev"
             buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000/api/v1\"")
             buildConfigField("String", "ENVIRONMENT", "\"development\"")
+            buildConfigField("boolean", "RUNTIME_FIXTURE_MODE", "false")
             resValue("string", "app_name", "AppStarterKit (Dev)")
+        }
+        create("mock") {
+            dimension = "environment"
+            applicationIdSuffix = ".mock"
+            versionNameSuffix = "-mock"
+            buildConfigField("String", "API_BASE_URL", "\"https://fixture.invalid/api/v1\"")
+            buildConfigField("String", "ENVIRONMENT", "\"mock\"")
+            buildConfigField("boolean", "RUNTIME_FIXTURE_MODE", "true")
+            resValue("string", "app_name", "AppStarterKit (Mock)")
         }
         create("staging") {
             dimension = "environment"
@@ -34,12 +44,14 @@ android {
             versionNameSuffix = "-staging"
             buildConfigField("String", "API_BASE_URL", "\"https://api-staging.yourapp.com/api/v1\"")
             buildConfigField("String", "ENVIRONMENT", "\"staging\"")
+            buildConfigField("boolean", "RUNTIME_FIXTURE_MODE", "false")
             resValue("string", "app_name", "AppStarterKit (Staging)")
         }
         create("prod") {
             dimension = "environment"
             buildConfigField("String", "API_BASE_URL", "\"https://api.yourapp.com/api/v1\"")
             buildConfigField("String", "ENVIRONMENT", "\"production\"")
+            buildConfigField("boolean", "RUNTIME_FIXTURE_MODE", "false")
             resValue("string", "app_name", "AppStarterKit")
         }
     }

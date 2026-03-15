@@ -5,6 +5,7 @@ import com.appstarterkit.app.core.storage.SecurePreferences
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.UUID
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
@@ -14,20 +15,29 @@ import javax.inject.Singleton
 class ApiClient @Inject constructor(
     private val securePreferences: SecurePreferences,
     private val tokenAuthenticator: TokenAuthenticator,
+    private val fixtureInterceptor: FixtureInterceptor,
 ) {
     private val authInterceptor = Interceptor { chain ->
         val token = securePreferences.getAccessToken()
+        val requestBuilder = chain.request().newBuilder()
+            .header("X-Request-Id", "android-${UUID.randomUUID()}")
+
         val request = if (token != null) {
-            chain.request().newBuilder()
+            requestBuilder
                 .addHeader("Authorization", "Bearer $token")
                 .build()
         } else {
-            chain.request()
+            requestBuilder.build()
         }
         chain.proceed(request)
     }
 
     private val okHttpClient = OkHttpClient.Builder()
+        .apply {
+            if (BuildConfig.RUNTIME_FIXTURE_MODE) {
+                addInterceptor(fixtureInterceptor)
+            }
+        }
         .addInterceptor(authInterceptor)
         .authenticator(tokenAuthenticator)
         .apply {

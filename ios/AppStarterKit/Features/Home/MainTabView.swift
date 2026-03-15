@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @Environment(AppState.self) private var appState
+
     var body: some View {
         TabView {
             HomeView()
@@ -9,5 +11,10 @@ struct MainTabView: View {
                 }
         }
         .preferredColorScheme(.dark)
+        .onAppear {
+            if case .home = appState.pendingRoute {
+                appState.pendingRoute = nil
+            }
+        }
     }
 }

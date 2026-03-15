@@ -26,16 +26,38 @@ private struct RefreshTokenResponse: Decodable {
 }
 
 actor APIClient {
-    static let shared = APIClient()
+    static var shared = APIClient()
 
-    private let baseURL: String = {
-        Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String
-            ?? "http://localhost:3000/api/v1"
-    }()
+    private let baseURL: String
+    private let session: URLSession
 
     // Tracks an in-flight refresh so concurrent 401s share one Task instead of
     // each triggering its own /auth/refresh call.
     private var refreshTask: Task<String, Error>?
+
+    init(
+        baseURL: String = Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String
+            ?? "http://localhost:3000/api/v1",
+        session: URLSession = .shared
+    ) {
+        self.baseURL = baseURL
+        self.session = session
+    }
+
+    nonisolated static func configureShared(
+        baseURL: String? = nil,
+        session: URLSession? = nil
+    ) {
+        shared = APIClient(
+            baseURL: baseURL ?? defaultBaseURL,
+            session: session ?? .shared
+        )
+    }
+
+    private nonisolated static var defaultBaseURL: String {
+        Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String
+            ?? "http://localhost:3000/api/v1"
+    }
 
     // MARK: - Public request method
 
@@ -105,13 +127,14 @@ actor APIClient {
         var req = URLRequest(url: url)
         req.httpMethod = method
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.setValue("ios-\(UUID().uuidString)", forHTTPHeaderField: "X-Request-Id")
         if let token = accessToken {
             req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         if let body {
             req.httpBody = try JSONEncoder().encode(body)
         }
-        let (data, response) = try await URLSession.shared.data(for: req)
+        let (data, response) = try await session.data(for: req)
         guard let http = response as? HTTPURLResponse else {
             throw APIError.networkError(URLError(.badServerResponse))
         }

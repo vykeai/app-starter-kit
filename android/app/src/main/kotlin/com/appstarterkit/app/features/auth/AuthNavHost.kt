@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import android.net.Uri
 import com.appstarterkit.app.core.deeplink.DeepLinkViewModel
+import com.appstarterkit.app.core.deeplink.PendingRoute
 import com.appstarterkit.app.features.home.HomeScreen
 
 @Composable
@@ -20,7 +21,7 @@ fun AuthNavHost(
 ) {
     val navController = rememberNavController()
     val uiState by viewModel.uiState.collectAsState()
-    val pendingAuthPayload by deepLinkViewModel.pendingAuthPayload.collectAsState()
+    val pendingRoute by deepLinkViewModel.pendingRoute.collectAsState()
 
     LaunchedEffect(uiState.isAuthenticated) {
         if (uiState.isAuthenticated) {
@@ -33,31 +34,39 @@ fun AuthNavHost(
         }
     }
 
-    LaunchedEffect(pendingAuthPayload) {
-        val payload = pendingAuthPayload ?: return@LaunchedEffect
-
-        when {
-            !payload.linkToken.isNullOrBlank() -> {
-                payload.email?.let(viewModel::rememberEmail)
-                viewModel.verifyLinkToken(payload.linkToken)
-            }
-            !payload.email.isNullOrBlank() -> {
-                val email = payload.email
-                viewModel.rememberEmail(email)
-                payload.code?.let(viewModel::primePendingCode)
-                navController.navigate("enter-code/${Uri.encode(email)}") {
-                    launchSingleTop = true
+    LaunchedEffect(pendingRoute) {
+        when (val route = pendingRoute ?: return@LaunchedEffect) {
+            is PendingRoute.Auth -> {
+                val payload = route.payload
+                when {
+                    !payload.linkToken.isNullOrBlank() -> {
+                        payload.email?.let(viewModel::rememberEmail)
+                        viewModel.verifyLinkToken(payload.linkToken)
+                    }
+                    !payload.email.isNullOrBlank() -> {
+                        val email = payload.email
+                        viewModel.rememberEmail(email)
+                        payload.code?.let(viewModel::primePendingCode)
+                        navController.navigate("enter-code/${Uri.encode(email)}") {
+                            launchSingleTop = true
+                        }
+                    }
+                    !payload.code.isNullOrBlank() -> {
+                        viewModel.primePendingCode(payload.code)
+                        navController.navigate("enter-email") {
+                            launchSingleTop = true
+                        }
+                    }
                 }
             }
-            !payload.code.isNullOrBlank() -> {
-                viewModel.primePendingCode(payload.code)
-                navController.navigate("enter-email") {
+            PendingRoute.Home -> {
+                navController.navigate("home") {
                     launchSingleTop = true
                 }
             }
         }
 
-        deepLinkViewModel.consumePendingAuth()
+        deepLinkViewModel.consumePendingRoute()
     }
 
     NavHost(navController = navController, startDestination = "welcome") {

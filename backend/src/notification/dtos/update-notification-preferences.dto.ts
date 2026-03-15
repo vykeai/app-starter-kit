@@ -1,8 +1,7 @@
-import { IsBoolean, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
-class UpdatePreferencesDto {
+export class UpdateNotificationPreferencesDto {
   @ApiPropertyOptional({ example: 'dark' })
   @IsOptional()
   @IsString()
@@ -32,17 +31,4 @@ class UpdatePreferencesDto {
   @IsOptional()
   @IsBoolean()
   emailNotificationsEnabled?: boolean;
-}
-
-export class UpdateUserDto {
-  @ApiPropertyOptional({ example: 'John Doe' })
-  @IsOptional()
-  @IsString()
-  displayName?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => UpdatePreferencesDto)
-  preferences?: UpdatePreferencesDto;
 }

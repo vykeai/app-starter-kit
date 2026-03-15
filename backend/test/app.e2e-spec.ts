@@ -27,6 +27,14 @@ const mockPrismaService = {
       id: 'e2e-user-id',
       email: 'test@example.com',
       displayName: null,
+      preferences: {
+        theme: 'system',
+        pushMarketingEnabled: false,
+        pushActivityEnabled: true,
+        pushTransactionalEnabled: true,
+        pushSystemEnabled: true,
+        emailNotificationsEnabled: true,
+      },
     }),
   },
   magicLink: {
@@ -47,6 +55,38 @@ const mockPrismaService = {
       userId: 'e2e-user-id',
       revokedAt: null,
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    }),
+    updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+  },
+  userPreferences: {
+    upsert: jest.fn().mockImplementation(async ({ create, update }) => ({
+      theme: update?.theme ?? create?.theme ?? 'system',
+      pushMarketingEnabled:
+        update?.pushMarketingEnabled ?? create?.pushMarketingEnabled ?? false,
+      pushActivityEnabled:
+        update?.pushActivityEnabled ?? create?.pushActivityEnabled ?? true,
+      pushTransactionalEnabled:
+        update?.pushTransactionalEnabled ??
+        create?.pushTransactionalEnabled ??
+        true,
+      pushSystemEnabled:
+        update?.pushSystemEnabled ?? create?.pushSystemEnabled ?? true,
+      emailNotificationsEnabled:
+        update?.emailNotificationsEnabled ??
+        create?.emailNotificationsEnabled ??
+        true,
+      updatedAt: new Date(),
+    })),
+  },
+  pushDevice: {
+    upsert: jest.fn().mockResolvedValue({
+      id: 'push-device-id',
+      platform: 'ios',
+      token: 'push-token-123',
+      locale: 'en-GB',
+      appVersion: '1.0.0',
+      lastSeenAt: new Date(),
+      revokedAt: null,
     }),
     updateMany: jest.fn().mockResolvedValue({ count: 1 }),
   },
@@ -182,5 +222,62 @@ describe('App (e2e)', () => {
       .post('/api/v1/auth/magic-link/verify')
       .send({ email: 'test@example.com' })
       .expect(400);
+  });
+
+  // ── Notifications ──────────────────────────────────────────────────────────
+
+  it('GET /api/v1/notifications/preferences returns the authenticated preference snapshot', async () => {
+    const verify = await request(app.getHttpServer())
+      .post('/api/v1/auth/magic-link/verify')
+      .send({ email: 'test@example.com', code: '12345678' })
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .get('/api/v1/notifications/preferences')
+      .set('Authorization', `Bearer ${verify.body.accessToken}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.theme).toBeDefined();
+        expect(res.body.pushActivityEnabled).toBe(true);
+      });
+  });
+
+  it('PATCH /api/v1/notifications/preferences updates notification flags', async () => {
+    const verify = await request(app.getHttpServer())
+      .post('/api/v1/auth/magic-link/verify')
+      .send({ email: 'test@example.com', code: '12345678' })
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .patch('/api/v1/notifications/preferences')
+      .set('Authorization', `Bearer ${verify.body.accessToken}`)
+      .send({ pushMarketingEnabled: true, emailNotificationsEnabled: false })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.pushMarketingEnabled).toBe(true);
+        expect(res.body.emailNotificationsEnabled).toBe(false);
+      });
+  });
+
+  it('POST /api/v1/notifications/devices registers a device token', async () => {
+    const verify = await request(app.getHttpServer())
+      .post('/api/v1/auth/magic-link/verify')
+      .send({ email: 'test@example.com', code: '12345678' })
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post('/api/v1/notifications/devices')
+      .set('Authorization', `Bearer ${verify.body.accessToken}`)
+      .send({
+        platform: 'ios',
+        token: 'push-token-123',
+        locale: 'en-GB',
+        appVersion: '1.0.0',
+      })
+      .expect(201)
+      .expect((res) => {
+        expect(res.body.token).toBe('push-token-123');
+        expect(res.body.platform).toBe('ios');
+      });
   });
 });

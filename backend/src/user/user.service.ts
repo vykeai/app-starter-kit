@@ -19,7 +19,14 @@ export class UserService {
       email: user.email,
       displayName: user.displayName,
       preferences: user.preferences
-        ? { theme: user.preferences.theme }
+        ? {
+            theme: user.preferences.theme,
+            pushMarketingEnabled: user.preferences.pushMarketingEnabled,
+            pushActivityEnabled: user.preferences.pushActivityEnabled,
+            pushTransactionalEnabled: user.preferences.pushTransactionalEnabled,
+            pushSystemEnabled: user.preferences.pushSystemEnabled,
+            emailNotificationsEnabled: user.preferences.emailNotificationsEnabled,
+          }
         : null,
     };
   }
@@ -35,10 +42,25 @@ export class UserService {
     if (dto.preferences) {
       await this.prisma.userPreferences.upsert({
         where: { userId },
-        update: { theme: dto.preferences.theme ?? undefined },
+        update: {
+          theme: dto.preferences.theme ?? undefined,
+          pushMarketingEnabled: dto.preferences.pushMarketingEnabled ?? undefined,
+          pushActivityEnabled: dto.preferences.pushActivityEnabled ?? undefined,
+          pushTransactionalEnabled: dto.preferences.pushTransactionalEnabled ?? undefined,
+          pushSystemEnabled: dto.preferences.pushSystemEnabled ?? undefined,
+          emailNotificationsEnabled:
+            dto.preferences.emailNotificationsEnabled ?? undefined,
+        },
         create: {
           userId,
           theme: dto.preferences.theme ?? 'system',
+          pushMarketingEnabled: dto.preferences.pushMarketingEnabled ?? false,
+          pushActivityEnabled: dto.preferences.pushActivityEnabled ?? true,
+          pushTransactionalEnabled:
+            dto.preferences.pushTransactionalEnabled ?? true,
+          pushSystemEnabled: dto.preferences.pushSystemEnabled ?? true,
+          emailNotificationsEnabled:
+            dto.preferences.emailNotificationsEnabled ?? true,
         },
       });
     }

@@ -29,6 +29,21 @@ async function main() {
   });
   console.log('✓ Test user:', testUser.email);
 
+  await prisma.userPreferences.upsert({
+    where: { userId: testUser.id },
+    update: {},
+    create: {
+      userId: testUser.id,
+      theme: 'system',
+      pushActivityEnabled: true,
+      pushTransactionalEnabled: true,
+      pushSystemEnabled: true,
+      pushMarketingEnabled: false,
+      emailNotificationsEnabled: true,
+    },
+  });
+  console.log('✓ Default user preferences seeded');
+
   // App versions
   await prisma.appVersion.upsert({
     where: { platform_version: { platform: 'ios', version: '1.0.0' } },

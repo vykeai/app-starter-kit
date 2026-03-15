@@ -36,22 +36,17 @@ struct AppStarterKit: App {
             return
         }
 
-        // Accept both the custom scheme and the universal-link host/path.
         let isCustomScheme = url.scheme?.lowercased() == "appstarterkit"
-        let isUniversalLink = (url.scheme == "https" || url.scheme == "http")
-            && url.path == "/auth/verify"
+        let isUniversalLink = url.scheme == "https" || url.scheme == "http"
 
         guard isCustomScheme || isUniversalLink else { return }
 
-        // The path for custom scheme looks like "/auth/verify"; host is "auth".
-        let isAuthVerify: Bool
-        if isCustomScheme {
-            isAuthVerify = url.host?.lowercased() == "auth" && url.path == "/verify"
-        } else {
-            isAuthVerify = true // already checked path above
+        if isDeepLinkToHome(url, isCustomScheme: isCustomScheme) {
+            appState.pendingRoute = .home
+            return
         }
 
-        guard isAuthVerify else {
+        guard isAuthVerify(url, isCustomScheme: isCustomScheme) else {
             return
         }
 
@@ -61,6 +56,22 @@ struct AppStarterKit: App {
         let pendingLink = PendingAuthLink(email: email, code: code, linkToken: linkToken)
 
         guard pendingLink.hasAuthPayload else { return }
-        appState.pendingAuthLink = pendingLink
+        appState.pendingRoute = .auth(pendingLink)
+    }
+
+    private func isAuthVerify(_ url: URL, isCustomScheme: Bool) -> Bool {
+        if isCustomScheme {
+            return url.host?.lowercased() == "auth" && url.path == "/verify"
+        }
+
+        return url.path == "/auth/verify"
+    }
+
+    private func isDeepLinkToHome(_ url: URL, isCustomScheme: Bool) -> Bool {
+        if isCustomScheme {
+            return url.host?.lowercased() == "home" || url.path == "/home"
+        }
+
+        return url.path == "/home"
     }
 }
