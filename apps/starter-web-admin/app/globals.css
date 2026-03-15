@@ -1,0 +1,165 @@
+:root {
+  --bg: #f4f1ea;
+  --ink: #17231f;
+  --muted: #60706a;
+  --panel: #fffdf8;
+  --edge: rgba(23, 35, 31, 0.1);
+  --accent: #116149;
+  --accent-soft: #dceee6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: linear-gradient(180deg, #f8f5ee 0%, var(--bg) 100%);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+button {
+  font: inherit;
+}
+
+.admin-shell {
+  width: min(1200px, calc(100vw - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+
+.admin-hero,
+.metric-card,
+.queue-panel,
+.status-card,
+.queue-card {
+  border: 1px solid var(--edge);
+  border-radius: 24px;
+  background: var(--panel);
+}
+
+.admin-hero {
+  display: grid;
+  grid-template-columns: 1.6fr 0.8fr;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.77rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.admin-hero h1,
+.panel-header h2 {
+  margin: 0;
+  line-height: 1;
+}
+
+.admin-hero h1 {
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  max-width: 12ch;
+}
+
+.lede {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.status-card {
+  padding: 1rem;
+  align-self: end;
+  display: grid;
+  gap: 0.35rem;
+  background: linear-gradient(180deg, var(--accent-soft), #f7fcf9);
+}
+
+.status-card strong {
+  font-size: 1.15rem;
+}
+
+.status-card small {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.metric-card {
+  padding: 1rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.metric-card span,
+.metric-card small {
+  color: var(--muted);
+}
+
+.metric-card strong {
+  font-size: 2rem;
+}
+
+.queue-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.panel-header button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  background: var(--ink);
+  color: #fffdf8;
+}
+
+.queue-list {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.queue-card {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.queue-card p,
+.queue-card span {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .admin-hero,
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+}

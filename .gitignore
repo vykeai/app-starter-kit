@@ -26,6 +26,9 @@ Thumbs.db
 .vscode/settings.json
 *.xcworkspace/xcuserdata/
 xcuserdata/
+apps/starter-web-admin/.next/
+apps/starter-web-app/.next/
+apps/starter-web-public/.astro/
 
 # Android
 apps/starter-android/.gradle/

@@ -7,6 +7,9 @@ Onlystack is a monorepo containing the starter app plus shared reusable layers.
 - **iOS** — SwiftUI + `@Observable` MVVM, Keychain storage, iOS 17+
 - **Android** — Jetpack Compose + ViewModel + StateFlow, Hilt DI, API 26+
 - **Backend** — NestJS + Prisma + PostgreSQL, BullMQ + Redis for async jobs
+- **Public Web** — Astro, static-first
+- **Admin Web** — Next.js, server-ready admin shell
+- **Product Web** — Next.js, authenticated app shell
 
 There is no shared code layer. Each platform independently reimplements business logic. Sentinel schemas are the machine-readable source of truth that enforces consistency across platforms without sharing runtime code.
 
@@ -54,6 +57,9 @@ onlystack/
 │       ├── design/           # AppTokens.kt (generated), components
 │       ├── core/             # ApiClient, NetworkMonitor, SecurePreferences, DI
 │       └── nfr/              # ForceUpdateViewModel, ReviewManager
+├── apps/starter-web-public/  # Astro public marketing surface
+├── apps/starter-web-admin/   # Next.js admin shell
+├── apps/starter-web-app/     # Next.js authenticated product shell
 ├── sentinel/schemas/         # Source of truth (see Schema-driven workflow below)
 ├── scripts/                  # rename.sh, pre-commit, validate-fixtures.js
 ├── docs/                     # Architecture, setup guides
@@ -218,6 +224,7 @@ Three environments exist on every platform:
 
 iOS API URLs are set in `apps/starter-ios/Configs/Dev.xcconfig`, `Staging.xcconfig`, `Release.xcconfig`.
 Android API URLs are set via `buildConfigField` in `apps/starter-android/app/build.gradle.kts`.
+Web starters currently use local mock/static data and should be wired to the API deliberately per product.
 
 ---
 

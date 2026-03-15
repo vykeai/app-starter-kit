@@ -16,7 +16,13 @@ Shared library boundaries in this monorepo:
 - `notifications-core`
 - `contracts`
 
-The starter app remains the runnable reference consumer for those libraries.
+Runnable starter surfaces in this monorepo:
+- `starter-api`
+- `starter-ios`
+- `starter-android`
+- `starter-web-public`
+- `starter-web-admin`
+- `starter-web-app`
 
 Stack doctrine lives in:
 - [STACK.md](/Users/ted/dev/onlystack/docs/STACK.md)
@@ -86,7 +92,15 @@ cd apps/starter-android
 # Or open in Android Studio, select dev flavour
 ```
 
-### 6. Runtime mock mode
+### 6. Web
+
+```bash
+cd apps/starter-web-public && npm install && npm run dev
+cd apps/starter-web-admin && npm install && npm run dev
+cd apps/starter-web-app && npm install && npm run dev
+```
+
+### 7. Runtime mock mode
 
 ```bash
 # Android fixture-backed runtime mode
@@ -115,6 +129,7 @@ cd apps/starter-android
 Auth standard docs:
 - [AUTH_SYSTEM.md](/Users/ted/dev/onlystack/docs/AUTH_SYSTEM.md) defines the canonical backend contract, frontend state machine, deep-link model, mock-mode auth, and non-email environment behavior.
 - [STARTER_KIT_EXTRACTION_AUDIT.md](/Users/ted/dev/onlystack/docs/STARTER_KIT_EXTRACTION_AUDIT.md) captures the broader systems that should live in the starter kit.
+- [EXTRACTION_DETAILED_AUDIT.md](/Users/ted/dev/onlystack/docs/EXTRACTION_DETAILED_AUDIT.md) records which patterns are actually strongest in `univiirse`, `goala`, `sitches`, and `fitkind`, and which ones should not be copied blindly.
 
 ### Design System
 - Sentinel-generated design tokens (colours, spacing, typography, radius)
@@ -200,6 +215,9 @@ infra/terraform/
 | iOS E2E | Maestro | `apps/starter-ios/e2e/` |
 | Android unit | JUnit 5 + MockK | `apps/starter-android/app/src/test/` |
 | Android E2E | Detox | `apps/starter-android/e2e/` |
+| Web public | Astro | `apps/starter-web-public/` |
+| Web admin | Next.js | `apps/starter-web-admin/` |
+| Web app | Next.js | `apps/starter-web-app/` |
 | Load tests | k6 | `load-tests/` |
 | Mutation tests | Stryker | `apps/starter-api/stryker.conf.json` |
 
@@ -349,6 +367,9 @@ onlystack/
 │   │   └── core/             # Network, Auth, Biometric, Subscription, DeepLink
 │   ├── fastlane/
 │   └── e2e/                  # Detox tests
+├── apps/starter-web-public/  # Astro public site starter
+├── apps/starter-web-admin/   # Next.js admin starter
+├── apps/starter-web-app/     # Next.js authenticated app starter
 ├── infra/terraform/          # GCP infrastructure
 ├── load-tests/               # k6 smoke/load/stress
 ├── sentinel/                 # Schema source of truth
@@ -372,6 +393,7 @@ onlystack/
 4. **App Store / Play Store IDs**: search `YOUR_APP_ID` in `HardUpdateView.swift` / `ForceUpdateComponents.kt`
 5. **Email**: implement `apps/starter-api/src/email/email.processor.ts` with your SMTP provider
 6. **Social auth**: follow TODO comments in `AppleSignInHelper.swift`, `GoogleSignInHelper.swift`, `GoogleSignInHelper.kt`, and `apps/starter-api/src/auth/auth.service.ts`
+7. **Web strategy**: see [WEB_STARTER_STRATEGY.md](/Users/ted/dev/onlystack/docs/WEB_STARTER_STRATEGY.md)
 7. **Subscriptions**: follow TODO comments in `SubscriptionManager.swift` / `SubscriptionManager.kt` for RevenueCat SDK
 8. **Firebase**: add `google-services.json` (Android) / `GoogleService-Info.plist` (iOS) and uncomment Crashlytics dependencies
 9. **Terraform**: fill in `infra/terraform/variables.tf` and `envs/staging.tfvars` with your GCP project

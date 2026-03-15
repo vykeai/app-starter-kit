@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const pillars = [
+  {
+    title: "Static-first marketing",
+    body: "Landing pages, pricing, docs, and legal surfaces stay cheap to host and fast to ship."
+  },
+  {
+    title: "Deep-link fallback",
+    body: "Public routes can catch auth links, app-store redirects, and campaign attribution before handing off to native."
+  },
+  {
+    title: "Conversion-ready structure",
+    body: "Hero, proof, feature framing, and CTA sections are already part of the surface instead of being rebuilt per app."
+  }
+];
+
+const stack = ["Astro", "Static hosting", "Simple forms", "SEO and sitemap", "Campaign pages"];
+---
+
+<BaseLayout
+  title="Onlystack Starter Web Public"
+  description="Static-first public marketing surface for Onlystack starter products."
+>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Onlystack Public</p>
+        <h1>Ship the public face of the product without paying for a full app runtime.</h1>
+        <p class="lede">
+          This starter is tuned for launch pages, docs, pricing, app-store handoff, and
+          SEO surfaces. It should feel like a confident product site, not a placeholder.
+        </p>
+        <div class="hero-actions">
+          <a class="primary-action" href="#pillars">See the structure</a>
+          <a class="secondary-action" href="#stack">View the stack</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <p class="panel-label">Launch posture</p>
+        <ul>
+          <li>Fast by default</li>
+          <li>Cheap to host</li>
+          <li>SEO-friendly</li>
+          <li>Good app-link fallback</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="pillars" class="content-grid">
+      {pillars.map((pillar) => (
+        <article class="content-card">
+          <h2>{pillar.title}</h2>
+          <p>{pillar.body}</p>
+        </article>
+      ))}
+    </section>
+
+    <section id="stack" class="stack-band">
+      <div>
+        <p class="eyebrow">Recommended use</p>
+        <h2>Best fit for public, not private.</h2>
+      </div>
+      <ul class="stack-list">
+        {stack.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+  </main>
+</BaseLayout>
