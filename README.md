@@ -7,7 +7,7 @@ The current executable reference is still the mobile starter app:
 **NestJS API + iOS (SwiftUI) + Android (Compose)**.
 
 Magic link auth, social sign-in, design tokens, offline indicator, force update,
-review prompt, subscriptions, admin panel, Terraform infra — all wired up and
+review prompt, subscriptions, admin panel, Railway deploy baseline — all wired up and
 ready to reuse.
 
 Shared library boundaries in this monorepo:
@@ -195,19 +195,9 @@ resource/
 |------|----------|---------|
 | Docker Compose | `docker-compose.yml` | Local postgres 16 + redis 7 |
 | Dockerfile | `apps/starter-api/Dockerfile` | Multi-stage, non-root, health check |
-| Terraform | `infra/terraform/` | GCP Cloud Run + Cloud SQL + Redis + Secret Manager |
-| Deploy workflow | `.github/workflows/deploy.yml` | Manual Cloud Run deploy (staging / production) |
-
-```
-infra/terraform/
-├── main.tf, variables.tf
-├── envs/staging.tfvars
-└── modules/
-    ├── cloud-run/
-    ├── cloud-sql/
-    ├── redis/
-    └── secrets/      # Secret Manager + Cloud Run SA IAM bindings
-```
+| Railway guide | `infra/RAILWAY.md` | Standard API deploy path |
+| Hosting doctrine | `docs/HOSTING.md` | Railway + Cloudflare R2 + web hosting defaults |
+| Deploy workflow | `.github/workflows/deploy.yml` | Manual Railway deploy (staging / production) |
 
 ### Testing
 

@@ -54,6 +54,7 @@ The minimum required values in `apps/starter-api/.env`:
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/app_dev
 JWT_SECRET=change-me-to-a-long-random-string
 REDIS_URL=redis://localhost:6379
+R2_BUCKET_NAME=onlystack-media-dev
 ```
 
 Then start the services and run migrations:
