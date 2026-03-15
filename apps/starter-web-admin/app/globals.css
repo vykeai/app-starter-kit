@@ -122,6 +122,12 @@ button {
   padding: 1rem;
 }
 
+.split-panel {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 1rem;
+}
+
 .panel-header {
   display: flex;
   justify-content: space-between;
@@ -143,6 +149,10 @@ button {
   margin-top: 1rem;
 }
 
+.compact-list {
+  margin-top: 0.75rem;
+}
+
 .queue-card {
   padding: 1rem;
   display: flex;
@@ -159,7 +169,8 @@ button {
 
 @media (max-width: 900px) {
   .admin-hero,
-  .metric-grid {
+  .metric-grid,
+  .split-panel {
     grid-template-columns: 1fr;
   }
 }

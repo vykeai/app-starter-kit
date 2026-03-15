@@ -21,6 +21,8 @@ class ApiClient @Inject constructor(
         val token = securePreferences.getAccessToken()
         val requestBuilder = chain.request().newBuilder()
             .header("X-Request-Id", "android-${UUID.randomUUID()}")
+            .header("X-Client-Platform", "android")
+            .header("X-Client-Version", BuildConfig.VERSION_NAME)
 
         val request = if (token != null) {
             requestBuilder

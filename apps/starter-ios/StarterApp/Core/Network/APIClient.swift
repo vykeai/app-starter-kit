@@ -2,14 +2,18 @@ import Foundation
 
 enum APIError: Error, LocalizedError {
     case networkError(Error)
-    case serverError(Int, String?)
+    case serverError(Int, String?, String?)
     case decodingError(Error)
     case unauthorized
 
     var errorDescription: String? {
         switch self {
         case .networkError(let e): return e.localizedDescription
-        case .serverError(let code, let msg): return msg ?? "Server error (\(code))"
+        case .serverError(let code, let msg, let correlationId):
+            if let msg, let correlationId {
+                return "\(msg) [\(correlationId)]"
+            }
+            return msg ?? "Server error (\(code))"
         case .decodingError: return "Failed to parse response"
         case .unauthorized: return "Session expired. Please sign in again."
         }
@@ -23,6 +27,16 @@ private struct RefreshTokenBody: Encodable {
 private struct RefreshTokenResponse: Decodable {
     let accessToken: String
     let refreshToken: String
+}
+
+private struct ErrorEnvelope: Decodable {
+    struct Payload: Decodable {
+        let code: String
+        let message: String
+        let correlationId: String?
+    }
+
+    let error: Payload
 }
 
 actor APIClient {
@@ -97,8 +111,8 @@ actor APIClient {
                 throw APIError.unauthorized
             }
             guard (200..<300).contains(retryHTTP.statusCode) else {
-                let msg = try? JSONDecoder().decode([String: String].self, from: retryData)
-                throw APIError.serverError(retryHTTP.statusCode, msg?["message"])
+                let payload = decodeErrorEnvelope(from: retryData)
+                throw APIError.serverError(retryHTTP.statusCode, payload?.message, payload?.correlationId)
             }
             do {
                 return try JSONDecoder().decode(T.self, from: retryData)
@@ -107,8 +121,8 @@ actor APIClient {
             }
         }
 
-        let msg = try? JSONDecoder().decode([String: String].self, from: data)
-        throw APIError.serverError(http.statusCode, msg?["message"])
+        let payload = decodeErrorEnvelope(from: data)
+        throw APIError.serverError(http.statusCode, payload?.message, payload?.correlationId)
     }
 
     // MARK: - Internal helpers
@@ -128,6 +142,11 @@ actor APIClient {
         req.httpMethod = method
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("ios-\(UUID().uuidString)", forHTTPHeaderField: "X-Request-Id")
+        req.setValue("ios", forHTTPHeaderField: "X-Client-Platform")
+        req.setValue(
+            Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0",
+            forHTTPHeaderField: "X-Client-Version"
+        )
         if let token = accessToken {
             req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
@@ -167,8 +186,8 @@ actor APIClient {
                 throw APIError.unauthorized
             }
             guard (200..<300).contains(http.statusCode) else {
-                let msg = try? JSONDecoder().decode([String: String].self, from: data)
-                throw APIError.serverError(http.statusCode, msg?["message"])
+                let payload = decodeErrorEnvelope(from: data)
+                throw APIError.serverError(http.statusCode, payload?.message, payload?.correlationId)
             }
 
             let decoded = try JSONDecoder().decode(RefreshTokenResponse.self, from: data)
@@ -180,6 +199,17 @@ actor APIClient {
         refreshTask = task
         return try await task.value
     }
+
+    private func decodeErrorEnvelope(from data: Data) -> ErrorEnvelope.Payload? {
+        if let decoded = try? JSONDecoder().decode(ErrorEnvelope.self, from: data) {
+            return decoded.error
+        }
+        if let messageMap = try? JSONDecoder().decode([String: String].self, from: data),
+           let message = messageMap["message"] {
+            return .init(code: "ERROR", message: message, correlationId: nil)
+        }
+        return nil
+    }
 }
 
 // MARK: - SyncAPIClient
@@ -187,11 +217,11 @@ actor APIClient {
 extension APIClient: SyncAPIClient {
     func syncPush(changes: [SyncChange], deviceId: String) async throws -> SyncPushResponse {
         // TODO: implement POST /sync/push
-        throw APIError.serverError(501, "sync push not yet implemented")
+        throw APIError.serverError(501, "sync push not yet implemented", nil)
     }
 
     func syncPull(since: Date?, collections: [String]) async throws -> SyncPullResponse<SyncChange> {
         // TODO: implement GET /sync/pull
-        throw APIError.serverError(501, "sync pull not yet implemented")
+        throw APIError.serverError(501, "sync pull not yet implemented", nil)
     }
 }

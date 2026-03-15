@@ -1,3 +1,5 @@
+import { currentEntitlement } from "../../lib/billing";
+import { currentUser } from "../../lib/account";
 import { libraryShelves } from "../../lib/mock-library";
 
 export default function LibraryPage() {
@@ -9,8 +11,14 @@ export default function LibraryPage() {
           <h1>Prose-first, session-aware, and ready for auth wiring.</h1>
         </div>
         <div className="header-card">
-          <span>Current mode</span>
-          <strong>Fixture-backed</strong>
+          <span>Signed in</span>
+          <strong>{currentUser.displayName}</strong>
+          <small>{currentUser.email}</small>
+        </div>
+        <div className="header-card">
+          <span>Entitlement</span>
+          <strong>{currentEntitlement.tier}</strong>
+          <small>{currentEntitlement.features.length} starter features</small>
         </div>
       </header>
 
@@ -25,6 +33,19 @@ export default function LibraryPage() {
             </ul>
           </article>
         ))}
+      </section>
+
+      <section className="account-strip">
+        <article className="inline-panel">
+          <span className="eyebrow">Preferences</span>
+          <strong>{currentUser.preferences.theme} theme</strong>
+          <p>{currentUser.preferences.enabledCategories.join(", ")}</p>
+        </article>
+        <article className="inline-panel">
+          <span className="eyebrow">Billing</span>
+          <strong>{currentEntitlement.source} source</strong>
+          <p>Renews {currentEntitlement.renewsAt ?? "never"}</p>
+        </article>
       </section>
     </main>
   );

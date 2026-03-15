@@ -1,3 +1,5 @@
+import { currentNetworkContext } from "../../lib/api";
+
 export default function LoginPage() {
   return (
     <main className="app-shell auth-shell">
@@ -15,6 +17,10 @@ export default function LoginPage() {
           </label>
           <button type="submit">Send magic link</button>
         </form>
+        <div className="auth-meta">
+          <span>Auth mode: {currentNetworkContext.authMode.replace("_", " ")}</span>
+          <span>Request: {currentNetworkContext.requestId}</span>
+        </div>
         <a className="mock-link" href="/library">
           Continue in mock mode
         </a>

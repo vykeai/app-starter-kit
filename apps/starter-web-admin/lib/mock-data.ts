@@ -10,3 +10,15 @@ export const adminQueues = [
   { name: "Media processing", health: "Watching", backlog: 42 },
   { name: "Push dispatch", health: "Healthy", backlog: 11 }
 ];
+
+export const adminEntitlements = [
+  { tier: "tracker", users: "8,402", source: "ios" },
+  { tier: "free", users: "3,912", source: "starter" },
+  { tier: "tracker", users: "166", source: "android" }
+];
+
+export const adminNotificationHealth = {
+  optedIn: "71%",
+  quietHoursEnabled: "18%",
+  marketingMuted: "22%"
+};

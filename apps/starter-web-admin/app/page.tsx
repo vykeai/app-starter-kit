@@ -1,4 +1,9 @@
-import { adminMetrics, adminQueues } from "../lib/mock-data";
+import {
+  adminEntitlements,
+  adminMetrics,
+  adminNotificationHealth,
+  adminQueues
+} from "../lib/mock-data";
 
 export default function HomePage() {
   return (
@@ -48,6 +53,34 @@ export default function HomePage() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="queue-panel split-panel">
+        <article>
+          <div className="panel-header">
+            <div>
+              <p className="eyebrow">Billing</p>
+              <h2>Entitlement mix</h2>
+            </div>
+          </div>
+          <div className="queue-list compact-list">
+            {adminEntitlements.map((entitlement) => (
+              <article key={`${entitlement.tier}-${entitlement.source}`} className="queue-card">
+                <div>
+                  <strong>{entitlement.tier}</strong>
+                  <p>{entitlement.source}</p>
+                </div>
+                <span>{entitlement.users}</span>
+              </article>
+            ))}
+          </div>
+        </article>
+        <article className="status-card">
+          <span>Notification health</span>
+          <strong>{adminNotificationHealth.optedIn} opted in</strong>
+          <small>Quiet hours: {adminNotificationHealth.quietHoursEnabled}</small>
+          <small>Marketing muted: {adminNotificationHealth.marketingMuted}</small>
+        </article>
       </section>
     </main>
   );

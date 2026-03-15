@@ -112,6 +112,16 @@ body {
   text-decoration: none;
 }
 
+.auth-meta {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  color: var(--muted);
+  font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+}
+
 .auth-form button {
   border: 0;
   background: var(--ink);
@@ -155,6 +165,13 @@ body {
   font-size: 1.1rem;
 }
 
+.header-card small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+}
+
 .shelf-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -186,9 +203,35 @@ body {
   border-top: 0;
 }
 
+.account-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.inline-panel {
+  border: 1px solid var(--edge);
+  border-radius: 24px;
+  background: var(--panel);
+  padding: 1rem 1.2rem;
+}
+
+.inline-panel strong {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.inline-panel p {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+}
+
 @media (max-width: 800px) {
   .library-header,
-  .shelf-grid {
+  .shelf-grid,
+  .account-strip {
     grid-template-columns: 1fr;
     display: grid;
   }

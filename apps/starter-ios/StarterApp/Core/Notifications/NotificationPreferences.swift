@@ -7,6 +7,14 @@ struct NotificationPreferences: Codable, Equatable {
     let pushTransactionalEnabled: Bool
     let pushSystemEnabled: Bool
     let emailNotificationsEnabled: Bool
+    let pushEnabled: Bool?
+    let emailEnabled: Bool?
+    let enabledCategories: [String]?
+    let quietHoursEnabled: Bool?
+    let quietHoursStart: String?
+    let quietHoursEnd: String?
+    let urgentBreaksQuietHours: Bool?
+    let batchSoonNotifications: Bool?
     let updatedAt: Date?
 }
 
@@ -17,6 +25,14 @@ struct UpdateNotificationPreferencesBody: Encodable {
     let pushTransactionalEnabled: Bool?
     let pushSystemEnabled: Bool?
     let emailNotificationsEnabled: Bool?
+    let pushEnabled: Bool?
+    let emailEnabled: Bool?
+    let enabledCategories: [String]?
+    let quietHoursEnabled: Bool?
+    let quietHoursStart: String?
+    let quietHoursEnd: String?
+    let urgentBreaksQuietHours: Bool?
+    let batchSoonNotifications: Bool?
 }
 
 struct RegisterPushDeviceBody: Encodable {

@@ -20,6 +20,14 @@ class NotificationRepository @Inject constructor(
         pushTransactionalEnabled: Boolean? = null,
         pushSystemEnabled: Boolean? = null,
         emailNotificationsEnabled: Boolean? = null,
+        pushEnabled: Boolean? = null,
+        emailEnabled: Boolean? = null,
+        enabledCategories: List<String>? = null,
+        quietHoursEnabled: Boolean? = null,
+        quietHoursStart: String? = null,
+        quietHoursEnd: String? = null,
+        urgentBreaksQuietHours: Boolean? = null,
+        batchSoonNotifications: Boolean? = null,
     ): Result<NotificationPreferences> = runCatching {
         apiService.updatePreferences(
             UpdateNotificationPreferencesBody(
@@ -29,6 +37,14 @@ class NotificationRepository @Inject constructor(
                 pushTransactionalEnabled = pushTransactionalEnabled,
                 pushSystemEnabled = pushSystemEnabled,
                 emailNotificationsEnabled = emailNotificationsEnabled,
+                pushEnabled = pushEnabled,
+                emailEnabled = emailEnabled,
+                enabledCategories = enabledCategories,
+                quietHoursEnabled = quietHoursEnabled,
+                quietHoursStart = quietHoursStart,
+                quietHoursEnd = quietHoursEnd,
+                urgentBreaksQuietHours = urgentBreaksQuietHours,
+                batchSoonNotifications = batchSoonNotifications,
             ),
         )
     }

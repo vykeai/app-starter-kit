@@ -11,7 +11,15 @@ struct NotificationService {
         pushActivityEnabled: Bool? = nil,
         pushTransactionalEnabled: Bool? = nil,
         pushSystemEnabled: Bool? = nil,
-        emailNotificationsEnabled: Bool? = nil
+        emailNotificationsEnabled: Bool? = nil,
+        pushEnabled: Bool? = nil,
+        emailEnabled: Bool? = nil,
+        enabledCategories: [String]? = nil,
+        quietHoursEnabled: Bool? = nil,
+        quietHoursStart: String? = nil,
+        quietHoursEnd: String? = nil,
+        urgentBreaksQuietHours: Bool? = nil,
+        batchSoonNotifications: Bool? = nil
     ) async throws -> NotificationPreferences {
         try await APIClient.shared.request(
             "notifications/preferences",
@@ -22,7 +30,15 @@ struct NotificationService {
                 pushActivityEnabled: pushActivityEnabled,
                 pushTransactionalEnabled: pushTransactionalEnabled,
                 pushSystemEnabled: pushSystemEnabled,
-                emailNotificationsEnabled: emailNotificationsEnabled
+                emailNotificationsEnabled: emailNotificationsEnabled,
+                pushEnabled: pushEnabled,
+                emailEnabled: emailEnabled,
+                enabledCategories: enabledCategories,
+                quietHoursEnabled: quietHoursEnabled,
+                quietHoursStart: quietHoursStart,
+                quietHoursEnd: quietHoursEnd,
+                urgentBreaksQuietHours: urgentBreaksQuietHours,
+                batchSoonNotifications: batchSoonNotifications
             )
         )
     }
