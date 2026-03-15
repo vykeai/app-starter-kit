@@ -196,6 +196,8 @@ resource/
 | Docker Compose | `docker-compose.yml` | Local postgres 16 + redis 7 |
 | Dockerfile | `apps/starter-api/Dockerfile` | Multi-stage, non-root, health check |
 | Railway guide | `infra/RAILWAY.md` | Standard API deploy path |
+| Railway env helper | `scripts/prepare-railway-env.sh` | Generates the starter API variable baseline |
+| Railway deploy helper | `scripts/deploy-api-railway.sh` | Deploys `apps/starter-api` from the correct monorepo path |
 | Hosting doctrine | `docs/HOSTING.md` | Railway + Cloudflare R2 + web hosting defaults |
 | Deploy workflow | `.github/workflows/deploy.yml` | Manual Railway deploy (staging / production) |
 

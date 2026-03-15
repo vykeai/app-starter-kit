@@ -7,6 +7,8 @@
     "schema:generate": "npx sentinel schema:generate",
     "sentinel:all": "npx sentinel all",
     "validate:fixtures": "node scripts/validate-fixtures.js",
+    "infra:railway:env": "./scripts/prepare-railway-env.sh",
+    "deploy:api": "./scripts/deploy-api-railway.sh",
     "build:backend": "cd apps/starter-api && npm run build",
     "build:ios": "cd apps/starter-ios && xcodebuild -project StarterApp.xcodeproj -scheme 'StarterApp-Dev' -destination 'generic/platform=iOS Simulator' build",
     "build:android": "cd apps/starter-android && ./gradlew :app:compileMockDebugKotlin",

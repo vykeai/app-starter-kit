@@ -49,7 +49,8 @@ APP_URL=https://api.yourapp.com
 npm install -g @railway/cli
 railway login
 railway link          # link to existing project
-railway up            # manual deploy
+./scripts/prepare-railway-env.sh staging api.onlystack.dev
+./scripts/deploy-api-railway.sh staging
 railway logs          # tail logs
 ```
 
@@ -59,7 +60,7 @@ Use Railway Environments for staging vs production:
 
 ```bash
 railway environment create staging
-railway up --environment staging
+./scripts/deploy-api-railway.sh staging
 ```
 
 ## Media Storage — Cloudflare R2
