@@ -72,6 +72,7 @@ class AppState {
             let profile = try await UserService().fetchMe()
             currentUser = AppUser(profile: profile)
             isAuthenticated = true
+            await refreshAuthenticatedServices()
         } catch {
             KeychainHelper.shared.clearAll()
             currentUser = nil
@@ -79,6 +80,26 @@ class AppState {
         }
 
         isBootstrappingSession = false
+    }
+
+    @MainActor
+    func completeAuthentication(user: AppUser?) async {
+        currentUser = user
+        isAuthenticated = user != nil
+        isBootstrappingSession = false
+        await refreshAuthenticatedServices()
+    }
+
+    @MainActor
+    func refreshAuthenticatedServices() async {
+        guard isAuthenticated else { return }
+        await SubscriptionManager.shared.refreshEntitlements()
+
+        if isRuntimeFixtureMode {
+            _ = try? await PushRegistrationManager().registerCurrentDevice(
+                pushToken: "fixture-ios-push-token"
+            )
+        }
     }
 
     private func configureRuntimeNetworking() {
@@ -192,6 +213,22 @@ class AppState {
                   "updatedAt": "2026-03-15T00:00:00.000Z"
                 }
                 """.data(using: .utf8) ?? Data()
+            case ("POST", let route) where route.hasSuffix("/notifications/devices"):
+                statusCode = 201
+                body = """
+                {
+                  "id": "push_device_fixture_ios",
+                  "platform": "ios",
+                  "token": "fixture-ios-push-token",
+                  "locale": "en_GB",
+                  "appVersion": "1.0.0",
+                  "lastSeenAt": "2026-03-15T00:00:00.000Z",
+                  "revokedAt": null
+                }
+                """.data(using: .utf8) ?? Data()
+            case ("DELETE", let route) where route.contains("/notifications/devices/"):
+                statusCode = 200
+                body = #"{"message":"Push device revoked"}"#.data(using: .utf8) ?? Data()
             case ("GET", let route) where route.hasSuffix("/billing/entitlements"):
                 statusCode = 200
                 body = """
@@ -281,6 +318,13 @@ class AppState {
             baseURL: overrideBaseURL ?? "https://fixture.invalid/api/v1",
             session: session
         )
+    }
+
+    private var isRuntimeFixtureMode: Bool {
+        let processInfo = ProcessInfo.processInfo
+        return processInfo.arguments.contains("-UITestMode") ||
+            processInfo.arguments.contains("-RuntimeFixtureMode") ||
+            processInfo.environment["APP_RUNTIME_FIXTURE_MODE"] == "1"
     }
 }
 

@@ -13,16 +13,18 @@ struct AuthFlowView: View {
                 EmailInputView(viewModel: viewModel)
             case .enterCode(let email):
                 CodeEntryView(viewModel: viewModel, email: email) {
-                    appState.currentUser = viewModel.authenticatedUser
-                    appState.isAuthenticated = true
+                    Task {
+                        await appState.completeAuthentication(user: viewModel.authenticatedUser)
+                    }
                 }
             }
         }
         .background(AppTokens.Color.background.ignoresSafeArea())
         .onChange(of: viewModel.authSucceeded) { _, succeeded in
             if succeeded {
-                appState.currentUser = viewModel.authenticatedUser
-                appState.isAuthenticated = true
+                Task {
+                    await appState.completeAuthentication(user: viewModel.authenticatedUser)
+                }
             }
         }
         .task {
@@ -41,8 +43,7 @@ struct AuthFlowView: View {
         appState.pendingAuthLink = nil
         let success = await viewModel.consumePendingAuth(pendingAuthLink)
         if success {
-            appState.currentUser = viewModel.authenticatedUser
-            appState.isAuthenticated = true
+            await appState.completeAuthentication(user: viewModel.authenticatedUser)
         }
     }
 }

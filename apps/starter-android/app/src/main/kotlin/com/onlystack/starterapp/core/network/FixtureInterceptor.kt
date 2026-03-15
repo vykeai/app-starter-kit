@@ -125,6 +125,22 @@ class FixtureInterceptor @Inject constructor() : Interceptor {
                 }
                 """.trimIndent()
             }
+            method == "POST" && path.endsWith("/notifications/devices") -> {
+                201 to """
+                {
+                  "id": "push_device_fixture_android",
+                  "platform": "android",
+                  "token": "fixture-android-push-token",
+                  "locale": "en-GB",
+                  "appVersion": "1.0.0",
+                  "lastSeenAt": "2026-03-15T00:00:00.000Z",
+                  "revokedAt": null
+                }
+                """.trimIndent()
+            }
+            method == "DELETE" && path.contains("/notifications/devices/") -> {
+                200 to """{"message":"Push device revoked"}"""
+            }
             method == "GET" && path.endsWith("/billing/entitlements") -> {
                 200 to """
                 {

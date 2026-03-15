@@ -2,7 +2,10 @@ package com.onlystack.starterapp.features.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.onlystack.starterapp.BuildConfig
 import com.onlystack.starterapp.core.auth.GoogleSignInResult
+import com.onlystack.starterapp.core.notifications.PushRegistrationManager
+import com.onlystack.starterapp.core.subscription.SubscriptionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +26,8 @@ data class AuthUiState(
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val subscriptionManager: SubscriptionManager,
+    private val pushRegistrationManager: PushRegistrationManager,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
@@ -82,6 +87,7 @@ class AuthViewModel @Inject constructor(
 
             authRepository.fetchCurrentUser()
                 .onSuccess {
+                    refreshAuthenticatedServices()
                     _uiState.update {
                         it.copy(
                             isAuthenticated = true,
@@ -112,6 +118,7 @@ class AuthViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             authRepository.verifyMagicLink(email = email, code = code, linkToken = linkToken)
                 .onSuccess {
+                    refreshAuthenticatedServices()
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isAuthenticated = true,
@@ -143,12 +150,24 @@ class AuthViewModel @Inject constructor(
                 viewModelScope.launch {
                     _uiState.update { it.copy(isLoading = true, errorMessage = null) }
                     authRepository.authenticateWithSocial("google", result.credential.idToken)
-                        .onSuccess { _uiState.update { it.copy(isLoading = false, isAuthenticated = true) } }
+                        .onSuccess {
+                            refreshAuthenticatedServices()
+                            _uiState.update { it.copy(isLoading = false, isAuthenticated = true) }
+                        }
                         .onFailure { e -> _uiState.update { it.copy(isLoading = false, errorMessage = e.message) } }
                 }
             }
             is GoogleSignInResult.Cancelled -> { /* ignore */ }
             is GoogleSignInResult.Failure -> _uiState.update { it.copy(errorMessage = result.error.message) }
+        }
+    }
+
+    private fun refreshAuthenticatedServices() {
+        viewModelScope.launch {
+            subscriptionManager.refreshEntitlements()
+            if (BuildConfig.RUNTIME_FIXTURE_MODE) {
+                pushRegistrationManager.registerCurrentDevice("fixture-android-push-token")
+            }
         }
     }
 }
