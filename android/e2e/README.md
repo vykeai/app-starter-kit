@@ -26,7 +26,7 @@ export SIMEMU_AGENT=starter
 simemu status
 simemu boot starter-android
 simemu install starter-android app/build/outputs/apk/mock/debug/app-mock-debug.apk
-simemu launch starter-android com.appstarterkit.app.mock
+simemu launch starter-android com.onlystack.starterapp.mock
 ```
 
 ## Screenshot proof loop

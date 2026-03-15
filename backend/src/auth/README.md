@@ -18,7 +18,7 @@ Current runtime status:
 
 Canonical target:
 
-- see [AUTH_SYSTEM.md](/Users/ted/dev/app-starter-kit/docs/AUTH_SYSTEM.md)
+- see [AUTH_SYSTEM.md](/Users/ted/dev/onlystack/docs/AUTH_SYSTEM.md)
 
 Migration order:
 

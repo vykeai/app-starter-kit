@@ -1,4 +1,4 @@
-# Fastfile — AppStarterKit iOS
+# Fastfile — StarterApp iOS
 #
 # Prerequisites before any lane will work:
 #   1. Install dependencies:       cd ios && bundle install
@@ -16,12 +16,12 @@ platform :ios do
   # test — Run the unit + UI test suite locally or in CI.
   #
   # Requirements:
-  #   • Xcode with the AppStarterKit-Dev scheme configured (done via xcodegen).
+  #   • Xcode with the StarterApp-Dev scheme configured (done via xcodegen).
   #   • A booted simulator, or let run_tests pick one automatically.
   # ---------------------------------------------------------------------------
   lane :test do
     run_tests(
-      scheme:        "AppStarterKit-Dev",
+      scheme:        "StarterApp-Dev",
       device:        "iPhone 15 Pro",
       clean:         true,
       code_coverage: true,
@@ -61,7 +61,7 @@ platform :ios do
     # locally if not running in CI.
     increment_build_number(
       build_number: ENV["BUILD_NUMBER"] || latest_testflight_build_number + 1,
-      xcodeproj:    "AppStarterKit.xcodeproj"
+      xcodeproj:    "StarterApp.xcodeproj"
     )
 
     # Fetch App Store signing identity.
@@ -70,12 +70,12 @@ platform :ios do
 
     # Build for distribution.
     build_app(
-      scheme:               "AppStarterKit-Release",
+      scheme:               "StarterApp-Release",
       configuration:        "Release-Release",
       export_method:        "app-store",
       include_bitcode:      false,
       output_directory:     "fastlane/builds",
-      output_name:          "AppStarterKit.ipa"
+      output_name:          "StarterApp.ipa"
     )
 
     # Upload to TestFlight (no immediate external release).
@@ -86,7 +86,7 @@ platform :ios do
     # Commit the bumped build number so the repo stays in sync.
     commit_version_bump(
       message:    "chore: bump build number for TestFlight [skip ci]",
-      xcodeproj:  "AppStarterKit.xcodeproj"
+      xcodeproj:  "StarterApp.xcodeproj"
     )
   end
 
@@ -105,7 +105,7 @@ platform :ios do
     # Bump the build number.
     increment_build_number(
       build_number: ENV["BUILD_NUMBER"] || latest_testflight_build_number + 1,
-      xcodeproj:    "AppStarterKit.xcodeproj"
+      xcodeproj:    "StarterApp.xcodeproj"
     )
 
     # Fetch App Store signing identity.
@@ -113,12 +113,12 @@ platform :ios do
 
     # Build for distribution.
     build_app(
-      scheme:               "AppStarterKit-Release",
+      scheme:               "StarterApp-Release",
       configuration:        "Release-Release",
       export_method:        "app-store",
       include_bitcode:      false,
       output_directory:     "fastlane/builds",
-      output_name:          "AppStarterKit.ipa"
+      output_name:          "StarterApp.ipa"
     )
 
     # Upload to App Store and submit for review.
@@ -132,7 +132,7 @@ platform :ios do
     # Commit the bumped build number.
     commit_version_bump(
       message:    "chore: bump build number for App Store release [skip ci]",
-      xcodeproj:  "AppStarterKit.xcodeproj"
+      xcodeproj:  "StarterApp.xcodeproj"
     )
   end
 

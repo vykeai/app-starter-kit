@@ -9,7 +9,7 @@ describe('Auth flow', () => {
 
   it('should show welcome screen on launch', async () => {
     await expect(element(by.text('Get Started'))).toBeVisible();
-    await expect(element(by.text('AppStarterKit'))).toBeVisible();
+    await expect(element(by.text('StarterApp'))).toBeVisible();
   });
 
   it('should navigate to email input on tap', async () => {

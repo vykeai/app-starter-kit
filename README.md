@@ -19,9 +19,9 @@ Shared library boundaries in this monorepo:
 The starter app remains the runnable reference consumer for those libraries.
 
 Stack doctrine lives in:
-- [STACK.md](/Users/ted/dev/app-starter-kit/docs/STACK.md)
-- [CONVENTIONS.md](/Users/ted/dev/app-starter-kit/docs/CONVENTIONS.md)
-- [HOSTING.md](/Users/ted/dev/app-starter-kit/docs/HOSTING.md)
+- [STACK.md](/Users/ted/dev/onlystack/docs/STACK.md)
+- [CONVENTIONS.md](/Users/ted/dev/onlystack/docs/CONVENTIONS.md)
+- [HOSTING.md](/Users/ted/dev/onlystack/docs/HOSTING.md)
 
 ---
 
@@ -49,7 +49,7 @@ Stack doctrine lives in:
 ./scripts/rename.sh "MyApp" "com.mycompany.myapp"
 ```
 
-The script replaces all occurrences of `AppStarterKit`, `com.appstarterkit.app`, and `app-starter-kit` across every platform, renames source directories, and regenerates the xcodeproj.
+The script replaces all occurrences of `StarterApp`, `com.onlystack.starterapp`, and `starter-app` across every platform, renames source directories, and regenerates the xcodeproj.
 
 ### 2. Start local infrastructure
 
@@ -74,8 +74,8 @@ npm run start:dev       # http://localhost:3000/api/v1
 cd ios
 brew install xcodegen   # if not installed
 xcodegen generate
-open AppStarterKit.xcodeproj
-# Select scheme AppStarterKit-Dev and run
+open StarterApp.xcodeproj
+# Select scheme StarterApp-Dev and run
 ```
 
 ### 5. Android
@@ -113,8 +113,8 @@ cd android
 - **Sign in with Google** (iOS + Android — SDK stubs with TODO comments)
 
 Auth standard docs:
-- [AUTH_SYSTEM.md](/Users/ted/dev/app-starter-kit/docs/AUTH_SYSTEM.md) defines the canonical backend contract, frontend state machine, deep-link model, mock-mode auth, and non-email environment behavior.
-- [STARTER_KIT_EXTRACTION_AUDIT.md](/Users/ted/dev/app-starter-kit/docs/STARTER_KIT_EXTRACTION_AUDIT.md) captures the broader systems that should live in the starter kit.
+- [AUTH_SYSTEM.md](/Users/ted/dev/onlystack/docs/AUTH_SYSTEM.md) defines the canonical backend contract, frontend state machine, deep-link model, mock-mode auth, and non-email environment behavior.
+- [STARTER_KIT_EXTRACTION_AUDIT.md](/Users/ted/dev/onlystack/docs/STARTER_KIT_EXTRACTION_AUDIT.md) captures the broader systems that should live in the starter kit.
 
 ### Design System
 - Sentinel-generated design tokens (colours, spacing, typography, radius)
@@ -196,7 +196,7 @@ infra/terraform/
 |-------|------|----------|
 | Backend unit | Jest | `backend/src/**/*.spec.ts` |
 | Backend E2E | Supertest | `backend/test/` |
-| iOS unit | XCTest | `ios/AppStarterKitTests/` |
+| iOS unit | XCTest | `ios/StarterAppTests/` |
 | iOS E2E | Maestro | `ios/e2e/` |
 | Android unit | JUnit 5 + MockK | `android/app/src/test/` |
 | Android E2E | Detox | `android/e2e/` |
@@ -228,10 +228,10 @@ infra/terraform/
 
 | Env | iOS Scheme | Android Flavour | API URL |
 |-----|-----------|-----------------|---------|
-| Dev | AppStarterKit-Dev | dev | `http://localhost:3000/api/v1` (Android: `http://10.0.2.2:3000/api/v1`) |
-| Mock | AppStarterKit-Dev + `-UITestMode` | mock | fixture-backed runtime transport |
-| Staging | AppStarterKit-Staging | staging | `https://api-staging.yourapp.com/api/v1` |
-| Production | AppStarterKit-Release | prod | `https://api.yourapp.com/api/v1` |
+| Dev | StarterApp-Dev | dev | `http://localhost:3000/api/v1` (Android: `http://10.0.2.2:3000/api/v1`) |
+| Mock | StarterApp-Dev + `-UITestMode` | mock | fixture-backed runtime transport |
+| Staging | StarterApp-Staging | staging | `https://api-staging.yourapp.com/api/v1` |
+| Production | StarterApp-Release | prod | `https://api.yourapp.com/api/v1` |
 
 Update URLs in `ios/Configs/*.xcconfig` and `android/app/build.gradle.kts`.
 
@@ -310,7 +310,7 @@ Rules:
 ## Project Structure
 
 ```
-app-starter-kit/
+onlystack/
 ├── backend/
 │   ├── src/
 │   │   ├── auth/             # Magic link auth + social auth + JWT
@@ -332,7 +332,7 @@ app-starter-kit/
 │   ├── Configs/              # xcconfig per env
 │   ├── fastlane/
 │   ├── e2e/                  # Maestro flows
-│   └── AppStarterKit/
+│   └── StarterApp/
 │       ├── App/              # Entry point, RootView, AppState
 │       ├── Features/
 │       │   ├── Auth/         # Welcome → Email → Code + SocialAuth/
@@ -341,7 +341,7 @@ app-starter-kit/
 │       ├── DesignSystem/     # Tokens + Components
 │       └── Core/             # APIClient, Network, Keychain, Biometric, Subscription
 ├── android/
-│   ├── app/src/main/kotlin/com/appstarterkit/app/
+│   ├── app/src/main/kotlin/com/onlystack/starterapp/
 │   │   ├── app/              # Application + MainActivity
 │   │   ├── features/auth/    # Auth flow
 │   │   ├── features/more/    # ProfileScreen

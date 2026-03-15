@@ -27,8 +27,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   const config = new DocumentBuilder()
-    .setTitle('AppStarterKit API')
-    .setDescription('AppStarterKit backend API')
+    .setTitle('StarterApp API')
+    .setDescription('StarterApp backend API')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

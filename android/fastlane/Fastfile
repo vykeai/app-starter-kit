@@ -1,4 +1,4 @@
-# Fastfile — Android CI/CD lanes for AppStarterKit
+# Fastfile — Android CI/CD lanes for StarterApp
 #
 # Prerequisites before using any lane:
 #   1. Install Fastlane:  cd android && bundle install

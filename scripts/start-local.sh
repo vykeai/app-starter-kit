@@ -14,7 +14,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo ""
-echo "AppStarterKit — starting local stack"
+echo "StarterApp — starting local stack"
 echo "──────────────────────────────────────"
 
 # ── Step 1: Check prerequisites ────────────────────────────────────────────

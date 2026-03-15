@@ -271,7 +271,7 @@ export class AuthService {
     if (dto.provider === 'apple') {
       // TODO: Verify Apple identity token
       // npm install apple-signin-auth
-      // const appleUser = await appleSignin.verifyIdToken(dto.idToken, { audience: 'com.appstarterkit.app' });
+      // const appleUser = await appleSignin.verifyIdToken(dto.idToken, { audience: 'com.onlystack.starterapp' });
       // email = appleUser.email; providerUserId = appleUser.sub;
       throw new BadRequestException('Apple Sign-In not yet configured. See auth.service.ts TODO.');
     } else {

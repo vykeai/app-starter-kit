@@ -1,4 +1,4 @@
-# AppStarterKit — Auth flow E2E test
+# StarterApp — Auth flow E2E test
 # Tests: launch → welcome screen → email entry → OTP code screen → back navigation
 #
 # Prerequisites:
@@ -10,7 +10,7 @@
 #   [AuthService] OTP for test@example.com: 12345678
 # Copy the code into the inputText step below for a manual end-to-end run.
 
-appId: com.appstarterkit.app.dev
+appId: com.onlystack.starterapp.dev
 
 ---
 - launchApp:
@@ -19,7 +19,7 @@ appId: com.appstarterkit.app.dev
       - -UITestMode
 
 # Welcome screen
-- assertVisible: "AppStarterKit"
+- assertVisible: "StarterApp"
 - assertVisible: "Sign In"
 - tapOn: "Sign In"
 

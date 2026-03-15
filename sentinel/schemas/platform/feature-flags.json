@@ -1,7 +1,7 @@
 {
   "$sentinel": "1.0",
   "type": "feature-flags",
-  "description": "Feature flags for app-starter-kit. All flags default OFF. Enable per milestone.",
+  "description": "Feature flags for StarterApp. All flags default OFF. Enable per milestone.",
   "flags": [
     { "key": "SOCIAL",        "description": "Social features (follows, feed, sharing)",  "defaultEnabled": false },
     { "key": "NOTIFICATIONS", "description": "Push notifications",                         "defaultEnabled": false },

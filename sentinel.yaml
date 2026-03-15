@@ -14,21 +14,21 @@ platforms:
     path: ./ios
     language: swift
     output:
-      tokens:    ./ios/AppStarterKit/DesignSystem/Tokens/AppTokens.swift
-      strings:   ./ios/AppStarterKit/Resources/Strings.swift
-      flags:     ./ios/AppStarterKit/Core/FeatureFlags.swift
-      models:    ./ios/AppStarterKit/Core/Models/Models.swift
-      endpoints: ./ios/AppStarterKit/Core/Network/APIClientProtocol.swift
+      tokens:    ./ios/StarterApp/DesignSystem/Tokens/AppTokens.swift
+      strings:   ./ios/StarterApp/Resources/Strings.swift
+      flags:     ./ios/StarterApp/Core/FeatureFlags.swift
+      models:    ./ios/StarterApp/Core/Models/Models.swift
+      endpoints: ./ios/StarterApp/Core/Network/APIClientProtocol.swift
 
   android:
     path: ./android
     language: kotlin
     output:
-      tokens:    ./android/app/src/main/kotlin/com/appstarterkit/app/design/tokens/AppTokens.kt
+      tokens:    ./android/app/src/main/kotlin/com/onlystack/starterapp/design/tokens/AppTokens.kt
       strings:   ./android/app/src/main/res/values/strings-generated.xml
-      flags:     ./android/app/src/main/kotlin/com/appstarterkit/app/core/FeatureFlags.kt
-      models:    ./android/app/src/main/kotlin/com/appstarterkit/app/core/models/Models.kt
-      endpoints: ./android/app/src/main/kotlin/com/appstarterkit/app/core/network/APIClient.kt
+      flags:     ./android/app/src/main/kotlin/com/onlystack/starterapp/core/FeatureFlags.kt
+      models:    ./android/app/src/main/kotlin/com/onlystack/starterapp/core/models/Models.kt
+      endpoints: ./android/app/src/main/kotlin/com/onlystack/starterapp/core/network/APIClient.kt
 
 catalog:
   output: catalog/
@@ -39,7 +39,7 @@ catalog:
   ios18:
     iphone:
       slug: starter-ios           # update to your simemu slug
-      app_id: com.appstarterkit.app.dev
+      app_id: com.onlystack.starterapp.dev
     # ipad:
     #   slug: starter-ipad
     #   app_id: starter.app.dev
@@ -47,16 +47,16 @@ catalog:
   ios26:
     iphone:
       slug: starter-ios26
-      app_id: com.appstarterkit.app.dev
+      app_id: com.onlystack.starterapp.dev
       glossy: true                # captures glossy-light + glossy-dark variants too
 
   android:
     phone:
       slug: starter-android
-      app_id: com.appstarterkit.app.mock
+      app_id: com.onlystack.starterapp.mock
     # tablet:
     #   slug: starter-tablet
-    #   app_id: com.appstarterkit.app
+    #   app_id: com.onlystack.starterapp
 
   screens: []  # add screens as you build them — slug + flow path required
 

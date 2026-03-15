@@ -64,7 +64,7 @@ services:
 - Runs on `macos-14` (Apple Silicon, Xcode 15)
 - Installs XcodeGen via Homebrew
 - Runs `xcodegen generate`
-- Builds `AppStarterKit-Dev` scheme for iOS Simulator
+- Builds `StarterApp-Dev` scheme for iOS Simulator
 - Runs unit tests
 
 ### Required secrets

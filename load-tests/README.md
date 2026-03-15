@@ -1,4 +1,4 @@
-# AppStarterKit Load Tests
+# StarterApp Load Tests
 
 k6-based load testing suite covering smoke, load, and stress scenarios.
 

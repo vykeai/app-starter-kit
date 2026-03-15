@@ -12,7 +12,7 @@ Goal: identify systems that appear repeatedly enough to belong in `Onlystack`.
 
 ### 1. Auth System
 
-Already common everywhere. Needs the stronger shared standard documented in [AUTH_SYSTEM.md](/Users/ted/dev/app-starter-kit/docs/AUTH_SYSTEM.md).
+Already common everywhere. Needs the stronger shared standard documented in [AUTH_SYSTEM.md](/Users/ted/dev/onlystack/docs/AUTH_SYSTEM.md).
 
 Why:
 - repeated across all repos
@@ -220,7 +220,7 @@ Do not push these into starter kit:
 
 ## Immediate Recommendation
 
-The next extraction wave for `app-starter-kit` should be:
+The next extraction wave for `Onlystack` should be:
 
 1. auth
 2. deep-link routing

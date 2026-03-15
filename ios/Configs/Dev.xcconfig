@@ -1,4 +1,4 @@
-PRODUCT_BUNDLE_IDENTIFIER = com.appstarterkit.app.dev
-BUNDLE_DISPLAY_NAME = AppStarterKit (Dev)
+PRODUCT_BUNDLE_IDENTIFIER = com.onlystack.starterapp.dev
+BUNDLE_DISPLAY_NAME = StarterApp (Dev)
 API_BASE_URL = http://localhost:3000/api/v1
 ENVIRONMENT = development

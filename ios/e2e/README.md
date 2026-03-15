@@ -49,7 +49,7 @@ simemu maestro starter-ios ios/e2e/01_auth_flow.yaml
   uses: mobile-dev-inc/action-maestro-cloud@v1
   with:
     api-key: ${{ secrets.MAESTRO_CLOUD_API_KEY }}
-    app-file: path/to/AppStarterKit.app
+    app-file: path/to/StarterApp.app
     workspace: ios/e2e/
 ```
 

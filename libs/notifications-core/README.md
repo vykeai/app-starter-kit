@@ -3,8 +3,8 @@
 Source of truth currently lives in:
 
 - backend: `backend/src/notification/`
-- iOS: `ios/AppStarterKit/Core/Notifications/`
-- Android: `android/app/src/main/kotlin/com/appstarterkit/app/core/notifications/`
+- iOS: `ios/StarterApp/Core/Notifications/`
+- Android: `android/app/src/main/kotlin/com/onlystack/starterapp/core/notifications/`
 
 Responsibilities:
 

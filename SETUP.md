@@ -30,12 +30,12 @@ java -version    # must be 17+
 ## Section 1: Clone and rename
 
 ```bash
-git clone https://github.com/YOUR_ORG/app-starter-kit.git my-app
+git clone https://github.com/vykeai/onlystack.git my-app
 cd my-app
 bash scripts/rename.sh "MyApp" "com.mycompany.myapp"
 ```
 
-The rename script performs a full find-and-replace of `AppStarterKit` and the bundle ID across all source files, renames iOS directories, moves the Android package tree, and regenerates the Xcode project. It prompts for confirmation before making changes.
+The rename script performs a full find-and-replace of `StarterApp` and the bundle ID across all source files, renames iOS directories, moves the Android package tree, and regenerates the Xcode project. It prompts for confirmation before making changes.
 
 After renaming, update brand colours in `ios/MyApp/DesignSystem/Tokens/AppTokens.swift` and `android/app/src/main/kotlin/.../design/tokens/AppTokens.kt`.
 
@@ -80,11 +80,11 @@ Swagger UI is available at `http://localhost:3000/api/docs`.
 
 ```bash
 cd ios && xcodegen generate
-open AppStarterKit.xcodeproj
+open StarterApp.xcodeproj
 ```
 
 In Xcode:
-1. Select the **AppStarterKit-Dev** scheme from the scheme picker
+1. Select the **StarterApp-Dev** scheme from the scheme picker
 2. Select an iPhone simulator as the run destination
 3. Press Cmd+R to build and run
 
@@ -127,7 +127,7 @@ npm run validate:fixtures
 ```
 
 iOS tests (run in Xcode):
-- Select the **AppStarterKit-Dev** scheme
+- Select the **StarterApp-Dev** scheme
 - Press **Cmd+U** to run the full test suite
 
 Android tests:

@@ -15,7 +15,7 @@ const path = require('path');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const ENDPOINT_SCHEMA = path.join(REPO_ROOT, 'sentinel/schemas/features/auth-endpoints.json');
-const IOS_FIXTURES = path.join(REPO_ROOT, 'ios/AppStarterKitTests/Fixtures');
+const IOS_FIXTURES = path.join(REPO_ROOT, 'ios/StarterAppTests/Fixtures');
 const ANDROID_FIXTURES = path.join(REPO_ROOT, 'android/app/src/test/resources/fixtures');
 
 let errors = 0;

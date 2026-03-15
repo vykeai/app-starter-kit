@@ -1,6 +1,6 @@
-name: AppStarterKit
+name: StarterApp
 options:
-  bundleIdPrefix: com.appstarterkit.app
+  bundleIdPrefix: com.onlystack.starterapp
   deploymentTarget:
     iOS: "17.0"
   xcodeVersion: "15"
@@ -12,11 +12,11 @@ configs:
   Release-Debug: debug
   Release-Release: release
 targets:
-  AppStarterKit:
+  StarterApp:
     type: application
     platform: iOS
     sources:
-      - path: AppStarterKit
+      - path: StarterApp
     configFiles:
       Dev-Debug: Configs/Dev.xcconfig
       Dev-Release: Configs/Dev.xcconfig
@@ -27,53 +27,53 @@ targets:
     settings:
       base:
         SWIFT_VERSION: "5.9"
-        PRODUCT_NAME: AppStarterKit
-        INFOPLIST_FILE: AppStarterKit/App/Info.plist
+        PRODUCT_NAME: StarterApp
+        INFOPLIST_FILE: StarterApp/App/Info.plist
         GENERATE_INFOPLIST_FILE: NO
     dependencies: []
-  AppStarterKitTests:
+  StarterAppTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: AppStarterKitTests
+      - path: StarterAppTests
     resources:
-      - path: AppStarterKitTests/Fixtures
+      - path: StarterAppTests/Fixtures
     dependencies:
-      - target: AppStarterKit
+      - target: StarterApp
     settings:
       base:
         SWIFT_VERSION: "5.9"
-  AppStarterKitUITests:
+  StarterAppUITests:
     type: bundle.ui-testing
     platform: iOS
     sources:
-      - path: AppStarterKitUITests
+      - path: StarterAppUITests
     dependencies:
-      - target: AppStarterKit
+      - target: StarterApp
     settings:
       base:
         SWIFT_VERSION: "5.9"
 schemes:
-  AppStarterKit-Dev:
+  StarterApp-Dev:
     build:
       targets:
-        AppStarterKit: all
+        StarterApp: all
     run:
       config: Dev-Debug
     test:
       config: Dev-Debug
       targets:
-        - AppStarterKitTests
-        - AppStarterKitUITests
-  AppStarterKit-Staging:
+        - StarterAppTests
+        - StarterAppUITests
+  StarterApp-Staging:
     build:
       targets:
-        AppStarterKit: all
+        StarterApp: all
     run:
       config: Staging-Debug
-  AppStarterKit-Release:
+  StarterApp-Release:
     build:
       targets:
-        AppStarterKit: all
+        StarterApp: all
     run:
       config: Release-Release

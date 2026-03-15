@@ -1,4 +1,4 @@
-# AppStarterKit — Local development stack
+# StarterApp — Local development stack
 # Usage: docker-compose up -d
 # Stop:  docker-compose down
 # Reset: docker-compose down -v  (deletes all data)

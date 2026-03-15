@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Rename AppStarterKit to your app name across all platforms.
+# Rename StarterApp to your app name across all platforms.
 # Run once after cloning, before your first commit.
 #
 # Usage (interactive):
@@ -10,8 +10,8 @@
 #   ./scripts/rename.sh "FitKind" "com.fitkind.app"
 #
 # What it changes:
-#   iOS    — AppStarterKit → NewName in sources, xcconfig, project.yml; renames source dirs; regenerates xcodeproj
-#   Android — com.appstarterkit.app → new package; AppStarterKit → NewName; moves source tree
+#   iOS    — StarterApp → NewName in sources, xcconfig, project.yml; renames source dirs; regenerates xcodeproj
+#   Android — com.onlystack.starterapp → new package; StarterApp → NewName; moves source tree
 #   Backend — app name in Swagger docs
 #   Docs    — README, CLAUDE.md references
 #   Root    — package.json name
@@ -28,7 +28,7 @@ NEW_BUNDLE="${2:-}"
 
 if [[ -z "$NEW_NAME" ]]; then
   echo ""
-  echo "App rename — app-starter-kit"
+  echo "App rename — StarterApp"
   echo "────────────────────────────"
   read -rp "New app name (PascalCase, e.g. FitKind):       " NEW_NAME
 fi
@@ -46,11 +46,11 @@ fi
 
 # ── Derived values ────────────────────────────────────────────────────────────
 
-OLD_NAME="AppStarterKit"
+OLD_NAME="StarterApp"
 OLD_BUNDLE_IOS="starter.app"       # used in xcconfig PRODUCT_BUNDLE_IDENTIFIER prefix
-OLD_PACKAGE_ANDROID="com.appstarterkit.app"
-OLD_KEBAB="app-starter-kit"
-OLD_SWAGGER_TITLE="AppStarterKit API"
+OLD_PACKAGE_ANDROID="com.onlystack.starterapp"
+OLD_KEBAB="starter-app"
+OLD_SWAGGER_TITLE="StarterApp API"
 
 # PascalCase — as provided
 NEW_PASCAL="$NEW_NAME"
@@ -61,14 +61,14 @@ NEW_LOWER=$(echo "$NEW_NAME" | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')
 # Kebab case — try to split on uppercase boundaries (FitKind → fit-kind)
 NEW_KEBAB=$(echo "$NEW_NAME" | sed 's/\([A-Z]\)/-\1/g' | tr '[:upper:]' '[:lower:]' | sed 's/^-//')
 
-# Android package path (com.appstarterkit.app → com/fitkind/app)
+# Android package path (com.onlystack.starterapp → com/fitkind/app)
 OLD_PKG_PATH=$(echo "$OLD_PACKAGE_ANDROID" | tr '.' '/')
 NEW_PKG_PATH=$(echo "$NEW_BUNDLE" | tr '.' '/')
 
-# iOS bundle ID prefix — everything up to last segment (com.appstarterkit.app → starter.app → new.bundle)
+# iOS bundle ID prefix — everything up to last segment (com.onlystack.starterapp → starter.app → new.bundle)
 # We replace the xcconfig placeholder `starter.app` with the full bundle ID (minus last segment is tricky)
 # Simpler: just replace full bundle strings
-OLD_IOS_BUNDLE_PREFIX="com.appstarterkit.app"  # full prefix in xcconfigs
+OLD_IOS_BUNDLE_PREFIX="com.onlystack.starterapp"  # full prefix in xcconfigs
 
 echo ""
 echo "Renaming:"
@@ -130,11 +130,11 @@ echo "[1/5] Replacing content in source files..."
 # App name (PascalCase) — most important
 replace_in_files "$OLD_NAME" "$NEW_PASCAL"
 
-# Bundle IDs (dot-notation: com.appstarterkit.app)
+# Bundle IDs (dot-notation: com.onlystack.starterapp)
 replace_in_files "$OLD_IOS_BUNDLE_PREFIX" "$NEW_BUNDLE"
 replace_in_files "$OLD_PACKAGE_ANDROID" "$NEW_BUNDLE"
 
-# Package path (slash-notation in yaml/sh: com/appstarterkit/app)
+# Package path (slash-notation in yaml/sh: com/onlystack/starterapp)
 replace_in_files "$OLD_PKG_PATH" "$NEW_PKG_PATH"
 
 # Kebab name (package.json, README, CLAUDE.md)
@@ -169,7 +169,7 @@ if [[ -d "ios/${OLD_NAME}.xcodeproj" && "${OLD_NAME}" != "${NEW_PASCAL}" ]]; the
 fi
 
 # Update project.yml name field (was already content-replaced above, but double-check)
-# project.yml `name: AppStarterKit` is handled by replace_in_files above.
+# project.yml `name: StarterApp` is handled by replace_in_files above.
 
 # ── Step 3: Move Android package directories ───────────────────────────────────
 
@@ -224,5 +224,5 @@ echo "  3. Replace YOUR_APP_ID in HardUpdateView.swift / ForceUpdateComponents.k
 echo "     with your real App Store / Play Store IDs"
 echo "  4. Implement email sending in backend/src/email/email.processor.ts"
 echo "  5. Update API URLs in ios/Configs/*.xcconfig and android/app/build.gradle.kts"
-echo "  6. git add -A && git commit -m 'chore: rename AppStarterKit → ${NEW_PASCAL}'"
+echo "  6. git add -A && git commit -m 'chore: rename StarterApp → ${NEW_PASCAL}'"
 echo ""

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.appstarterkit.app"
+    namespace = "com.onlystack.starterapp"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.appstarterkit.app"
+        applicationId = "com.onlystack.starterapp"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
@@ -27,7 +27,7 @@ android {
             buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:3000/api/v1\"")
             buildConfigField("String", "ENVIRONMENT", "\"development\"")
             buildConfigField("boolean", "RUNTIME_FIXTURE_MODE", "false")
-            resValue("string", "app_name", "AppStarterKit (Dev)")
+            resValue("string", "app_name", "StarterApp (Dev)")
         }
         create("mock") {
             dimension = "environment"
@@ -36,7 +36,7 @@ android {
             buildConfigField("String", "API_BASE_URL", "\"https://fixture.invalid/api/v1\"")
             buildConfigField("String", "ENVIRONMENT", "\"mock\"")
             buildConfigField("boolean", "RUNTIME_FIXTURE_MODE", "true")
-            resValue("string", "app_name", "AppStarterKit (Mock)")
+            resValue("string", "app_name", "StarterApp (Mock)")
         }
         create("staging") {
             dimension = "environment"
@@ -45,14 +45,14 @@ android {
             buildConfigField("String", "API_BASE_URL", "\"https://api-staging.yourapp.com/api/v1\"")
             buildConfigField("String", "ENVIRONMENT", "\"staging\"")
             buildConfigField("boolean", "RUNTIME_FIXTURE_MODE", "false")
-            resValue("string", "app_name", "AppStarterKit (Staging)")
+            resValue("string", "app_name", "StarterApp (Staging)")
         }
         create("prod") {
             dimension = "environment"
             buildConfigField("String", "API_BASE_URL", "\"https://api.yourapp.com/api/v1\"")
             buildConfigField("String", "ENVIRONMENT", "\"production\"")
             buildConfigField("boolean", "RUNTIME_FIXTURE_MODE", "false")
-            resValue("string", "app_name", "AppStarterKit")
+            resValue("string", "app_name", "StarterApp")
         }
     }
 

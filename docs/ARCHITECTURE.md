@@ -27,7 +27,7 @@ Generated files must never be hand-edited. Edit the schema and run `npx sentinel
 ## Directory structure
 
 ```
-app-starter-kit/
+onlystack/
 ├── backend/                  # NestJS API
 │   ├── src/
 │   │   ├── auth/             # Magic link: request + verify + refresh + logout
@@ -40,14 +40,14 @@ app-starter-kit/
 ├── ios/
 │   ├── project.yml           # XcodeGen — 3 schemes: Dev, Staging, Release
 │   ├── Configs/              # xcconfig per scheme (API_BASE_URL, ENVIRONMENT)
-│   └── AppStarterKit/
-│       ├── App/              # AppStarterKit.swift, AppState.swift, RootView.swift
+│   └── StarterApp/
+│       ├── App/              # StarterApp.swift, AppState.swift, RootView.swift
 │       ├── Features/Auth/    # WelcomeView, EmailInputView, CodeEntryView
 │       ├── Features/Home/    # HomeView placeholder
 │       ├── DesignSystem/     # AppTokens.swift (generated), components
 │       └── Core/             # APIClient, NetworkMonitor, KeychainHelper, NFRs
 ├── android/
-│   └── app/src/main/kotlin/com/appstarterkit/app/
+│   └── app/src/main/kotlin/com/onlystack/starterapp/
 │       ├── app/              # Application (Hilt), MainActivity
 │       ├── features/auth/    # AuthNavHost, AuthViewModel, screens
 │       ├── features/home/    # HomeScreen placeholder
@@ -212,9 +212,9 @@ Three environments exist on every platform:
 
 | Environment | iOS Scheme | Android Flavour | API Base URL |
 |-------------|-----------|-----------------|--------------|
-| Dev | AppStarterKit-Dev | devDebug | `http://localhost:3000/api/v1` (iOS) / `http://10.0.2.2:3000/api/v1` (Android emulator) |
-| Staging | AppStarterKit-Staging | stagingDebug | `https://api-staging.yourapp.com/api/v1` |
-| Production | AppStarterKit-Release | prodRelease | `https://api.yourapp.com/api/v1` |
+| Dev | StarterApp-Dev | devDebug | `http://localhost:3000/api/v1` (iOS) / `http://10.0.2.2:3000/api/v1` (Android emulator) |
+| Staging | StarterApp-Staging | stagingDebug | `https://api-staging.yourapp.com/api/v1` |
+| Production | StarterApp-Release | prodRelease | `https://api.yourapp.com/api/v1` |
 
 iOS API URLs are set in `ios/Configs/Dev.xcconfig`, `Staging.xcconfig`, `Release.xcconfig`.
 Android API URLs are set via `buildConfigField` in `android/app/build.gradle.kts`.
