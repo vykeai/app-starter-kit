@@ -1,13 +1,26 @@
-import { IsEmail, IsString, Length } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsDefined, IsEmail, IsOptional, IsString, Length, ValidateIf } from 'class-validator';
 
 export class VerifyMagicLinkDto {
-  @ApiProperty({ example: 'user@example.com' })
+  @ApiPropertyOptional({ example: 'user@example.com' })
+  @ValidateIf((dto) => !dto.linkToken)
+  @IsDefined()
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: '12345678' })
+  @ApiPropertyOptional({ example: '12345678' })
+  @ValidateIf((dto) => !dto.linkToken)
+  @IsDefined()
   @IsString()
   @Length(8, 8)
   code: string;
+
+  @ApiPropertyOptional({
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.magic-link.example',
+    description: 'Opaque one-tap token embedded in auth emails and review links.',
+  })
+  @ValidateIf((dto) => !dto.email || !dto.code)
+  @IsString()
+  @IsOptional()
+  linkToken?: string;
 }

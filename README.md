@@ -221,6 +221,29 @@ Optional non-production bypass variables:
 - `AUTH_DEV_BYPASS_EMAIL`
 - `AUTH_DEV_BYPASS_CODE`
 - `AUTH_DEV_BYPASS_LINK_TOKEN`
+
+Recommended local setup:
+
+```bash
+AUTH_DELIVERY_MODE=console
+AUTH_LINK_BASE_URL=appstarterkit://auth/verify
+AUTH_DEV_BYPASS_ENABLED=true
+AUTH_DEV_BYPASS_EMAIL=reviewer@yourapp.com
+AUTH_DEV_BYPASS_CODE=11112222
+AUTH_DEV_BYPASS_LINK_TOKEN=dev-review-link-token
+```
+
+How auth should work in each environment:
+
+- real email environments
+  - request code normally
+  - email contains both a manual code and a one-tap deep link
+- local/CI without email delivery
+  - backend returns and logs `code`, `linkToken`, and `linkUrl`
+  - mobile/web can use the same auth UI and either type the code or open the deep link
+- review/demo environments
+  - use the allowlisted bypass credentials above
+  - clients still hit the normal auth endpoints and receive the normal auth envelope
 - `AUTH_REVIEW_EMAIL`
 - `AUTH_REVIEW_CODE`
 

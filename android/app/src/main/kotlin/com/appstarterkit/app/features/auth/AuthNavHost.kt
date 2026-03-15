@@ -5,12 +5,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import android.net.Uri
 import com.appstarterkit.app.core.deeplink.DeepLinkViewModel
 import com.appstarterkit.app.features.home.HomeScreen
-import kotlinx.coroutines.launch
 
 @Composable
 fun AuthNavHost(
@@ -18,6 +19,46 @@ fun AuthNavHost(
     deepLinkViewModel: DeepLinkViewModel = hiltViewModel(),
 ) {
     val navController = rememberNavController()
+    val uiState by viewModel.uiState.collectAsState()
+    val pendingAuthPayload by deepLinkViewModel.pendingAuthPayload.collectAsState()
+
+    LaunchedEffect(uiState.isAuthenticated) {
+        if (uiState.isAuthenticated) {
+            navController.navigate("home") {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
+        }
+    }
+
+    LaunchedEffect(pendingAuthPayload) {
+        val payload = pendingAuthPayload ?: return@LaunchedEffect
+
+        when {
+            !payload.linkToken.isNullOrBlank() -> {
+                payload.email?.let(viewModel::rememberEmail)
+                viewModel.verifyLinkToken(payload.linkToken)
+            }
+            !payload.email.isNullOrBlank() -> {
+                val email = payload.email
+                viewModel.rememberEmail(email)
+                payload.code?.let(viewModel::primePendingCode)
+                navController.navigate("enter-code/${Uri.encode(email)}") {
+                    launchSingleTop = true
+                }
+            }
+            !payload.code.isNullOrBlank() -> {
+                viewModel.primePendingCode(payload.code)
+                navController.navigate("enter-email") {
+                    launchSingleTop = true
+                }
+            }
+        }
+
+        deepLinkViewModel.consumePendingAuth()
+    }
 
     NavHost(navController = navController, startDestination = "welcome") {
         composable("welcome") {
@@ -26,26 +67,19 @@ fun AuthNavHost(
         composable("enter-email") {
             EmailInputScreen(
                 viewModel = viewModel,
-                onCodeSent = { email -> navController.navigate("enter-code/$email") },
+                onCodeSent = { email ->
+                    viewModel.resetCodeSent()
+                    navController.navigate("enter-code/${Uri.encode(email)}")
+                },
             )
         }
         composable("enter-code/{email}") { backStackEntry ->
             val email = backStackEntry.arguments?.getString("email") ?: ""
 
-            // Observe any OTP code delivered via deep link and auto-populate it.
-            val pendingCode by deepLinkViewModel.pendingCode.collectAsState()
-            LaunchedEffect(pendingCode) {
-                val code = pendingCode ?: return@LaunchedEffect
-                if (code.isNotBlank()) {
-                    viewModel.verifyCode(email, code)
-                    deepLinkViewModel.consumeCode()
-                }
-            }
-
             CodeEntryScreen(
                 viewModel = viewModel,
                 email = email,
-                onAuthenticated = { navController.navigate("home") { popUpTo(0) } },
+                onAuthenticated = { },
             )
         }
         composable("home") {

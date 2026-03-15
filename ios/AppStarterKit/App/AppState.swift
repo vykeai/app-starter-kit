@@ -1,10 +1,21 @@
 import Foundation
 
+struct PendingAuthLink: Equatable {
+    let email: String?
+    let code: String?
+    let linkToken: String?
+
+    var hasAuthPayload: Bool {
+        !(email?.isEmpty ?? true) || !(code?.isEmpty ?? true) || !(linkToken?.isEmpty ?? true)
+    }
+}
+
 @Observable
 class AppState {
     var isAuthenticated: Bool = false
     var currentUser: AppUser? = nil
     var syncEngine: SyncEngine?
+    var pendingAuthLink: PendingAuthLink? = nil
     let forceUpdateChecker = ForceUpdateChecker()
     let networkMonitor = NetworkMonitor()
 
@@ -18,6 +29,7 @@ class AppState {
         KeychainHelper.shared.clearAll()
         isAuthenticated = false
         currentUser = nil
+        pendingAuthLink = nil
         isLoggingOut = false
     }
 }

@@ -49,6 +49,14 @@ fun CodeEntryScreen(
         if (uiState.isAuthenticated) onAuthenticated()
     }
 
+    LaunchedEffect(uiState.pendingCode) {
+        val pendingCode = uiState.pendingCode ?: return@LaunchedEffect
+        if (pendingCode != code.text) {
+            code = TextFieldValue(pendingCode, TextRange(pendingCode.length))
+        }
+        viewModel.clearPendingCode()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

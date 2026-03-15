@@ -5,7 +5,11 @@ import retrofit2.http.DELETE
 import retrofit2.http.POST
 
 data class RequestMagicLinkBody(val email: String)
-data class VerifyMagicLinkBody(val email: String, val code: String)
+data class VerifyMagicLinkBody(
+    val email: String? = null,
+    val code: String? = null,
+    val linkToken: String? = null,
+)
 data class AuthResponse(val accessToken: String, val refreshToken: String)
 data class MessageResponse(val message: String)
 data class SocialAuthRequest(val provider: String, val idToken: String)

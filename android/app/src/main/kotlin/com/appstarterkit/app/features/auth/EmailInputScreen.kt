@@ -30,7 +30,7 @@ fun EmailInputScreen(
     onCodeSent: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var email by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf(viewModel.lastRequestedEmail().orEmpty()) }
 
     LaunchedEffect(uiState.isCodeSent) {
         if (uiState.isCodeSent) onCodeSent(email)

@@ -2,8 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { getQueueToken } from '@nestjs/bull';
-import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
+
+process.env.NODE_ENV = 'development';
+process.env.DATABASE_URL = 'postgresql://starter:starter@localhost:5432/starter_test';
+process.env.JWT_SECRET = 'test-jwt-secret-test-jwt-secret-123';
+process.env.AUTH_DELIVERY_MODE = 'console';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { AppModule } = require('../src/app.module');
 
 // E2E smoke tests — run against a fully-assembled NestJS app with Prisma + Queue mocked.
 // These verify routing, pipes, and response shapes without a real database.
@@ -54,7 +61,10 @@ const mockPrismaService = {
   },
 };
 
-const mockEmailQueue = { add: jest.fn() };
+const mockEmailQueue = {
+  add: jest.fn(),
+  process: jest.fn(),
+};
 
 describe('App (e2e)', () => {
   let app: INestApplication;
@@ -78,14 +88,14 @@ describe('App (e2e)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await app?.close();
   });
 
   // ── Health ──────────────────────────────────────────────────────────────────
 
   it('GET /health returns 200', () => {
     return request(app.getHttpServer())
-      .get('/health')
+      .get('/api/v1/health')
       .expect(200)
       .expect((res) => {
         expect(res.body.status).toBe('ok');
@@ -117,6 +127,7 @@ describe('App (e2e)', () => {
       .expect(201)
       .expect((res) => {
         expect(res.body.message).toBe('Code sent');
+        expect(res.body.deliveryMode).toBeDefined();
       });
   });
 
@@ -144,6 +155,24 @@ describe('App (e2e)', () => {
       .expect((res) => {
         expect(res.body).toHaveProperty('accessToken');
         expect(res.body).toHaveProperty('refreshToken');
+        expect(res.body.user).toMatchObject({ email: 'test@example.com' });
+      });
+  });
+
+  it('POST /api/v1/auth/magic-link/verify accepts linkToken payloads', async () => {
+    const requestResponse = await request(app.getHttpServer())
+      .post('/api/v1/auth/magic-link/request')
+      .send({ email: 'test@example.com' })
+      .expect(201);
+
+    expect(requestResponse.body.linkToken).toBeDefined();
+
+    await request(app.getHttpServer())
+      .post('/api/v1/auth/magic-link/verify')
+      .send({ linkToken: requestResponse.body.linkToken })
+      .expect(201)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('accessToken');
         expect(res.body.user).toMatchObject({ email: 'test@example.com' });
       });
   });

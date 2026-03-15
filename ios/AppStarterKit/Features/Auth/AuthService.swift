@@ -5,8 +5,9 @@ struct MagicLinkRequestBody: Encodable {
 }
 
 struct MagicLinkVerifyBody: Encodable {
-    let email: String
-    let code: String
+    let email: String?
+    let code: String?
+    let linkToken: String?
 }
 
 struct AuthResponse: Decodable {
@@ -28,11 +29,15 @@ struct AuthService {
         )
     }
 
-    func verifyMagicLink(email: String, code: String) async throws -> AuthResponse {
+    func verifyMagicLink(
+        email: String? = nil,
+        code: String? = nil,
+        linkToken: String? = nil
+    ) async throws -> AuthResponse {
         return try await APIClient.shared.request(
             "auth/magic-link/verify",
             method: "POST",
-            body: MagicLinkVerifyBody(email: email, code: code)
+            body: MagicLinkVerifyBody(email: email, code: code, linkToken: linkToken)
         )
     }
 

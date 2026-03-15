@@ -54,20 +54,42 @@ struct CodeEntryView: View {
         }
         .padding(AppTokens.Spacing.lg)
         .background(AppTokens.Color.background.ignoresSafeArea())
-        .onAppear { focusedIndex = 0 }
+        .onAppear {
+            syncDigits(with: viewModel.codeInput)
+            focusedIndex = nextFocusIndex(for: viewModel.codeInput)
+        }
+        .onChange(of: viewModel.codeInput) { _, newValue in
+            guard digits.joined() != newValue else { return }
+            syncDigits(with: newValue)
+            focusedIndex = nextFocusIndex(for: newValue)
+        }
     }
 
     private func handleInput(at index: Int, value: String) {
         if value.count == digitCount {
             let chars = Array(value.prefix(digitCount)).map(String.init)
             for i in 0..<digitCount { digits[i] = chars[i] }
+            viewModel.codeInput = chars.joined()
             focusedIndex = nil
             return
         }
         digits[index] = String(value.prefix(1))
+        viewModel.codeInput = digits.joined()
         if !digits[index].isEmpty && index < digitCount - 1 {
             focusedIndex = index + 1
         }
+    }
+
+    private func syncDigits(with code: String) {
+        let chars = Array(code.prefix(digitCount)).map(String.init)
+        for index in 0..<digitCount {
+            digits[index] = index < chars.count ? chars[index] : ""
+        }
+    }
+
+    private func nextFocusIndex(for code: String) -> Int? {
+        let nextIndex = min(code.count, digitCount - 1)
+        return code.count >= digitCount ? nil : nextIndex
     }
 }
 

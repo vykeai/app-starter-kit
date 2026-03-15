@@ -75,7 +75,7 @@ class AuthViewModelTest {
 
     @Test
     fun `verifyMagicLink_success_updatesStateToAuthenticated`() = runTest {
-        coEvery { authRepository.verifyMagicLink(any(), any()) } returns Result.success(
+        coEvery { authRepository.verifyMagicLink(any(), any(), any()) } returns Result.success(
             AuthResponse(accessToken = "access_abc", refreshToken = "refresh_xyz"),
         )
 
@@ -89,7 +89,7 @@ class AuthViewModelTest {
 
     @Test
     fun `verifyMagicLink_failure_setsErrorState`() = runTest {
-        coEvery { authRepository.verifyMagicLink(any(), any()) } returns Result.failure(
+        coEvery { authRepository.verifyMagicLink(any(), any(), any()) } returns Result.failure(
             RuntimeException("401 Unauthorized"),
         )
 

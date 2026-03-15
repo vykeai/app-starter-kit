@@ -40,7 +40,11 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Returns accessToken, refreshToken, and user' })
   @ApiResponse({ status: 401, description: 'Invalid email or code' })
   verifyMagicLink(@Body() dto: VerifyMagicLinkDto) {
-    return this.authService.verifyMagicLink(dto.email, dto.code);
+    return this.authService.verifyMagicLink({
+      email: dto.email,
+      code: dto.code,
+      linkToken: dto.linkToken,
+    });
   }
 
   @Post('refresh')

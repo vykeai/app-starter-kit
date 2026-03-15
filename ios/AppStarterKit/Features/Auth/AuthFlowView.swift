@@ -23,5 +23,23 @@ struct AuthFlowView: View {
                 appState.isAuthenticated = true
             }
         }
+        .task {
+            await processPendingAuthIfNeeded()
+        }
+        .onChange(of: appState.pendingAuthLink) { _, _ in
+            Task {
+                await processPendingAuthIfNeeded()
+            }
+        }
+    }
+
+    @MainActor
+    private func processPendingAuthIfNeeded() async {
+        guard let pendingAuthLink = appState.pendingAuthLink else { return }
+        appState.pendingAuthLink = nil
+        let success = await viewModel.consumePendingAuth(pendingAuthLink)
+        if success {
+            appState.isAuthenticated = true
+        }
     }
 }

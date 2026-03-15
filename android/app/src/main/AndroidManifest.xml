@@ -47,8 +47,8 @@
                 as a fallback without verification.
 
                 URI patterns handled:
-                  https://yourapp.com/auth/verify?code=XXXXXXXX
-                  appstarterkit://auth/verify?code=XXXXXXXX
+                  https://yourapp.com/auth/verify?email=user@example.com&code=XXXXXXXX&linkToken=...
+                  appstarterkit://auth/verify?email=user@example.com&code=XXXXXXXX&linkToken=...
             -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />

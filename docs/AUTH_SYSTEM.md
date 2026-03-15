@@ -199,6 +199,33 @@ Rules:
 - must still return normal auth envelopes
 - must be visible in logs/docs so teams know they are using bypass mode
 
+Example local/review configuration:
+
+```bash
+AUTH_DELIVERY_MODE=console
+AUTH_LINK_BASE_URL=appstarterkit://auth/verify
+AUTH_DEV_BYPASS_ENABLED=true
+AUTH_DEV_BYPASS_EMAIL=reviewer@yourapp.com
+AUTH_DEV_BYPASS_CODE=11112222
+AUTH_DEV_BYPASS_LINK_TOKEN=dev-review-link-token
+```
+
+Expected runtime behavior:
+
+- `email`
+  - backend sends real email containing a code plus a deep link
+- `console`
+  - backend logs and returns `code`, `linkToken`, and `linkUrl`
+- `disabled`
+  - backend creates the challenge without attempting delivery; useful for tightly controlled fixture tests
+
+Mock/non-email pass strategy:
+
+- use the same auth UI and endpoints
+- type the returned code manually, or
+- open the returned deep link, or
+- use the allowlisted bypass credentials in review/demo environments
+
 ## Screenshot-Backed Verification
 
 Starter-kit auth is not complete without simulator proof.
@@ -226,9 +253,8 @@ Proof storage:
 Current repo issues to address over time:
 
 - runtime endpoints still use legacy `magic-link/request` and `magic-link/verify`
-- deep-link handling is still code-prefill-oriented rather than challenge-resume-oriented
 - Apple/Google provider verification is not fully implemented in starter-kit backend
-- auth docs previously treated email code flow as the only contract
+- challenge IDs are still not first-class in the runtime DTOs yet
 
 This document defines the target standard to converge toward.
 

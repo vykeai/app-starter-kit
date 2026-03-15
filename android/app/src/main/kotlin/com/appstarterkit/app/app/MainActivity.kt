@@ -19,8 +19,8 @@ import dagger.hilt.android.AndroidEntryPoint
  * exposes a [StateFlow] consumed by the Compose nav tree.
  *
  * Supported deep link patterns (also declared in AndroidManifest.xml):
- *  - https://yourapp.com/auth/verify?code=XXXXXXXX
- *  - appstarterkit://auth/verify?code=XXXXXXXX
+ *  - https://yourapp.com/auth/verify?email=user@example.com&code=XXXXXXXX&linkToken=...
+ *  - appstarterkit://auth/verify?email=user@example.com&code=XXXXXXXX&linkToken=...
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

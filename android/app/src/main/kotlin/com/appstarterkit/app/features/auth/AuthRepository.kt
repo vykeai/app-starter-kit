@@ -5,7 +5,11 @@ import javax.inject.Inject
 
 interface AuthRepository {
     suspend fun requestMagicLink(email: String): Result<Unit>
-    suspend fun verifyMagicLink(email: String, code: String): Result<AuthResponse>
+    suspend fun verifyMagicLink(
+        email: String? = null,
+        code: String? = null,
+        linkToken: String? = null,
+    ): Result<AuthResponse>
     /** Invalidates the server session and clears all locally stored tokens. */
     suspend fun logout()
     suspend fun authenticateWithSocial(provider: String, idToken: String): Result<Unit>
@@ -19,8 +23,14 @@ class AuthRepositoryImpl @Inject constructor(
         apiService.requestMagicLink(RequestMagicLinkBody(email))
     }
 
-    override suspend fun verifyMagicLink(email: String, code: String): Result<AuthResponse> = runCatching {
-        val response = apiService.verifyMagicLink(VerifyMagicLinkBody(email, code))
+    override suspend fun verifyMagicLink(
+        email: String?,
+        code: String?,
+        linkToken: String?,
+    ): Result<AuthResponse> = runCatching {
+        val response = apiService.verifyMagicLink(
+            VerifyMagicLinkBody(email = email, code = code, linkToken = linkToken),
+        )
         securePreferences.saveAccessToken(response.accessToken)
         securePreferences.saveRefreshToken(response.refreshToken)
         response

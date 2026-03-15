@@ -32,16 +32,57 @@ export class AuthService {
       },
     });
 
+    const linkToken = this.signMagicLinkToken({
+      email: user.email,
+      code,
+      expiresAt,
+    });
+    const linkUrl = this.buildMagicLinkUrl({
+      email: user.email,
+      code,
+      linkToken,
+    });
+    const deliveryMode = this.getDeliveryMode();
+
     await this.emailQueue.add({
       to: email,
+      email: user.email,
       code,
+      linkToken,
+      linkUrl,
+      deliveryMode,
     });
 
-    return { message: 'Code sent' };
+    const response: Record<string, unknown> = {
+      message: 'Code sent',
+      deliveryMode,
+    };
+
+    if (deliveryMode !== 'email') {
+      response.email = user.email;
+      response.code = code;
+      response.linkToken = linkToken;
+      response.linkUrl = linkUrl;
+    }
+
+    return response;
   }
 
-  async verifyMagicLink(email: string, code: string) {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+  async verifyMagicLink(input: { email?: string; code?: string; linkToken?: string }) {
+    const bypassResult = await this.tryVerifyDevBypass(input);
+    if (bypassResult) {
+      return this.generateTokens(bypassResult);
+    }
+
+    const resolvedInput = input.linkToken
+      ? this.verifyMagicLinkToken(input.linkToken)
+      : { email: input.email, code: input.code };
+
+    if (!resolvedInput.email || !resolvedInput.code) {
+      throw new UnauthorizedException('Invalid email or code');
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { email: resolvedInput.email } });
     if (!user) {
       throw new UnauthorizedException('Invalid email or code');
     }
@@ -49,7 +90,7 @@ export class AuthService {
     const magicLink = await this.prisma.magicLink.findFirst({
       where: {
         userId: user.id,
-        code,
+        code: resolvedInput.code,
         usedAt: null,
         expiresAt: { gt: new Date() },
       },
@@ -64,10 +105,119 @@ export class AuthService {
       data: { usedAt: new Date() },
     });
 
-    const accessToken = this.jwtService.sign({ sub: user.id });
+    return this.generateTokens(user);
+  }
 
+  private getDeliveryMode(): 'email' | 'console' | 'disabled' {
+    const raw = process.env.AUTH_DELIVERY_MODE;
+    if (raw === 'email' || raw === 'disabled') {
+      return raw;
+    }
+    return 'console';
+  }
+
+  private buildMagicLinkUrl(input: {
+    email: string;
+    code: string;
+    linkToken: string;
+  }): string {
+    const baseUrl = process.env.AUTH_LINK_BASE_URL || 'appstarterkit://auth/verify';
+    const url = new URL(baseUrl);
+    url.searchParams.set('email', input.email);
+    url.searchParams.set('code', input.code);
+    url.searchParams.set('linkToken', input.linkToken);
+    return url.toString();
+  }
+
+  private signMagicLinkToken(input: {
+    email: string;
+    code: string;
+    expiresAt: Date;
+  }): string {
+    const expiresInSeconds = Math.max(
+      60,
+      Math.floor((input.expiresAt.getTime() - Date.now()) / 1000),
+    );
+    return this.jwtService.sign(
+      {
+        type: 'magic_link',
+        email: input.email,
+        code: input.code,
+      },
+      { expiresIn: expiresInSeconds },
+    );
+  }
+
+  private verifyMagicLinkToken(linkToken: string): { email: string; code: string } {
+    try {
+      const payload = this.jwtService.verify<{
+        type?: string;
+        email?: string;
+        code?: string;
+      }>(linkToken);
+
+      if (payload.type !== 'magic_link' || !payload.email || !payload.code) {
+        throw new UnauthorizedException('Invalid magic link token');
+      }
+
+      return {
+        email: payload.email,
+        code: payload.code,
+      };
+    } catch {
+      throw new UnauthorizedException('Invalid magic link token');
+    }
+  }
+
+  private async tryVerifyDevBypass(input: {
+    email?: string;
+    code?: string;
+    linkToken?: string;
+  }) {
+    if (process.env.AUTH_DEV_BYPASS_ENABLED !== 'true') {
+      return null;
+    }
+
+    const bypassEmail = process.env.AUTH_DEV_BYPASS_EMAIL;
+    const bypassCode = process.env.AUTH_DEV_BYPASS_CODE;
+    const bypassLinkToken = process.env.AUTH_DEV_BYPASS_LINK_TOKEN;
+
+    const emailMatches = Boolean(
+      bypassEmail &&
+      ((input.email && input.email === bypassEmail) ||
+        (input.linkToken &&
+          bypassLinkToken &&
+          input.linkToken === bypassLinkToken)),
+    );
+    const codeMatches = Boolean(bypassCode && input.code === bypassCode);
+    const linkMatches = Boolean(
+      bypassLinkToken &&
+      input.linkToken &&
+      input.linkToken === bypassLinkToken,
+    );
+
+    if (!emailMatches || (!codeMatches && !linkMatches)) {
+      return null;
+    }
+
+    return this.prisma.user.upsert({
+      where: { email: bypassEmail! },
+      update: {},
+      create: { email: bypassEmail! },
+    });
+  }
+
+  private async generateTokens(user: {
+    id: string;
+    email: string;
+    displayName: string | null;
+  }) {
+    const accessToken = this.jwtService.sign({ sub: user.id });
     const refreshTokenValue = crypto.randomUUID();
-    const refreshExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    const refreshExpiryDays = Number(process.env.REFRESH_TOKEN_EXPIRY_DAYS) || 30;
+    const refreshExpiresAt = new Date(
+      Date.now() + refreshExpiryDays * 24 * 60 * 60 * 1000,
+    );
 
     await this.prisma.refreshToken.create({
       data: {

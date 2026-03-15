@@ -10,12 +10,6 @@ import SwiftUI
 // import Firebase
 // FirebaseApp.configure()
 
-extension Notification.Name {
-    /// Posted when the app handles a deep-link containing an OTP code.
-    /// `userInfo` key: `"code"` → `String`
-    static let deepLinkOTPReceived = Notification.Name("DeepLinkOTPReceived")
-}
-
 @main
 struct AppStarterKit: App {
     @State private var appState = AppState()
@@ -27,7 +21,7 @@ struct AppStarterKit: App {
                 .environment(appState)
                 .environment(toastManager)
                 .onOpenURL { url in
-                    handleDeepLink(url)
+                    handleDeepLink(url, appState: appState)
                 }
         }
     }
@@ -35,9 +29,9 @@ struct AppStarterKit: App {
     // MARK: - Deep-link handling
 
     /// Handles two URL shapes:
-    ///   • Custom scheme:  `appstarterkit://auth/verify?code=XXXXXX`
-    ///   • Universal link: `https://yourapp.com/auth/verify?code=XXXXXX`
-    private func handleDeepLink(_ url: URL) {
+    ///   • Custom scheme:  `appstarterkit://auth/verify?email=user@example.com&code=XXXXXX&linkToken=...`
+    ///   • Universal link: `https://yourapp.com/auth/verify?email=user@example.com&code=XXXXXX&linkToken=...`
+    private func handleDeepLink(_ url: URL, appState: AppState) {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             return
         }
@@ -57,16 +51,16 @@ struct AppStarterKit: App {
             isAuthVerify = true // already checked path above
         }
 
-        guard isAuthVerify,
-              let code = components.queryItems?.first(where: { $0.name == "code" })?.value,
-              !code.isEmpty else {
+        guard isAuthVerify else {
             return
         }
 
-        NotificationCenter.default.post(
-            name: .deepLinkOTPReceived,
-            object: nil,
-            userInfo: ["code": code]
-        )
+        let email = components.queryItems?.first(where: { $0.name == "email" })?.value
+        let code = components.queryItems?.first(where: { $0.name == "code" })?.value
+        let linkToken = components.queryItems?.first(where: { $0.name == "linkToken" })?.value
+        let pendingLink = PendingAuthLink(email: email, code: code, linkToken: linkToken)
+
+        guard pendingLink.hasAuthPayload else { return }
+        appState.pendingAuthLink = pendingLink
     }
 }

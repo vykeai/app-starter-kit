@@ -16,6 +16,7 @@ data class AuthUiState(
     val errorMessage: String? = null,
     val isCodeSent: Boolean = false,
     val isAuthenticated: Boolean = false,
+    val pendingCode: String? = null,
 )
 
 @HiltViewModel
@@ -24,9 +25,11 @@ class AuthViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
+    private var lastEmail: String? = null
 
     fun requestCode(email: String) {
         if (email.isBlank()) return
+        lastEmail = email.trim()
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             authRepository.requestMagicLink(email)
@@ -36,10 +39,50 @@ class AuthViewModel @Inject constructor(
     }
 
     fun verifyCode(email: String, code: String) {
+        lastEmail = email
+        verifyMagicLink(email = email, code = code)
+    }
+
+    fun verifyLinkToken(linkToken: String) {
+        verifyMagicLink(linkToken = linkToken)
+    }
+
+    fun primePendingCode(code: String) {
+        val normalized = code.filter { it.isDigit() }.take(8)
+        _uiState.update { it.copy(pendingCode = normalized.ifEmpty { null }) }
+    }
+
+    fun clearPendingCode() {
+        _uiState.update { it.copy(pendingCode = null) }
+    }
+
+    fun resetCodeSent() {
+        _uiState.update { it.copy(isCodeSent = false) }
+    }
+
+    fun rememberEmail(email: String) {
+        if (email.isNotBlank()) {
+            lastEmail = email
+        }
+    }
+
+    fun lastRequestedEmail(): String? = lastEmail
+
+    private fun verifyMagicLink(
+        email: String? = null,
+        code: String? = null,
+        linkToken: String? = null,
+    ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-            authRepository.verifyMagicLink(email, code)
-                .onSuccess { _uiState.value = _uiState.value.copy(isLoading = false, isAuthenticated = true) }
+            authRepository.verifyMagicLink(email = email, code = code, linkToken = linkToken)
+                .onSuccess {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        isAuthenticated = true,
+                        pendingCode = null,
+                    )
+                }
                 .onFailure { _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "Invalid code. Please try again.") }
         }
     }
@@ -54,6 +97,7 @@ class AuthViewModel @Inject constructor(
             authRepository.logout()
             // Reset UI state so a fresh login flow starts cleanly.
             _uiState.value = AuthUiState()
+            lastEmail = null
             onComplete()
         }
     }

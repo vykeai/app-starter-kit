@@ -21,39 +21,42 @@ class AuthViewModel {
 
     private let authService = AuthService()
 
-    // Strong reference to the observation token so it lives as long as the ViewModel.
-    private var deepLinkObserver: NSObjectProtocol?
-
-    init() {
-        // Listen for deep-link OTP codes. If the auth flow is active (the user is on
-        // the code-entry screen), we auto-populate the OTP field so they don't have
-        // to type it manually.
-        deepLinkObserver = NotificationCenter.default.addObserver(
-            forName: .deepLinkOTPReceived,
-            object: nil,
-            queue: .main
-        ) { [weak self] notification in
-            guard let self,
-                  let code = notification.userInfo?["code"] as? String else { return }
-            self.handleDeepLinkCode(code)
-        }
-    }
-
-    deinit {
-        if let observer = deepLinkObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
-    }
-
     // MARK: - Deep-link OTP
 
-    /// Auto-populates `codeInput` when a deep-link arrives, but only if the user is
-    /// currently on the code-entry step. The view observes `codeInput` and will update
-    /// its digit boxes accordingly.
+    /// Stores any code recovered from a deep link so the code-entry UI can render it.
     func handleDeepLinkCode(_ code: String) {
-        // Only pre-fill if we're on the code-entry screen.
-        guard case .enterCode = step else { return }
         codeInput = code
+    }
+
+    func consumePendingAuth(_ pendingAuthLink: PendingAuthLink) async -> Bool {
+        if let email = pendingAuthLink.email, !email.isEmpty {
+            emailInput = email
+            step = .enterCode(email: email)
+        } else {
+            switch step {
+            case .welcome:
+                step = .enterEmail
+            case .enterEmail, .enterCode:
+                break
+            }
+        }
+
+        if let code = pendingAuthLink.code, !code.isEmpty {
+            handleDeepLinkCode(code)
+        }
+
+        if let linkToken = pendingAuthLink.linkToken, !linkToken.isEmpty {
+            return await verifyMagicLink(linkToken: linkToken)
+        }
+
+        guard let email = pendingAuthLink.email,
+              let code = pendingAuthLink.code,
+              !email.isEmpty,
+              !code.isEmpty else {
+            return false
+        }
+
+        return await verifyMagicLink(email: email, code: code)
     }
 
     // MARK: - Auth flow
@@ -72,19 +75,7 @@ class AuthViewModel {
     }
 
     func verifyCode(email: String) async -> Bool {
-        isLoading = true
-        errorMessage = nil
-        do {
-            let result = try await authService.verifyMagicLink(email: email, code: codeInput)
-            KeychainHelper.shared.saveAccessToken(result.accessToken)
-            KeychainHelper.shared.saveRefreshToken(result.refreshToken)
-            isLoading = false
-            return true
-        } catch {
-            errorMessage = "Invalid code. Please try again."
-            isLoading = false
-            return false
-        }
+        await verifyMagicLink(email: email, code: codeInput)
     }
 
     // MARK: - Social sign-in
@@ -122,5 +113,29 @@ class AuthViewModel {
             errorMessage = error.localizedDescription
         }
         isLoading = false
+    }
+
+    private func verifyMagicLink(
+        email: String? = nil,
+        code: String? = nil,
+        linkToken: String? = nil
+    ) async -> Bool {
+        isLoading = true
+        errorMessage = nil
+        do {
+            let result = try await authService.verifyMagicLink(
+                email: email,
+                code: code,
+                linkToken: linkToken
+            )
+            KeychainHelper.shared.saveAccessToken(result.accessToken)
+            KeychainHelper.shared.saveRefreshToken(result.refreshToken)
+            isLoading = false
+            return true
+        } catch {
+            errorMessage = "Invalid code. Please try again."
+            isLoading = false
+            return false
+        }
     }
 }
