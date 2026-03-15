@@ -20,6 +20,8 @@ export default function LoginPage() {
         <div className="auth-meta">
           <span>Auth mode: {currentNetworkContext.authMode.replace("_", " ")}</span>
           <span>Request: {currentNetworkContext.requestId}</span>
+          <span>Correlation: {currentNetworkContext.correlationId}</span>
+          <span>Refresh: {currentNetworkContext.refreshStrategy.replaceAll("_", " ")}</span>
         </div>
         <a className="mock-link" href="/library">
           Continue in mock mode

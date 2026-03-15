@@ -47,6 +47,12 @@ export default function LibraryPage() {
           <p>Renews {currentEntitlement.renewsAt ?? "never"}</p>
         </article>
       </section>
+
+      <section className="route-strip">
+        <a className="route-pill" href="/settings">
+          Open account settings
+        </a>
+      </section>
     </main>
   );
 }

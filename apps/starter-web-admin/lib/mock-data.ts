@@ -22,3 +22,13 @@ export const adminNotificationHealth = {
   quietHoursEnabled: "18%",
   marketingMuted: "22%"
 };
+
+export const adminAuthHealth = {
+  magicLinkSuccess: "94.2%",
+  socialMix: [
+    { label: "magic link", value: "63%" },
+    { label: "apple", value: "21%" },
+    { label: "google", value: "16%" }
+  ],
+  refreshFailures: "0.4%"
+};

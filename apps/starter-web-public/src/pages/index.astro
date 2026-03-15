@@ -17,6 +17,7 @@ const pillars = [
 ];
 
 const stack = ["Astro", "Static hosting", "Simple forms", "SEO and sitemap", "Campaign pages"];
+const authModes = ["Magic link with typed code fallback", "Apple sign-in", "Google sign-in", "App-link fallback into native"];
 ---
 
 <BaseLayout
@@ -34,7 +35,7 @@ const stack = ["Astro", "Static hosting", "Simple forms", "SEO and sitemap", "Ca
         </p>
         <div class="hero-actions">
           <a class="primary-action" href="#pillars">See the structure</a>
-          <a class="secondary-action" href="#stack">View the stack</a>
+          <a class="secondary-action" href="http://localhost:3001/login">Open starter auth</a>
         </div>
       </div>
       <aside class="hero-panel">
@@ -64,6 +65,16 @@ const stack = ["Astro", "Static hosting", "Simple forms", "SEO and sitemap", "Ca
       </div>
       <ul class="stack-list">
         {stack.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    <section class="stack-band auth-band">
+      <div>
+        <p class="eyebrow">Auth handoff</p>
+        <h2>Public pages should hand off into the same auth model as native and web app.</h2>
+      </div>
+      <ul class="stack-list">
+        {authModes.map((item) => <li>{item}</li>)}
       </ul>
     </section>
   </main>

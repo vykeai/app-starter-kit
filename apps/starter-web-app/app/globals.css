@@ -139,6 +139,7 @@ body {
   justify-content: space-between;
   gap: 1rem;
   align-items: flex-end;
+  flex-wrap: wrap;
 }
 
 .library-header h1 {
@@ -210,11 +211,37 @@ body {
   margin-top: 1rem;
 }
 
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.settings-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  max-width: 13ch;
+  line-height: 1;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
 .inline-panel {
   border: 1px solid var(--edge);
   border-radius: 24px;
   background: var(--panel);
   padding: 1rem 1.2rem;
+}
+
+.tall-panel {
+  min-height: 240px;
 }
 
 .inline-panel strong {
@@ -228,10 +255,55 @@ body {
   font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
 }
 
+.detail-list {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1rem 0 0;
+}
+
+.detail-list div {
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--edge);
+}
+
+.detail-list dt,
+.detail-list dd,
+.route-pill {
+  font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.detail-list dt {
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.detail-list dd {
+  margin: 0.35rem 0 0;
+}
+
+.route-strip {
+  margin-top: 1rem;
+}
+
+.route-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.9rem 1.2rem;
+  background: #dfeee8;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
 @media (max-width: 800px) {
   .library-header,
   .shelf-grid,
-  .account-strip {
+  .account-strip,
+  .settings-grid {
     grid-template-columns: 1fr;
     display: grid;
   }

@@ -1,4 +1,5 @@
 import {
+  adminAuthHealth,
   adminEntitlements,
   adminMetrics,
   adminNotificationHealth,
@@ -80,6 +81,34 @@ export default function HomePage() {
           <strong>{adminNotificationHealth.optedIn} opted in</strong>
           <small>Quiet hours: {adminNotificationHealth.quietHoursEnabled}</small>
           <small>Marketing muted: {adminNotificationHealth.marketingMuted}</small>
+        </article>
+      </section>
+
+      <section className="queue-panel split-panel">
+        <article>
+          <div className="panel-header">
+            <div>
+              <p className="eyebrow">Auth</p>
+              <h2>Session and sign-in health</h2>
+            </div>
+          </div>
+          <div className="queue-list compact-list">
+            {adminAuthHealth.socialMix.map((item) => (
+              <article key={item.label} className="queue-card">
+                <div>
+                  <strong>{item.label}</strong>
+                  <p>share of successful sign-ins</p>
+                </div>
+                <span>{item.value}</span>
+              </article>
+            ))}
+          </div>
+        </article>
+        <article className="status-card">
+          <span>Magic-link success</span>
+          <strong>{adminAuthHealth.magicLinkSuccess}</strong>
+          <small>Refresh failures: {adminAuthHealth.refreshFailures}</small>
+          <small>Use this panel to spot auth regressions before support does.</small>
         </article>
       </section>
     </main>
