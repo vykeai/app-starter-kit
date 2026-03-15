@@ -4,10 +4,15 @@ struct ProfileView: View {
     @Environment(AppState.self) var appState
     @Environment(ToastManager.self) var toastManager
     private let userService = UserService()
+    private let notificationService = NotificationService()
+    private let billingService = BillingService()
     @State private var displayName: String = ""
     @State private var isEditing = false
     @State private var showDeleteAccountAlert = false
     @State private var isSaving = false
+    @State private var notificationPreferences: NotificationPreferences?
+    @State private var entitlement: EntitlementState?
+    @State private var isLoadingSettings = false
 
     var body: some View {
         NavigationStack {
@@ -44,6 +49,56 @@ struct ProfileView: View {
                         }
                     }
                     .padding(.vertical, AppTokens.Spacing.sm)
+                }
+
+                Section("Notifications") {
+                    Toggle(
+                        "Push notifications",
+                        isOn: Binding(
+                            get: { notificationPreferences?.pushEnabled ?? false },
+                            set: { value in Task { await updateNotificationSetting(pushEnabled: value) } }
+                        )
+                    )
+
+                    Toggle(
+                        "Email notifications",
+                        isOn: Binding(
+                            get: { notificationPreferences?.emailEnabled ?? false },
+                            set: { value in Task { await updateNotificationSetting(emailEnabled: value) } }
+                        )
+                    )
+
+                    if let notificationPreferences {
+                        LabeledContent("Categories") {
+                            Text(notificationPreferences.enabledCategories?.joined(separator: ", ") ?? "None")
+                        }
+                        LabeledContent("Quiet hours") {
+                            Text(
+                                notificationPreferences.quietHoursEnabled == true
+                                    ? "\(notificationPreferences.quietHoursStart ?? "--") - \(notificationPreferences.quietHoursEnd ?? "--")"
+                                    : "Off"
+                            )
+                        }
+                    } else if isLoadingSettings {
+                        ProgressView()
+                    }
+                }
+
+                Section("Billing") {
+                    if let entitlement {
+                        LabeledContent("Tier") {
+                            Text(entitlement.tier)
+                        }
+                        LabeledContent("Source") {
+                            Text(entitlement.source)
+                        }
+                        LabeledContent("Features") {
+                            Text(entitlement.features.joined(separator: ", "))
+                                .multilineTextAlignment(.trailing)
+                        }
+                    } else if isLoadingSettings {
+                        ProgressView()
+                    }
                 }
 
                 // Account section
@@ -91,6 +146,7 @@ struct ProfileView: View {
             }
             .onAppear {
                 displayName = appState.currentUser?.displayName ?? ""
+                Task { await loadAccountDetails() }
             }
         }
     }
@@ -109,6 +165,37 @@ struct ProfileView: View {
             appState.currentUser = AppUser(profile: profile)
             toastManager.show("Name updated", style: .success)
             isEditing = false
+        } catch {
+            toastManager.show(error.localizedDescription, style: .error)
+        }
+    }
+
+    private func loadAccountDetails() async {
+        guard !isLoadingSettings else { return }
+        isLoadingSettings = true
+        defer { isLoadingSettings = false }
+
+        async let notificationTask = notificationService.fetchPreferences()
+        async let billingTask = billingService.fetchEntitlements()
+
+        do {
+            notificationPreferences = try await notificationTask
+            entitlement = try await billingTask
+        } catch {
+            toastManager.show(error.localizedDescription, style: .error)
+        }
+    }
+
+    private func updateNotificationSetting(
+        pushEnabled: Bool? = nil,
+        emailEnabled: Bool? = nil
+    ) async {
+        do {
+            notificationPreferences = try await notificationService.updatePreferences(
+                pushEnabled: pushEnabled,
+                emailEnabled: emailEnabled
+            )
+            toastManager.show("Preferences updated", style: .success)
         } catch {
             toastManager.show(error.localizedDescription, style: .error)
         }

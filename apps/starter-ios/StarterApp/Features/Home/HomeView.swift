@@ -19,9 +19,6 @@ import SwiftUI
 // Then inject SyncEngine from AppState and call syncEngine.sync() on appear.
 
 struct HomeView: View {
-    @Environment(AppState.self) private var appState
-    @State private var showLogoutConfirmation = false
-
     var body: some View {
         NavigationStack {
             VStack(spacing: AppTokens.Spacing.lg) {
@@ -39,26 +36,14 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        HapticsHelper.impact(.light)
-                        showLogoutConfirmation = true
+                    NavigationLink {
+                        ProfileView()
                     } label: {
                         Image(systemName: "person.circle")
                             .foregroundStyle(AppTokens.Color.textPrimary)
                             .accessibilityLabel("Account")
                     }
                 }
-            }
-            .confirmationDialog(
-                "Sign out of your account?",
-                isPresented: $showLogoutConfirmation,
-                titleVisibility: .visible
-            ) {
-                Button("Sign Out", role: .destructive) {
-                    HapticsHelper.notification(.warning)
-                    appState.logout()
-                }
-                Button("Cancel", role: .cancel) {}
             }
         }
     }

@@ -26,11 +26,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,20 +42,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.onlystack.starterapp.design.tokens.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    currentUser: AppUser?,
     onLogout: () -> Unit,
     onNavigateBack: () -> Unit,
+    viewModel: ProfileViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
 ) {
-    var displayName by remember { mutableStateOf(currentUser?.displayName ?: "") }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val currentUser = uiState.user
+    var displayName by remember(currentUser?.displayName) { mutableStateOf(currentUser?.displayName ?: "") }
     var isEditing by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showSignOutDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.load()
+    }
 
     Scaffold(
         topBar = {
@@ -67,9 +77,9 @@ fun ProfileScreen(
                 actions = {
                     if (isEditing) {
                         TextButton(onClick = {
-                            // TODO: PATCH /user/me with updated displayName
+                            viewModel.saveDisplayName(displayName)
                             isEditing = false
-                        }) { Text("Save") }
+                        }, enabled = !uiState.isSaving) { Text("Save") }
                     } else {
                         TextButton(onClick = { isEditing = true }) { Text("Edit") }
                     }
@@ -133,6 +143,81 @@ fun ProfileScreen(
                                 color = AppColors.TextSecondary,
                             )
                         }
+                    }
+                }
+            }
+
+            item {
+                Card {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        Text("Notifications", style = MaterialTheme.typography.titleMedium)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Column {
+                                Text("Push notifications")
+                                Text(
+                                    "Shared preferences from notifications-core",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = AppColors.TextSecondary,
+                                )
+                            }
+                            Switch(
+                                checked = uiState.notifications?.pushEnabled ?: false,
+                                onCheckedChange = viewModel::setPushEnabled,
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Column {
+                                Text("Email notifications")
+                                Text(
+                                    "Transactional and digest delivery",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = AppColors.TextSecondary,
+                                )
+                            }
+                            Switch(
+                                checked = uiState.notifications?.emailEnabled ?: false,
+                                onCheckedChange = viewModel::setEmailEnabled,
+                            )
+                        }
+                    }
+                }
+            }
+
+            item {
+                Card {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text("Billing", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            uiState.entitlement?.tier ?: "Loading tier…",
+                            style = MaterialTheme.typography.titleLarge,
+                        )
+                        Text(
+                            "Source: ${uiState.entitlement?.source ?: "unknown"}",
+                            color = AppColors.TextSecondary,
+                        )
+                        Text(
+                            "Features: ${uiState.entitlement?.features?.joinToString() ?: "loading"}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = AppColors.TextSecondary,
+                        )
                     }
                 }
             }

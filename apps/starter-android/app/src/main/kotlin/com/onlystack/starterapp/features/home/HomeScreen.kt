@@ -33,9 +33,8 @@ import com.onlystack.starterapp.design.tokens.AppSpacing
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit = {},
+    onOpenProfile: () -> Unit = {},
 ) {
-    var showSignOutDialog by remember { mutableStateOf(false) }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -44,7 +43,7 @@ fun HomeScreen(
                     containerColor = AppColors.Surface,
                 ),
                 actions = {
-                    IconButton(onClick = { showSignOutDialog = true }) {
+                    IconButton(onClick = onOpenProfile) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
                             contentDescription = "Account",
@@ -76,39 +75,5 @@ fun HomeScreen(
                 color = AppColors.TextSecondary,
             )
         }
-    }
-
-    if (showSignOutDialog) {
-        AlertDialog(
-            onDismissRequest = { showSignOutDialog = false },
-            title = {
-                Text(
-                    text = "Sign out?",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = AppColors.TextPrimary,
-                )
-            },
-            text = {
-                Text(
-                    text = "You will be returned to the login screen.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = AppColors.TextSecondary,
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    showSignOutDialog = false
-                    onLogout()
-                }) {
-                    Text("Sign out", color = AppColors.Error)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showSignOutDialog = false }) {
-                    Text("Cancel", color = AppColors.TextSecondary)
-                }
-            },
-            containerColor = AppColors.Surface,
-        )
     }
 }

@@ -125,6 +125,56 @@ class AppState {
             case ("DELETE", let route) where route.hasSuffix("/auth/session"):
                 statusCode = 200
                 body = #"{"message":"Signed out"}"#.data(using: .utf8) ?? Data()
+            case ("GET", let route) where route.hasSuffix("/user/me"),
+                 ("PATCH", let route) where route.hasSuffix("/user/me"):
+                statusCode = 200
+                body = """
+                {
+                  "id": "fixture-user",
+                  "email": "test@example.com",
+                  "displayName": "Starter Test User",
+                  "preferences": {
+                    "theme": "moss",
+                    "pushMarketingEnabled": false,
+                    "pushActivityEnabled": true,
+                    "pushTransactionalEnabled": true,
+                    "pushSystemEnabled": true,
+                    "emailNotificationsEnabled": true
+                  }
+                }
+                """.data(using: .utf8) ?? Data()
+            case ("GET", let route) where route.hasSuffix("/notifications/preferences"),
+                 ("PATCH", let route) where route.hasSuffix("/notifications/preferences"):
+                statusCode = 200
+                body = """
+                {
+                  "theme": "moss",
+                  "pushMarketingEnabled": false,
+                  "pushActivityEnabled": true,
+                  "pushTransactionalEnabled": true,
+                  "pushSystemEnabled": true,
+                  "emailNotificationsEnabled": true,
+                  "pushEnabled": true,
+                  "emailEnabled": true,
+                  "enabledCategories": ["activity", "transactional"],
+                  "quietHoursEnabled": true,
+                  "quietHoursStart": "22:00",
+                  "quietHoursEnd": "07:00",
+                  "urgentBreaksQuietHours": true,
+                  "batchSoonNotifications": false,
+                  "updatedAt": "2026-03-15T00:00:00.000Z"
+                }
+                """.data(using: .utf8) ?? Data()
+            case ("GET", let route) where route.hasSuffix("/billing/entitlements"):
+                statusCode = 200
+                body = """
+                {
+                  "tier": "tracker",
+                  "source": "ios",
+                  "features": ["auth-core", "notifications-core", "billing-core"],
+                  "renewsAt": "2026-04-14T12:00:00Z"
+                }
+                """.data(using: .utf8) ?? Data()
             case ("GET", let route) where route.hasSuffix("/health"):
                 statusCode = 200
                 body = #"{"status":"ok","timestamp":"2026-03-15T00:00:00.000Z"}"#.data(using: .utf8) ?? Data()

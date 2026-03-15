@@ -13,6 +13,7 @@ import android.net.Uri
 import com.onlystack.starterapp.core.deeplink.DeepLinkViewModel
 import com.onlystack.starterapp.core.deeplink.PendingRoute
 import com.onlystack.starterapp.features.home.HomeScreen
+import com.onlystack.starterapp.features.more.ProfileScreen
 
 @Composable
 fun AuthNavHost(
@@ -102,6 +103,21 @@ fun AuthNavHost(
                         }
                     }
                 },
+                onOpenProfile = {
+                    navController.navigate("profile")
+                },
+            )
+        }
+        composable("profile") {
+            ProfileScreen(
+                onLogout = {
+                    viewModel.logout {
+                        navController.navigate("welcome") {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                },
+                onNavigateBack = { navController.popBackStack() },
             )
         }
     }

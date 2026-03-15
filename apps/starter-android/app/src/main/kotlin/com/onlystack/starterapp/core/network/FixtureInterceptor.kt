@@ -49,6 +49,92 @@ class FixtureInterceptor @Inject constructor() : Interceptor {
             method == "DELETE" && path.endsWith("/auth/session") -> {
                 200 to """{"message":"Signed out"}"""
             }
+            method == "GET" && path.endsWith("/user/me") -> {
+                200 to """
+                {
+                  "id": "fixture-user",
+                  "email": "test@example.com",
+                  "displayName": "Starter Test User",
+                  "preferences": {
+                    "theme": "moss",
+                    "pushMarketingEnabled": false,
+                    "pushActivityEnabled": true,
+                    "pushTransactionalEnabled": true,
+                    "pushSystemEnabled": true,
+                    "emailNotificationsEnabled": true
+                  }
+                }
+                """.trimIndent()
+            }
+            method == "PATCH" && path.endsWith("/user/me") -> {
+                200 to """
+                {
+                  "id": "fixture-user",
+                  "email": "test@example.com",
+                  "displayName": "Starter Test User",
+                  "preferences": {
+                    "theme": "moss",
+                    "pushMarketingEnabled": false,
+                    "pushActivityEnabled": true,
+                    "pushTransactionalEnabled": true,
+                    "pushSystemEnabled": true,
+                    "emailNotificationsEnabled": true
+                  }
+                }
+                """.trimIndent()
+            }
+            method == "GET" && path.endsWith("/notifications/preferences") -> {
+                200 to """
+                {
+                  "theme": "moss",
+                  "pushMarketingEnabled": false,
+                  "pushActivityEnabled": true,
+                  "pushTransactionalEnabled": true,
+                  "pushSystemEnabled": true,
+                  "emailNotificationsEnabled": true,
+                  "pushEnabled": true,
+                  "emailEnabled": true,
+                  "enabledCategories": ["activity", "transactional"],
+                  "quietHoursEnabled": true,
+                  "quietHoursStart": "22:00",
+                  "quietHoursEnd": "07:00",
+                  "urgentBreaksQuietHours": true,
+                  "batchSoonNotifications": false,
+                  "updatedAt": "2026-03-15T00:00:00.000Z"
+                }
+                """.trimIndent()
+            }
+            method == "PATCH" && path.endsWith("/notifications/preferences") -> {
+                200 to """
+                {
+                  "theme": "moss",
+                  "pushMarketingEnabled": false,
+                  "pushActivityEnabled": true,
+                  "pushTransactionalEnabled": true,
+                  "pushSystemEnabled": true,
+                  "emailNotificationsEnabled": true,
+                  "pushEnabled": true,
+                  "emailEnabled": true,
+                  "enabledCategories": ["activity", "transactional"],
+                  "quietHoursEnabled": true,
+                  "quietHoursStart": "22:00",
+                  "quietHoursEnd": "07:00",
+                  "urgentBreaksQuietHours": true,
+                  "batchSoonNotifications": false,
+                  "updatedAt": "2026-03-15T00:00:00.000Z"
+                }
+                """.trimIndent()
+            }
+            method == "GET" && path.endsWith("/billing/entitlements") -> {
+                200 to """
+                {
+                  "tier": "tracker",
+                  "source": "android",
+                  "features": ["auth-core", "notifications-core", "billing-core"],
+                  "renewsAt": "2026-04-14T12:00:00Z"
+                }
+                """.trimIndent()
+            }
             method == "GET" && path.endsWith("/health") -> {
                 200 to """{"status":"ok","timestamp":"2026-03-15T00:00:00.000Z"}"""
             }
