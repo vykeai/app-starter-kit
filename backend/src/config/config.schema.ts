@@ -2,6 +2,14 @@ import * as Joi from 'joi';
 
 export const configSchema = Joi.object({
   NODE_ENV: Joi.string().valid('development', 'staging', 'production').default('development'),
+  AUTH_DELIVERY_MODE: Joi.string().valid('email', 'console', 'disabled').default('console'),
+  AUTH_DEV_BYPASS_ENABLED: Joi.boolean().default(false),
+  AUTH_DEV_BYPASS_EMAIL: Joi.string().email().optional(),
+  AUTH_DEV_BYPASS_CODE: Joi.string().optional(),
+  AUTH_DEV_BYPASS_LINK_TOKEN: Joi.string().optional(),
+  AUTH_LINK_BASE_URL: Joi.string().uri().optional(),
+  AUTH_REVIEW_EMAIL: Joi.string().email().optional(),
+  AUTH_REVIEW_CODE: Joi.string().optional(),
   PORT: Joi.number().default(3000),
   DATABASE_URL: Joi.string().required(),
   JWT_SECRET: Joi.string().min(32).required(),
@@ -19,5 +27,8 @@ export const configSchema = Joi.object({
   APP_VERSION_ANDROID_CURRENT: Joi.string().default('1.0.0'),
   APP_VERSION_ANDROID_MINIMUM: Joi.string().default('1.0.0'),
   GOOGLE_CLIENT_ID: Joi.string().optional(),
+  GOOGLE_IOS_CLIENT_ID: Joi.string().optional(),
+  GOOGLE_ANDROID_CLIENT_ID: Joi.string().optional(),
+  GOOGLE_WEB_CLIENT_ID: Joi.string().optional(),
   APPLE_BUNDLE_ID: Joi.string().optional(),
 });

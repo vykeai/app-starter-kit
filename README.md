@@ -82,6 +82,10 @@ cd android
 - **Sign in with Apple** (iOS only — full `ASAuthorizationController` impl)
 - **Sign in with Google** (iOS + Android — SDK stubs with TODO comments)
 
+Auth standard docs:
+- [AUTH_SYSTEM.md](/Users/ted/dev/app-starter-kit/docs/AUTH_SYSTEM.md) defines the canonical backend contract, frontend state machine, deep-link model, mock-mode auth, and non-email environment behavior.
+- [STARTER_KIT_EXTRACTION_AUDIT.md](/Users/ted/dev/app-starter-kit/docs/STARTER_KIT_EXTRACTION_AUDIT.md) captures the broader systems that should live in the starter kit.
+
 ### Design System
 - Sentinel-generated design tokens (colours, spacing, typography, radius)
 - Dark mode first
@@ -199,6 +203,32 @@ infra/terraform/
 | Production | AppStarterKit-Release | prod | `https://api.yourapp.com/api/v1` |
 
 Update URLs in `ios/Configs/*.xcconfig` and `android/app/build.gradle.kts`.
+
+## Auth Environment Modes
+
+Starter-kit auth is expected to run in three modes:
+
+- `AUTH_DELIVERY_MODE=email`
+  - production/staging email delivery
+- `AUTH_DELIVERY_MODE=console`
+  - local development and CI; backend logs the code and link token instead of sending email
+- `AUTH_DELIVERY_MODE=disabled`
+  - challenge creation without delivery, for tightly controlled fixture flows
+
+Optional non-production bypass variables:
+
+- `AUTH_DEV_BYPASS_ENABLED`
+- `AUTH_DEV_BYPASS_EMAIL`
+- `AUTH_DEV_BYPASS_CODE`
+- `AUTH_DEV_BYPASS_LINK_TOKEN`
+- `AUTH_REVIEW_EMAIL`
+- `AUTH_REVIEW_CODE`
+
+Rules:
+
+- bypass must never be active in production
+- mock mode must not fork UI logic
+- auth deep links should always exercise the same frontend state machine as production
 
 ---
 

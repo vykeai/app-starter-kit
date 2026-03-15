@@ -79,14 +79,28 @@ app-starter-kit/
 
 ## Auth Flow
 
-Magic link with 8-digit OTP. Never passwords.
+See `docs/AUTH_SYSTEM.md` for the canonical auth contract.
+
+Baseline starter flow:
+
+- email challenge request
+- manual code entry
+- one-tap deep-link resume
+- Apple Sign In
+- Google Sign In
+- refresh
+- logout
 
 ```
-POST /api/v1/auth/magic-link/request  { email }
-  → generates 8-digit code, stores MagicLink (15min expiry), queues email job
+POST /api/v1/auth/challenge/request   { email, purpose }
+  → creates challengeId + short code + opaque link token
 
-POST /api/v1/auth/magic-link/verify   { email, code }
-  → marks MagicLink used, returns { accessToken (15m), refreshToken (30d), user }
+POST /api/v1/auth/challenge/verify
+  → accepts either { challengeId, code } or { linkToken }
+  → returns { accessToken, refreshToken, user, nextStep }
+
+POST /api/v1/auth/apple               { identityToken, name? }
+POST /api/v1/auth/google              { idToken }
 
 POST /api/v1/auth/refresh             { refreshToken }
   → returns { accessToken }
@@ -94,6 +108,11 @@ POST /api/v1/auth/refresh             { refreshToken }
 POST /api/v1/auth/logout              { refreshToken }  [requires JWT]
   → revokes RefreshToken
 ```
+
+Environment guidance:
+- production uses real email delivery
+- local/CI may use `AUTH_DELIVERY_MODE=console`
+- bypass credentials are allowed only outside production and must still return normal auth envelopes
 
 Token storage:
 - **iOS**: Keychain via `KeychainHelper`

@@ -1,0 +1,32 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "auth-runtime",
+  "name": "Auth Runtime Modes",
+  "milestone": "M1",
+  "platforms": ["ios", "android", "api", "web"],
+  "canonicalDoc": "docs/AUTH_SYSTEM.md",
+  "modes": [
+    {
+      "id": "production_email",
+      "delivery": "email",
+      "bypassAllowed": false
+    },
+    {
+      "id": "development_console",
+      "delivery": "console",
+      "bypassAllowed": true
+    },
+    {
+      "id": "ci_fixture",
+      "delivery": "disabled",
+      "bypassAllowed": true
+    }
+  ],
+  "rules": [
+    "Mock mode must not fork UI behavior.",
+    "Deep-link verification must exercise the same frontend state machine as production.",
+    "Production must not allow bypass credentials.",
+    "Console or disabled delivery is allowed only outside production."
+  ]
+}

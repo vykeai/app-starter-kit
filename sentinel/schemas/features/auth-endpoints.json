@@ -2,49 +2,105 @@
   "$sentinel": "1.0",
   "type": "endpoints",
   "id": "auth-endpoints",
-  "description": "Magic link authentication",
-  "platforms": ["ios", "android", "api"],
+  "description": "Canonical starter auth contract",
+  "platforms": ["ios", "android", "api", "web"],
   "base": "/api/v1",
+  "canonicalDoc": "docs/AUTH_SYSTEM.md",
+  "notes": [
+    "This schema describes the target contract for starter auth.",
+    "Legacy magic-link/request and magic-link/verify endpoints may remain during migration."
+  ],
   "endpoints": [
     {
-      "id": "requestMagicLink",
+      "id": "requestAuthChallenge",
       "method": "POST",
-      "path": "/auth/magic-link/request",
+      "path": "/auth/challenge/request",
       "auth": false,
-      "description": "Request an 8-digit OTP sent to email",
-      "body": {
-        "fields": [
-          { "name": "email", "type": "String" }
-        ]
-      },
-      "response": {
-        "fields": [
-          { "name": "message", "type": "String" }
-        ]
-      }
-    },
-    {
-      "id": "verifyMagicLink",
-      "method": "POST",
-      "path": "/auth/magic-link/verify",
-      "auth": false,
-      "description": "Verify OTP and return tokens",
+      "description": "Create an email auth challenge for manual code entry and one-tap deep-link resume",
       "body": {
         "fields": [
           { "name": "email", "type": "String" },
-          { "name": "code",  "type": "String" }
+          { "name": "purpose", "type": "String", "enum": ["login", "signup", "reauth"] }
         ]
       },
       "response": {
         "fields": [
-          { "name": "accessToken",  "type": "String" },
+          { "name": "challengeId", "type": "String" },
+          { "name": "expiresAt", "type": "ISODateString" },
+          { "name": "resendAt", "type": "ISODateString" },
+          { "name": "delivery", "type": "String", "enum": ["email", "console", "disabled"] }
+        ]
+      },
+      "legacyAliases": ["/auth/magic-link/request", "/auth/magic-link"]
+    },
+    {
+      "id": "verifyAuthChallenge",
+      "method": "POST",
+      "path": "/auth/challenge/verify",
+      "auth": false,
+      "description": "Verify a manual code or opaque link token and return session tokens",
+      "body": {
+        "fields": [
+          { "name": "challengeId", "type": "String", "optional": true },
+          { "name": "email", "type": "String", "optional": true },
+          { "name": "code", "type": "String", "optional": true },
+          { "name": "linkToken", "type": "String", "optional": true }
+        ]
+      },
+      "response": {
+        "fields": [
+          { "name": "accessToken", "type": "String" },
           { "name": "refreshToken", "type": "String" },
-          { "name": "user",         "type": "User"   }
+          { "name": "user", "type": "User" },
+          { "name": "nextStep", "type": "String", "enum": ["authenticated", "needs_onboarding", "needs_registration"] }
+        ]
+      },
+      "legacyAliases": ["/auth/magic-link/verify", "/auth/verify"]
+    },
+    {
+      "id": "appleSignIn",
+      "method": "POST",
+      "path": "/auth/apple",
+      "auth": false,
+      "description": "Authenticate with a verified Apple identity token",
+      "body": {
+        "fields": [
+          { "name": "identityToken", "type": "String" },
+          { "name": "name", "type": "String", "optional": true }
+        ]
+      },
+      "response": {
+        "fields": [
+          { "name": "accessToken", "type": "String" },
+          { "name": "refreshToken", "type": "String" },
+          { "name": "user", "type": "User" },
+          { "name": "nextStep", "type": "String", "enum": ["authenticated", "needs_onboarding", "needs_registration"] }
         ]
       }
     },
     {
-      "id": "refreshToken",
+      "id": "googleSignIn",
+      "method": "POST",
+      "path": "/auth/google",
+      "auth": false,
+      "description": "Authenticate with a verified Google ID token",
+      "body": {
+        "fields": [
+          { "name": "idToken", "type": "String" }
+        ]
+      },
+      "response": {
+        "fields": [
+          { "name": "accessToken", "type": "String" },
+          { "name": "refreshToken", "type": "String" },
+          { "name": "user", "type": "User" },
+          { "name": "nextStep", "type": "String", "enum": ["authenticated", "needs_onboarding", "needs_registration"] }
+        ]
+      },
+      "legacyAliases": ["/auth/social"]
+    },
+    {
+      "id": "refreshSession",
       "method": "POST",
       "path": "/auth/refresh",
       "auth": false,
@@ -61,11 +117,11 @@
       }
     },
     {
-      "id": "logout",
+      "id": "logoutSession",
       "method": "POST",
       "path": "/auth/logout",
       "auth": true,
-      "description": "Revoke refresh token",
+      "description": "Revoke one refresh token",
       "body": {
         "fields": [
           { "name": "refreshToken", "type": "String" }
@@ -74,6 +130,28 @@
       "response": {
         "fields": [
           { "name": "message", "type": "String" }
+        ]
+      }
+    },
+    {
+      "id": "logoutAllSessions",
+      "method": "DELETE",
+      "path": "/auth/session",
+      "auth": true,
+      "description": "Revoke all refresh tokens for the current user",
+      "response": {
+        "fields": []
+      }
+    },
+    {
+      "id": "getCurrentSessionUser",
+      "method": "GET",
+      "path": "/auth/me",
+      "auth": true,
+      "description": "Return the current authenticated user",
+      "response": {
+        "fields": [
+          { "name": "user", "type": "User" }
         ]
       }
     }

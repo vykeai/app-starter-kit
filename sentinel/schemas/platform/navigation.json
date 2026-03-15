@@ -18,9 +18,9 @@
   "deeplinks": [
     {
       "pattern": "/auth/verify",
-      "params": ["code"],
+      "params": ["linkToken", "challengeId", "code"],
       "navigatesTo": "code-entry",
-      "description": "Magic link OTP deeplink from email"
+      "description": "Auth resume deep link from email. Clients store the payload at app scope, then resume auth when the auth flow is ready."
     }
   ]
 }
