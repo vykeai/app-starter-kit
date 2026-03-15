@@ -1,0 +1,17 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "networking-library",
+  "name": "Networking Library",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android", "api", "web"],
+  "capabilities": [
+    "typed_api_client",
+    "auth_interceptor",
+    "refresh_token_handling",
+    "mock_transport_compatibility",
+    "base_url_injection",
+    "typed_error_layer",
+    "request_id_support"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "screenshot-proof",
+  "name": "Screenshot Proof Loop",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android", "web"],
+  "capabilities": [
+    "simemu_device_allocation",
+    "maestro_flow_execution",
+    "sentinel_catalog_capture",
+    "sentinel_catalog_validation",
+    "release_proof_storage"
+  ],
+  "verification": {
+    "simulator": "simemu",
+    "automation": "maestro",
+    "catalog": "sentinel"
+  }
+}

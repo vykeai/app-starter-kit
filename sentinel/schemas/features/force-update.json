@@ -1,0 +1,14 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "force-update",
+  "name": "Force Update",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android", "api"],
+  "capabilities": [
+    "version_check_endpoint",
+    "hard_update_blocker",
+    "soft_update_banner",
+    "launch_override_for_testing"
+  ]
+}

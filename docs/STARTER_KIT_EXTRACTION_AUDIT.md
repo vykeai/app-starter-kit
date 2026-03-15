@@ -129,6 +129,48 @@ Include:
 - mock config
 - fixture validation guidance
 
+### 12. Notification Preferences Data Structure
+
+Worth extracting as a shared contract.
+
+Include:
+- base push/email toggles
+- category-based preferences
+- quiet hours
+- optional product-specific sub-toggles
+
+Why:
+- `goala` has the right structural base
+- `univiirse` shows why products still need a small extension surface
+
+### 13. Media Upload / Read
+
+Worth extracting as starter-kit infrastructure.
+
+Include:
+- upload/read/delete asset contract
+- progress reporting
+- background upload hooks
+- stable media asset metadata
+
+Why:
+- `univiirse` already has the strongest reusable pattern here
+
+### 14. Networking Library
+
+Worth extracting as a first-class starter system.
+
+Include:
+- thin typed API client
+- auth interceptor / refresh handling
+- base URL injection
+- mock transport compatibility
+- structured error mapping
+
+Why:
+- every repo keeps rebuilding the same thin client shape
+- `univiirse`, `fitkind`, `sitches`, and starter all converge on it already
+
 ## Maybe In Starter Kit
 
 ### 1. Onboarding Shell
@@ -188,5 +230,8 @@ The next extraction wave for `app-starter-kit` should be:
 6. offline indicator
 7. review manager
 8. backend common module hardening
+9. notification preferences contract
+10. media upload/read
+11. networking library
 
 That gives new repos a strong operational base without turning the starter kit into a monolith.

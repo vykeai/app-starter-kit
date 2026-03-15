@@ -1,0 +1,26 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "deep-link-routing",
+  "name": "Deep-Link Routing",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android", "web"],
+  "capabilities": [
+    "app_scoped_pending_payload",
+    "cold_start_resume",
+    "warm_start_resume",
+    "authenticated_route_handoff",
+    "unauthenticated_route_handoff",
+    "typed_route_parser"
+  ],
+  "verification": {
+    "requiredProof": [
+      "deep-link-open-authenticated",
+      "deep-link-open-unauthenticated",
+      "cold-start-route",
+      "warm-start-route"
+    ],
+    "simulator": "simemu",
+    "automation": "maestro"
+  }
+}

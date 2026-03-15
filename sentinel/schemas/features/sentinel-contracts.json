@@ -1,0 +1,18 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "sentinel-contracts",
+  "name": "Sentinel Contract Layer",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android", "api", "web"],
+  "capabilities": [
+    "design_tokens",
+    "strings",
+    "feature_flags",
+    "models",
+    "endpoint_contracts",
+    "navigation",
+    "mock_config",
+    "catalog_validation"
+  ]
+}

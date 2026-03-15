@@ -1,0 +1,22 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "mock-transport",
+  "name": "Fixture-Backed Mock Transport",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android", "api", "web"],
+  "capabilities": [
+    "fixture_backed_http_interception",
+    "route_to_fixture_mapping",
+    "empty_state_mode",
+    "slow_state_mode",
+    "shared_fixture_contract"
+  ],
+  "verification": {
+    "requiredProof": [
+      "filled-fixture-state",
+      "empty-fixture-state",
+      "slow-fixture-state"
+    ]
+  }
+}

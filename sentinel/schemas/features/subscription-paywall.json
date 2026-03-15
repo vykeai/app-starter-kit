@@ -1,0 +1,16 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "subscription-paywall",
+  "name": "Subscription And Paywall",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android", "api", "web"],
+  "capabilities": [
+    "entitlement_manager",
+    "native_store_adapters",
+    "restore_purchases",
+    "backend_verification",
+    "feature_gating",
+    "paywall_presentation_layer"
+  ]
+}

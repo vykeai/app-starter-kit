@@ -1,0 +1,19 @@
+{
+  "$sentinel": "1.0",
+  "type": "model",
+  "id": "media-asset",
+  "name": "MediaAsset",
+  "platforms": ["ios", "android", "api", "web"],
+  "fields": [
+    { "name": "id", "type": "String", "optional": false },
+    { "name": "ownerId", "type": "String", "optional": false },
+    { "name": "kind", "type": "String", "optional": false },
+    { "name": "storageKey", "type": "String", "optional": false },
+    { "name": "publicUrl", "type": "String", "optional": true },
+    { "name": "mimeType", "type": "String", "optional": true },
+    { "name": "width", "type": "Number", "optional": true },
+    { "name": "height", "type": "Number", "optional": true },
+    { "name": "sizeBytes", "type": "Number", "optional": true },
+    { "name": "createdAt", "type": "Date", "optional": false }
+  ]
+}

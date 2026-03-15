@@ -1,0 +1,13 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "review-prompt",
+  "name": "Review Prompt Manager",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android"],
+  "capabilities": [
+    "cooldown_gating",
+    "semantic_triggers",
+    "store_native_review_prompt"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "backend-common",
+  "name": "Common Backend Module",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["api"],
+  "capabilities": [
+    "request_id_middleware",
+    "structured_error_envelope",
+    "pagination_contract",
+    "health_module",
+    "queue_module"
+  ]
+}

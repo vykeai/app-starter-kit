@@ -2,13 +2,22 @@
   "$sentinel": "1.0",
   "type": "feature",
   "id": "push-notifications",
-  "description": "Push notification registration and handling",
-  "categories": [
-    { "id": "auth", "description": "Authentication events (magic link delivery confirmation)" },
-    { "id": "system", "description": "Force update, maintenance alerts" }
+  "name": "Push Notifications",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android", "api", "web"],
+  "description": "Push notification registration, typed delivery, and preference-aware handling",
+  "capabilities": [
+    "device_registration",
+    "device_unregistration",
+    "typed_notification_categories",
+    "preference_aware_delivery",
+    "quiet_hours_filtering",
+    "push_payload_deep_link_handoff"
   ],
-  "platforms": {
-    "ios": { "provider": "APNs via FCM", "permissionRequired": true },
-    "android": { "provider": "FCM", "permissionRequired": true }
-  }
+  "categories": [
+    { "id": "auth", "description": "Authentication events and sign-in state changes" },
+    { "id": "system", "description": "Force update, maintenance, service alerts" },
+    { "id": "activity", "description": "Product activity and collaboration events" },
+    { "id": "review", "description": "Scheduled review or recap prompts" }
+  ]
 }

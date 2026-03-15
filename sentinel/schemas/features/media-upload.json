@@ -1,0 +1,16 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "media-upload",
+  "name": "Media Upload And Read",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android", "api", "web"],
+  "capabilities": [
+    "prepare_upload",
+    "upload_progress",
+    "background_upload",
+    "media_list_read",
+    "media_delete",
+    "local_asset_metadata"
+  ]
+}

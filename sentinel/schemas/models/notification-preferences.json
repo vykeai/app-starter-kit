@@ -1,0 +1,19 @@
+{
+  "$sentinel": "1.0",
+  "type": "model",
+  "id": "notification-preferences",
+  "name": "NotificationPreferences",
+  "platforms": ["ios", "android", "api", "web"],
+  "fields": [
+    { "name": "pushEnabled", "type": "Boolean", "optional": false },
+    { "name": "emailEnabled", "type": "Boolean", "optional": false },
+    { "name": "enabledCategories", "type": "String[]", "optional": false },
+    { "name": "quietHoursEnabled", "type": "Boolean", "optional": false },
+    { "name": "quietHoursStart", "type": "String", "optional": true },
+    { "name": "quietHoursEnd", "type": "String", "optional": true },
+    { "name": "quietHoursWeekendStart", "type": "String", "optional": true },
+    { "name": "quietHoursWeekendEnd", "type": "String", "optional": true },
+    { "name": "urgentBreaksQuietHours", "type": "Boolean", "optional": false },
+    { "name": "batchSoonNotifications", "type": "Boolean", "optional": false }
+  ]
+}

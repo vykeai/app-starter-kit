@@ -1,0 +1,14 @@
+{
+  "$sentinel": "1.0",
+  "type": "feature",
+  "id": "offline-state",
+  "name": "Offline Monitor",
+  "canonicalDoc": "docs/STARTER_KIT_SYSTEMS.md",
+  "platforms": ["ios", "android"],
+  "capabilities": [
+    "connectivity_monitor",
+    "root_level_offline_banner",
+    "sync_integration",
+    "network_recovery_dismissal"
+  ]
+}

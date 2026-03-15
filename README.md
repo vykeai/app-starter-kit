@@ -244,6 +244,27 @@ How auth should work in each environment:
 - review/demo environments
   - use the allowlisted bypass credentials above
   - clients still hit the normal auth endpoints and receive the normal auth envelope
+
+## Starter Systems
+
+The canonical cross-cutting systems that should be reused across products are
+documented in [docs/STARTER_KIT_SYSTEMS.md](docs/STARTER_KIT_SYSTEMS.md).
+
+This includes:
+
+- deep-link routing conventions
+- fixture-backed mock transport
+- screenshot proof loop with `simemu` + Maestro + Sentinel
+- force update
+- offline monitor/banner
+- review prompt manager
+- common backend module
+- push notification skeleton
+- subscription/paywall skeleton
+- Sentinel contract layer
+- notification preferences data structure
+- media upload/read
+- networking library
 - `AUTH_REVIEW_EMAIL`
 - `AUTH_REVIEW_CODE`
 
