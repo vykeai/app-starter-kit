@@ -299,6 +299,61 @@ body {
   text-decoration: none;
 }
 
+.settings-controls {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.toggle-row input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--accent);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.setting-chip,
+.panel-action {
+  border: 1px solid var(--edge);
+  font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.setting-chip {
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  background: #fffdf8;
+  color: var(--ink);
+}
+
+.setting-chip.selected {
+  background: #dfeee8;
+  color: var(--accent);
+  border-color: rgba(20, 95, 72, 0.2);
+}
+
+.panel-action {
+  margin-top: 1rem;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  background: var(--ink);
+  color: #fffdf8;
+  font-weight: 700;
+}
+
 @media (max-width: 800px) {
   .library-header,
   .shelf-grid,

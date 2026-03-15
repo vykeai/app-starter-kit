@@ -19,3 +19,14 @@ export const currentNotificationPreferences: WebNotificationPreferences = {
   urgentBreaksQuietHours: true,
   batchSoonNotifications: false,
 };
+
+export function updateNotificationPreferences(
+  current: WebNotificationPreferences,
+  patch: Partial<WebNotificationPreferences>,
+): WebNotificationPreferences {
+  return {
+    ...current,
+    ...patch,
+    enabledCategories: patch.enabledCategories ?? current.enabledCategories,
+  };
+}
