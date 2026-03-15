@@ -92,6 +92,10 @@ final class SubscriptionManager {
         currentTier = .free
     }
 
+    func resetEntitlements() {
+        currentTier = .free
+    }
+
     func isFeatureAvailable(_ feature: TrackerFeature) -> Bool {
         switch feature {
         case .basicLogging, .exerciseLibrary:

@@ -128,7 +128,9 @@ struct ProfileView: View {
                 Section("Account") {
                     Button("Sign out") {
                         HapticsHelper.impact(.medium)
-                        appState.logout()
+                        Task {
+                            await appState.logout()
+                        }
                     }
                     .foregroundStyle(AppTokens.Color.warning)
 

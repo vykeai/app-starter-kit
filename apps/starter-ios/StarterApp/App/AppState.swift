@@ -45,9 +45,17 @@ class AppState {
     }
 
     @MainActor
-    func logout() {
+    func logout() async {
         guard !isLoggingOut else { return }
         isLoggingOut = true
+
+        SubscriptionManager.shared.resetEntitlements()
+        if isRuntimeFixtureMode {
+            try? await PushRegistrationManager().revokeCurrentDevice(
+                pushToken: "fixture-ios-push-token"
+            )
+        }
+
         KeychainHelper.shared.clearAll()
         isAuthenticated = false
         currentUser = nil

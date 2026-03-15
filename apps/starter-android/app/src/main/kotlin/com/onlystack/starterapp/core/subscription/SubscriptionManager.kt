@@ -155,6 +155,10 @@ class SubscriptionManager @Inject constructor(
         _currentTier.value = if (hasTracker) SubscriptionTier.TRACKER else SubscriptionTier.FREE
     }
 
+    fun resetEntitlements() {
+        _currentTier.value = SubscriptionTier.FREE
+    }
+
     fun isFeatureAvailable(feature: TrackerFeature): Boolean = when (feature) {
         TrackerFeature.BASIC_LOGGING, TrackerFeature.EXERCISE_LIBRARY -> true
         TrackerFeature.UNLIMITED_TEMPLATES,

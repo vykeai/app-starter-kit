@@ -136,6 +136,7 @@ class AuthViewModel @Inject constructor(
      */
     fun logout(onComplete: () -> Unit) {
         viewModelScope.launch {
+            clearAuthenticatedServices()
             authRepository.logout()
             // Reset UI state so a fresh login flow starts cleanly.
             _uiState.value = AuthUiState(isBootstrappingSession = false)
@@ -168,6 +169,13 @@ class AuthViewModel @Inject constructor(
             if (BuildConfig.RUNTIME_FIXTURE_MODE) {
                 pushRegistrationManager.registerCurrentDevice("fixture-android-push-token")
             }
+        }
+    }
+
+    private suspend fun clearAuthenticatedServices() {
+        subscriptionManager.resetEntitlements()
+        if (BuildConfig.RUNTIME_FIXTURE_MODE) {
+            pushRegistrationManager.revokeCurrentDevice("fixture-android-push-token")
         }
     }
 }
