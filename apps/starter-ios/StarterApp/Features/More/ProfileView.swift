@@ -7,6 +7,7 @@ struct ProfileView: View {
     private let notificationService = NotificationService()
     private let billingService = BillingService()
     private let mediaService = MediaService()
+    private let pushRegistrationManager = PushRegistrationManager()
     @State private var displayName: String = ""
     @State private var isEditing = false
     @State private var showDeleteAccountAlert = false
@@ -222,6 +223,21 @@ struct ProfileView: View {
                 pushEnabled: pushEnabled,
                 emailEnabled: emailEnabled
             )
+
+            if ProcessInfo.processInfo.arguments.contains("-UITestMode") ||
+                ProcessInfo.processInfo.arguments.contains("-RuntimeFixtureMode") ||
+                ProcessInfo.processInfo.environment["APP_RUNTIME_FIXTURE_MODE"] == "1" {
+                if pushEnabled == true {
+                    _ = try? await pushRegistrationManager.registerCurrentDevice(
+                        pushToken: "fixture-ios-push-token"
+                    )
+                } else if pushEnabled == false {
+                    try? await pushRegistrationManager.revokeCurrentDevice(
+                        pushToken: "fixture-ios-push-token"
+                    )
+                }
+            }
+
             toastManager.show("Preferences updated", style: .success)
         } catch {
             toastManager.show(error.localizedDescription, style: .error)

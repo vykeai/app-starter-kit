@@ -2,11 +2,13 @@ package com.onlystack.starterapp.features.more
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.onlystack.starterapp.BuildConfig
 import com.onlystack.starterapp.core.billing.BillingRepository
 import com.onlystack.starterapp.core.billing.EntitlementState
 import com.onlystack.starterapp.core.media.MediaAsset
 import com.onlystack.starterapp.core.media.MediaRepository
 import com.onlystack.starterapp.core.notifications.NotificationPreferences
+import com.onlystack.starterapp.core.notifications.PushRegistrationManager
 import com.onlystack.starterapp.core.notifications.NotificationRepository
 import com.onlystack.starterapp.core.user.UserProfile
 import com.onlystack.starterapp.core.user.UserRepository
@@ -35,6 +37,7 @@ class ProfileViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
     private val billingRepository: BillingRepository,
     private val mediaRepository: MediaRepository,
+    private val pushRegistrationManager: PushRegistrationManager,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
@@ -127,6 +130,13 @@ class ProfileViewModel @Inject constructor(
                 pushEnabled = pushEnabled,
                 emailEnabled = emailEnabled,
             ).onSuccess { preferences ->
+                if (BuildConfig.RUNTIME_FIXTURE_MODE) {
+                    if (pushEnabled == true) {
+                        pushRegistrationManager.registerCurrentDevice("fixture-android-push-token")
+                    } else if (pushEnabled == false) {
+                        pushRegistrationManager.revokeCurrentDevice("fixture-android-push-token")
+                    }
+                }
                 _uiState.update { it.copy(notifications = preferences) }
             }.onFailure { error ->
                 _uiState.update { it.copy(errorMessage = error.message) }
