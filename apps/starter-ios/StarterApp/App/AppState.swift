@@ -19,6 +19,7 @@ enum PendingAppRoute: Equatable {
 class AppState {
     var isAuthenticated: Bool = false
     var currentUser: AppUser? = nil
+    var isBootstrappingSession: Bool = true
     var syncEngine: SyncEngine?
     var pendingRoute: PendingAppRoute? = nil
     let forceUpdateChecker = ForceUpdateChecker()
@@ -50,8 +51,34 @@ class AppState {
         KeychainHelper.shared.clearAll()
         isAuthenticated = false
         currentUser = nil
+        isBootstrappingSession = false
         pendingRoute = nil
         isLoggingOut = false
+    }
+
+    @MainActor
+    func bootstrapSessionIfNeeded() async {
+        guard isBootstrappingSession else { return }
+
+        let hasStoredAccessToken = KeychainHelper.shared.getAccessToken() != nil
+        let hasStoredRefreshToken = KeychainHelper.shared.getRefreshToken() != nil
+
+        guard hasStoredAccessToken || hasStoredRefreshToken else {
+            isBootstrappingSession = false
+            return
+        }
+
+        do {
+            let profile = try await UserService().fetchMe()
+            currentUser = AppUser(profile: profile)
+            isAuthenticated = true
+        } catch {
+            KeychainHelper.shared.clearAll()
+            currentUser = nil
+            isAuthenticated = false
+        }
+
+        isBootstrappingSession = false
     }
 
     private func configureRuntimeNetworking() {

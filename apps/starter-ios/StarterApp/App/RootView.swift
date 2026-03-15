@@ -9,6 +9,10 @@ struct RootView: View {
             Group {
                 if appState.forceUpdateChecker.isHardUpdateRequired {
                     HardUpdateView()
+                } else if appState.isBootstrappingSession {
+                    ProgressView("Restoring session…")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(AppTokens.Color.background.ignoresSafeArea())
                 } else if appState.isAuthenticated {
                     MainTabView()
                 } else {
@@ -31,6 +35,7 @@ struct RootView: View {
         .animation(.easeInOut(duration: 0.3), value: appState.networkMonitor.isConnected)
         .toastOverlay()
         .task {
+            await appState.bootstrapSessionIfNeeded()
             await appState.forceUpdateChecker.checkForUpdate()
         }
     }

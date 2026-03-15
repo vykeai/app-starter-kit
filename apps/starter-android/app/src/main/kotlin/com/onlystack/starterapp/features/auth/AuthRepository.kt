@@ -1,6 +1,7 @@
 package com.onlystack.starterapp.features.auth
 
 import com.onlystack.starterapp.core.storage.SecurePreferences
+import com.onlystack.starterapp.core.user.UserProfile
 import javax.inject.Inject
 
 interface AuthRepository {
@@ -12,6 +13,8 @@ interface AuthRepository {
     ): Result<AuthResponse>
     /** Invalidates the server session and clears all locally stored tokens. */
     suspend fun logout()
+    suspend fun hasStoredSession(): Boolean
+    suspend fun fetchCurrentUser(): Result<UserProfile>
     suspend fun authenticateWithSocial(provider: String, idToken: String): Result<Unit>
 }
 
@@ -41,6 +44,13 @@ class AuthRepositoryImpl @Inject constructor(
         // Ignore any errors — the local state is always cleared regardless.
         runCatching { apiService.deleteSession() }
         securePreferences.clearAll()
+    }
+
+    override suspend fun hasStoredSession(): Boolean =
+        securePreferences.getAccessToken() != null || securePreferences.getRefreshToken() != null
+
+    override suspend fun fetchCurrentUser(): Result<UserProfile> = runCatching {
+        apiService.fetchCurrentUser()
     }
 
     override suspend fun authenticateWithSocial(provider: String, idToken: String): Result<Unit> = runCatching {

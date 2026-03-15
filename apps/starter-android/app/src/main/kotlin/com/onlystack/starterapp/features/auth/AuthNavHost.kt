@@ -4,7 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,6 +28,13 @@ fun AuthNavHost(
     val navController = rememberNavController()
     val uiState by viewModel.uiState.collectAsState()
     val pendingRoute by deepLinkViewModel.pendingRoute.collectAsState()
+
+    if (uiState.isBootstrappingSession) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
 
     LaunchedEffect(uiState.isAuthenticated) {
         if (uiState.isAuthenticated) {

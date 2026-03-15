@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 data class AuthUiState(
     val isLoading: Boolean = false,
+    val isBootstrappingSession: Boolean = true,
     val errorMessage: String? = null,
     val isCodeSent: Boolean = false,
     val isAuthenticated: Boolean = false,
@@ -26,6 +27,10 @@ class AuthViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
     private var lastEmail: String? = null
+
+    init {
+        bootstrapSession()
+    }
 
     fun requestCode(email: String) {
         if (email.isBlank()) return
@@ -68,6 +73,36 @@ class AuthViewModel @Inject constructor(
 
     fun lastRequestedEmail(): String? = lastEmail
 
+    private fun bootstrapSession() {
+        viewModelScope.launch {
+            if (!authRepository.hasStoredSession()) {
+                _uiState.update { it.copy(isBootstrappingSession = false) }
+                return@launch
+            }
+
+            authRepository.fetchCurrentUser()
+                .onSuccess {
+                    _uiState.update {
+                        it.copy(
+                            isAuthenticated = true,
+                            isBootstrappingSession = false,
+                            errorMessage = null,
+                        )
+                    }
+                }
+                .onFailure {
+                    authRepository.logout()
+                    _uiState.update {
+                        it.copy(
+                            isAuthenticated = false,
+                            isBootstrappingSession = false,
+                            errorMessage = null,
+                        )
+                    }
+                }
+        }
+    }
+
     private fun verifyMagicLink(
         email: String? = null,
         code: String? = null,
@@ -96,7 +131,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.logout()
             // Reset UI state so a fresh login flow starts cleanly.
-            _uiState.value = AuthUiState()
+            _uiState.value = AuthUiState(isBootstrappingSession = false)
             lastEmail = null
             onComplete()
         }

@@ -1,7 +1,9 @@
 package com.onlystack.starterapp.features.auth
 
+import com.onlystack.starterapp.core.user.UserProfile
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 data class RequestMagicLinkBody(val email: String)
@@ -24,6 +26,9 @@ interface AuthApiService {
     /** Fire-and-forget session termination. Server invalidates the refresh token. */
     @DELETE("auth/session")
     suspend fun deleteSession(): MessageResponse
+
+    @GET("user/me")
+    suspend fun fetchCurrentUser(): UserProfile
 
     @POST("auth/social")
     suspend fun authenticateWithSocial(@Body body: SocialAuthRequest): AuthResponse
