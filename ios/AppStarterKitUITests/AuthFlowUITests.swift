@@ -17,6 +17,7 @@ final class AuthFlowUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
+        app.launchArguments += ["-UITestMode"]
         app.launch()
     }
 
@@ -50,9 +51,14 @@ final class AuthFlowUITests: XCTestCase {
     // MARK: - Code entry
 
     func testCodeEntryScreenHasEightBoxes() throws {
-        // Navigate to code entry (requires a running backend or stub)
-        // This test is marked as expected to fail without a backend.
-        // Enable once a test backend or UI test stub is configured.
-        throw XCTSkip("Requires test backend — configure in setUp with launch arguments")
+        app.buttons["Sign In"].tap()
+        let emailField = app.textFields["your@email.com"]
+        XCTAssertTrue(emailField.waitForExistence(timeout: 3))
+        emailField.tap()
+        emailField.typeText("test@example.com")
+        app.buttons["Continue"].tap()
+
+        XCTAssertTrue(app.staticTexts["Check your email"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["test@example.com"].exists)
     }
 }

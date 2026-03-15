@@ -39,7 +39,7 @@ catalog:
   ios18:
     iphone:
       slug: starter-ios           # update to your simemu slug
-      app_id: starter.app.dev     # update to your bundle ID
+      app_id: com.appstarterkit.app.dev
     # ipad:
     #   slug: starter-ipad
     #   app_id: starter.app.dev
@@ -47,13 +47,13 @@ catalog:
   ios26:
     iphone:
       slug: starter-ios26
-      app_id: starter.app.dev
+      app_id: com.appstarterkit.app.dev
       glossy: true                # captures glossy-light + glossy-dark variants too
 
   android:
     phone:
       slug: starter-android
-      app_id: com.appstarterkit.app  # update to your Android package
+      app_id: com.appstarterkit.app.mock
     # tablet:
     #   slug: starter-tablet
     #   app_id: com.appstarterkit.app

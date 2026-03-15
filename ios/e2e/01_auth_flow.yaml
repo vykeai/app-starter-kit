@@ -10,11 +10,13 @@
 #   [AuthService] OTP for test@example.com: 12345678
 # Copy the code into the inputText step below for a manual end-to-end run.
 
-appId: com.appstarterkit.app
+appId: com.appstarterkit.app.dev
 
 ---
 - launchApp:
     clearState: true
+    arguments:
+      - -UITestMode
 
 # Welcome screen
 - assertVisible: "AppStarterKit"
@@ -28,9 +30,13 @@ appId: com.appstarterkit.app
 - inputText: "test@example.com"
 - tapOn: "Continue"
 
-# OTP code entry screen (server sends code to email / logs to dev console)
+# OTP code entry screen (runtime fixture mode skips real email delivery)
 - assertVisible: "Check your email"
 - assertVisible: "test@example.com"
+- tapOn:
+    id: "codeDigitField_0"
+- inputText: "12345678"
+- assertVisible: "Home"
 
 # Test back navigation returns to email screen
 - tapOn: "Back"

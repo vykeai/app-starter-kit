@@ -7,6 +7,16 @@ they should preserve.
 The goal is not identical UI across products. The goal is one reusable runtime
 shape for the systems every product keeps rebuilding.
 
+Current packaging direction:
+
+- keep this repo as the integration host and runnable reference app
+- extract reusable seams as internal libraries first:
+  - `auth-core`
+  - `network-core`
+  - `notifications-core`
+  - `contracts`
+- only split repos later if multiple products consume those libraries cleanly
+
 ## Source Ranking
 
 Primary extraction sources:
@@ -342,3 +352,13 @@ Starter contract:
 These systems should become part of `app-starter-kit` by default. Product repos
 should customize presentation and domain rules, but should stop rebuilding the
 underlying runtime shape from scratch.
+
+## Next Extraction Candidates
+
+After the current runtime wave, the next strong starter-lib candidates are:
+
+- analytics / event contract
+- feature-flag bootstrap
+- common pending / empty / error state kit
+- background sync and job-runner glue
+- observability hooks for correlation IDs, request IDs, and client error reporting

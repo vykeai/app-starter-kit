@@ -4,6 +4,14 @@ Production-ready mobile app starter: **NestJS API + iOS (SwiftUI) + Android (Com
 
 Magic link auth, social sign-in, design tokens, offline indicator, force update, review prompt, subscriptions, admin panel, Terraform infra — all wired up and ready to rename.
 
+This repo is also the proving ground for the shared starter libraries:
+- `auth-core`
+- `network-core`
+- `notifications-core`
+- `contracts`
+
+The starter app remains the runnable reference consumer for those libraries.
+
 ---
 
 ## Stack
@@ -65,6 +73,17 @@ open AppStarterKit.xcodeproj
 cd android
 ./gradlew assembleDevDebug
 # Or open in Android Studio, select dev flavour
+```
+
+### 6. Runtime mock mode
+
+```bash
+# Android fixture-backed runtime mode
+cd android
+./gradlew assembleMockDebug
+
+# iOS fixture-backed runtime mode
+# Add launch argument: -UITestMode
 ```
 
 ---
@@ -199,6 +218,7 @@ infra/terraform/
 | Env | iOS Scheme | Android Flavour | API URL |
 |-----|-----------|-----------------|---------|
 | Dev | AppStarterKit-Dev | dev | `http://localhost:3000/api/v1` (Android: `http://10.0.2.2:3000/api/v1`) |
+| Mock | AppStarterKit-Dev + `-UITestMode` | mock | fixture-backed runtime transport |
 | Staging | AppStarterKit-Staging | staging | `https://api-staging.yourapp.com/api/v1` |
 | Production | AppStarterKit-Release | prod | `https://api.yourapp.com/api/v1` |
 

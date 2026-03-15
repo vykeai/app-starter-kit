@@ -1,77 +1,40 @@
-# Android E2E Tests (Detox)
+# Android E2E Tests
 
-Gray-box end-to-end testing for the Android app using
-[Detox](https://wix.github.io/Detox/). Tests run against a debug APK on an
-Android emulator.
+The canonical Android proof path is now:
+- build the `mock` flavour
+- run on an emulator managed by `simemu`
+- drive the flow with Maestro or a thin harness
+- capture screenshots with `simemu screenshot`
 
 ## Prerequisites
 
 - Node.js 20+
-- Android SDK with an AVD named `Pixel_6_API_34` (or update `.detoxrc.js`)
-- The backend running locally or pointed at staging
-
-## Install Detox CLI
-
-```bash
-npm install -g detox-cli
-```
-
-Install project dev dependencies (run from the `android/` directory):
-
-```bash
-cd android
-npm install --save-dev detox jest jest-circus @types/detox
-```
-
-## Setup
-
-The Detox config lives in `android/e2e/.detoxrc.js`. It references the
-emulator AVD name and the APK build path. Update `avdName` to match your
-local Android Virtual Device:
-
-```bash
-# List your local AVDs
-emulator -list-avds
-```
+- A `simemu` Android slug assigned to this project
+- No backend required when using the `mock` flavour
 
 ## Build the app
 
 ```bash
-detox build --configuration android.emu.debug
+cd android
+./gradlew assembleMockDebug
 ```
 
-This runs `./gradlew assembleDevDebug assembleDevDebugAndroidTest` and places
-the APK at `app/build/outputs/apk/dev/debug/app-dev-debug.apk`.
-
-## Run tests
+## Run on a simemu device
 
 ```bash
-detox test --configuration android.emu.debug
+export SIMEMU_AGENT=starter
+simemu status
+simemu boot starter-android
+simemu install starter-android app/build/outputs/apk/mock/debug/app-mock-debug.apk
+simemu launch starter-android com.appstarterkit.app.mock
 ```
 
-Run a single test file:
+## Screenshot proof loop
 
 ```bash
-detox test --configuration android.emu.debug e2e/auth.test.js
+simemu screenshot starter-android -o ~/Desktop/screenshots/starter/android_auth.png --max-size 1000
 ```
 
-## Port forwarding
-
-The `.detoxrc.js` config includes `reversePorts: [3000]` which runs
-`adb reverse tcp:3000 tcp:3000` automatically so the emulator can reach
-your local backend at `http://localhost:3000`.
-
-## CI usage (GitHub Actions)
-
-```yaml
-- name: Run Detox E2E
-  run: |
-    detox build --configuration android.emu.debug
-    detox test --configuration android.emu.debug --headless
-```
-
-## Test inventory
-
-| File | What it covers |
-|------|----------------|
-| `auth.test.js` | Welcome screen, navigation to email input, empty-email validation |
+The old Detox scaffolding is still present, but it is no longer the recommended
+starter proof loop. New starter coverage should target `simemu` + Maestro so
+the iOS and Android screenshot path stays aligned.
