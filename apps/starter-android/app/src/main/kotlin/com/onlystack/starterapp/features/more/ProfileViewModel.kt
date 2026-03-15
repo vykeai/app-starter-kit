@@ -93,20 +93,36 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun simulateAvatarUpload() {
+        uploadSelectedAvatar(
+            fileName = "profile-photo.webp",
+            mimeType = "image/webp",
+            sizeBytes = 262_144,
+            width = 1024,
+            height = 1024,
+        )
+    }
+
+    fun uploadSelectedAvatar(
+        fileName: String,
+        mimeType: String,
+        sizeBytes: Int?,
+        width: Int?,
+        height: Int?,
+    ) {
         viewModelScope.launch {
             _uiState.update { it.copy(isUploadingMedia = true, errorMessage = null) }
 
             mediaRepository.prepareUpload(
                 kind = "avatar",
-                mimeType = "image/webp",
-                fileName = "profile-photo.webp",
-                sizeBytes = 262_144,
+                mimeType = mimeType,
+                fileName = fileName,
+                sizeBytes = sizeBytes,
                 visibility = "public",
             ).onSuccess { preparation ->
                 mediaRepository.completeUpload(
                     assetId = preparation.assetId,
-                    width = 1024,
-                    height = 1024,
+                    width = width,
+                    height = height,
                 )
                 val mediaResult = mediaRepository.listAssets()
                 _uiState.update {
@@ -120,7 +136,6 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
-
     private fun updateNotifications(
         pushEnabled: Boolean? = null,
         emailEnabled: Boolean? = null,

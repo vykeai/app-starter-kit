@@ -1,4 +1,6 @@
+import PhotosUI
 import SwiftUI
+import UIKit
 
 struct ProfileView: View {
     @Environment(AppState.self) var appState
@@ -17,6 +19,7 @@ struct ProfileView: View {
     @State private var mediaAssets: [MediaAsset] = []
     @State private var isLoadingSettings = false
     @State private var isUploadingMedia = false
+    @State private var selectedPhoto: PhotosPickerItem?
 
     var body: some View {
         NavigationStack {
@@ -106,8 +109,12 @@ struct ProfileView: View {
                 }
 
                 Section("Media") {
-                    Button(isUploadingMedia ? "Uploading avatar…" : "Simulate avatar upload") {
-                        Task { await simulateAvatarUpload() }
+                    PhotosPicker(
+                        selection: $selectedPhoto,
+                        matching: .images,
+                        photoLibrary: .shared()
+                    ) {
+                        Text(isUploadingMedia ? "Uploading avatar…" : "Choose avatar photo")
                     }
                     .disabled(isUploadingMedia)
 
@@ -173,6 +180,13 @@ struct ProfileView: View {
             .onAppear {
                 displayName = appState.currentUser?.displayName ?? ""
                 Task { await loadAccountDetails() }
+            }
+            .onChange(of: selectedPhoto) { _, item in
+                guard let item else { return }
+                Task {
+                    await uploadSelectedPhoto(item)
+                    selectedPhoto = nil
+                }
             }
         }
     }
@@ -244,24 +258,30 @@ struct ProfileView: View {
         }
     }
 
-    private func simulateAvatarUpload() async {
+    private func uploadSelectedPhoto(_ item: PhotosPickerItem) async {
         guard !isUploadingMedia else { return }
         isUploadingMedia = true
         defer { isUploadingMedia = false }
 
         do {
+            guard let data = try await item.loadTransferable(type: Data.self) else {
+                toastManager.show("Could not load the selected photo", style: .error)
+                return
+            }
+            let image = UIImage(data: data)
+            let fileName = item.itemIdentifier.map { "\($0).jpeg" } ?? "profile-photo.jpeg"
             let preparation = try await mediaService.prepareUpload(
                 kind: "avatar",
-                mimeType: "image/webp",
-                fileName: "profile-photo.webp",
-                sizeBytes: 262_144,
+                mimeType: item.supportedContentTypes.first?.preferredMIMEType ?? "image/jpeg",
+                fileName: fileName,
+                sizeBytes: data.count,
                 visibility: "public"
             )
 
             _ = try await mediaService.completeUpload(
                 assetId: preparation.assetId,
-                width: 1024,
-                height: 1024
+                width: image.map { Int($0.size.width) },
+                height: image.map { Int($0.size.height) }
             )
             mediaAssets = try await mediaService.listAssets()
             toastManager.show("Media asset synced", style: .success)

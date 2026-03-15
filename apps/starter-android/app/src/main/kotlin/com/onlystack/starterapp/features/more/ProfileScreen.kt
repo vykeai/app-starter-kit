@@ -1,5 +1,9 @@
 package com.onlystack.starterapp.features.more
 
+import android.graphics.BitmapFactory
+import android.provider.OpenableColumns
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +42,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,10 +62,52 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val currentUser = uiState.user
+    val context = LocalContext.current
     var displayName by remember(currentUser?.displayName) { mutableStateOf(currentUser?.displayName ?: "") }
     var isEditing by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showSignOutDialog by remember { mutableStateOf(false) }
+    val pickAvatarLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+    ) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+
+        val resolver = context.contentResolver
+        val mimeType = resolver.getType(uri) ?: "image/jpeg"
+        var fileName = "profile-photo"
+        var sizeBytes: Int? = null
+        resolver.query(uri, null, null, null, null)?.use { cursor ->
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+            if (cursor.moveToFirst()) {
+                if (nameIndex >= 0) {
+                    fileName = cursor.getString(nameIndex) ?: fileName
+                }
+                if (sizeIndex >= 0 && !cursor.isNull(sizeIndex)) {
+                    sizeBytes = cursor.getLong(sizeIndex).toInt()
+                }
+            }
+        }
+
+        var width: Int? = null
+        var height: Int? = null
+        resolver.openInputStream(uri)?.use { stream ->
+            val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeStream(stream, null, options)
+            if (options.outWidth > 0 && options.outHeight > 0) {
+                width = options.outWidth
+                height = options.outHeight
+            }
+        }
+
+        viewModel.uploadSelectedAvatar(
+            fileName = fileName,
+            mimeType = mimeType,
+            sizeBytes = sizeBytes,
+            width = width,
+            height = height,
+        )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.load()
@@ -233,10 +280,10 @@ fun ProfileScreen(
                     ) {
                         Text("Media", style = MaterialTheme.typography.titleMedium)
                         Button(
-                            onClick = viewModel::simulateAvatarUpload,
+                            onClick = { pickAvatarLauncher.launch("image/*") },
                             enabled = !uiState.isUploadingMedia,
                         ) {
-                            Text(if (uiState.isUploadingMedia) "Uploading avatar…" else "Simulate avatar upload")
+                            Text(if (uiState.isUploadingMedia) "Uploading avatar…" else "Choose avatar photo")
                         }
                         uiState.mediaAssets.forEach { asset ->
                             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
